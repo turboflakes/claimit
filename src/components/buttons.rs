@@ -108,7 +108,7 @@ pub fn claim_button() -> Html {
             let accounts = state
                 .accounts
                 .iter()
-                .map(|a| AccountId32::from_str(&a.ss58).unwrap())
+                .map(|a| AccountId32::from_str(&a.address).unwrap())
                 .collect::<Vec<AccountId32>>();
             let cbs = child_bounties_raw
                 .into_iter()

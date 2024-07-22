@@ -52,7 +52,7 @@ pub fn account(props: &AccountItemProps) -> Html {
         <li class="account__item">
             <div class="relative flex justify-between items-center px-4 py-3 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 w-full dark:bg-gray-800">
                 <div class="inline-flex items-center">
-                    <Identicon address={props.account.ss58.clone()} size={24} class="me-2" />
+                    <Identicon address={props.account.address.clone()} size={24} class="me-2" />
                     {props.account.to_compact_string()}
                 </div>
                 <div class="inline-flex items-center account__item">
@@ -130,7 +130,7 @@ pub fn filter_item(props: &FilterItemProps) -> Html {
             let accounts = state
                 .accounts
                 .iter()
-                .map(|a| AccountId32::from_str(&a.ss58).unwrap())
+                .map(|a| AccountId32::from_str(&a.address).unwrap())
                 .collect::<Vec<AccountId32>>();
             Filter::Following(accounts)
         }
@@ -140,7 +140,7 @@ pub fn filter_item(props: &FilterItemProps) -> Html {
                     let accounts = state
                         .accounts
                         .iter()
-                        .map(|a| AccountId32::from_str(&a.ss58).unwrap())
+                        .map(|a| AccountId32::from_str(&a.address).unwrap())
                         .collect::<Vec<AccountId32>>();
                     let ids = child_bounties_raw
                         .into_iter()

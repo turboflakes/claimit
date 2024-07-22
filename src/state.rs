@@ -41,17 +41,17 @@ impl Reducible for State {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Action::Add(ss58) => {
+            Action::Add(address) => {
                 let mut accounts = self.accounts.clone();
                 // Verify if account is not already being followed
-                if accounts.iter().find(|&acc| acc.ss58 == ss58).is_none() {
+                if accounts.iter().find(|&acc| acc.address == address).is_none() {
                     // Check if there are already some child bounties available to be linked
                     let child_bounty_ids =
                         if let Some(child_bounties) = self.child_bounties_raw.clone() {
                             child_bounties
                                 .into_iter()
                                 .filter(|(_, cb)| {
-                                    let acc = AccountId32::from_str(&ss58).unwrap();
+                                    let acc = AccountId32::from_str(&address).unwrap();
                                     acc == cb.beneficiary
                                 })
                                 .map(|(id, _)| id)
@@ -62,7 +62,10 @@ impl Reducible for State {
 
                     accounts.push(Account {
                         id: accounts.last().map(|account| account.id + 1).unwrap_or(1),
-                        ss58,
+                        name: "".to_string(),
+                        source: "".to_string(),
+                        r#type: "".to_string(),
+                        address,
                         identity: None,
                         disabled: false,
                         child_bounty_ids,
@@ -161,7 +164,7 @@ impl Reducible for State {
                         .clone()
                         .into_iter()
                         .filter(|(_, cb)| {
-                            let acc = AccountId32::from_str(&account.ss58).unwrap();
+                            let acc = AccountId32::from_str(&account.address).unwrap();
                             acc == cb.beneficiary
                         })
                         .map(|(id, _)| id)

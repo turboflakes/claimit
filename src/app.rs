@@ -51,7 +51,7 @@ pub fn main() -> Html {
 
         let following = accounts
             .iter()
-            .map(|a| AccountId32::from_str(&a.ss58).unwrap())
+            .map(|a| AccountId32::from_str(&a.address).unwrap())
             .collect::<Vec<AccountId32>>();
 
         let filter = match following.len() {

@@ -10,7 +10,7 @@ let getPolkadotJsExtensionMod = (() => {
     // initialize `@polkadot/extension-dapp` module on page load
     let initPromise = (async () => {
         mod = await import(
-            "https://cdn.jsdelivr.net/npm/@polkadot/extension-dapp@0.46.3/+esm"
+            "https://cdn.jsdelivr.net/npm/@polkadot/extension-dapp@0.49.3/+esm"
             );
     })();
 
@@ -30,7 +30,7 @@ let getPolkadotJsExtensionMod = (() => {
  */
 async function getAccounts() {
     const extensionMod = await getPolkadotJsExtensionMod();
-    await extensionMod.web3Enable("Claimly.xyz");
+    await extensionMod.web3Enable("Claimeer.app");
     const allAccounts = await extensionMod.web3Accounts();
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
@@ -65,7 +65,8 @@ async function getAccounts() {
  *         "CheckNonce",
  *         "CheckWeight",
  *         "ChargeTransactionPayment",
- *         "PrevalidateAttests"
+ *         "PrevalidateAttests",
+ *         "CheckMetadataHash"
  *     ],
  *     "tip": "0x00000000000000000000000000000000",
  *     "version": 4

@@ -15,7 +15,7 @@ pub fn account(props: &AccountChipProps) -> Html {
     let is_already_following = state
         .accounts
         .iter()
-        .any(|account| *account.ss58 == props.account.to_string());
+        .any(|account| *account.address == props.account.to_string());
 
     let onclick = {
         let account = props.account.to_string();
