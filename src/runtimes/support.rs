@@ -17,11 +17,29 @@ impl SupportedRelayRuntime {
         }
     }
 
-    pub fn default_rpc_url(&self) -> String {
+    pub fn default_rpc_url(&self) -> &'static str {
         match &self {
-            Self::Polkadot => "wss://rpc.turboflakes.io:443/polkadot".to_string(),
-            Self::Kusama => "wss://rpc.turboflakes.io:443/kusama".to_string(),
+            Self::Polkadot => "wss://rpc.turboflakes.io:443/polkadot",
+            Self::Kusama => "wss://rpc.turboflakes.io:443/kusama",
         }
+    }
+
+    pub fn unit(&self) -> &'static str {
+        match &self {
+            Self::Polkadot => "DOT",
+            Self::Kusama => "KSM",
+        }
+    }
+
+    pub fn decimals(&self) -> u16 {
+        match &self {
+            Self::Polkadot => 10,
+            Self::Kusama => 12,
+        }
+    }
+
+    pub fn class(&self) -> String {
+        self.to_string().to_lowercase()
     }
 }
 

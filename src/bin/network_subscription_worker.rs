@@ -1,4 +1,4 @@
-use claimly::BlockSubscription;
+use claimeer::BlockSubscription;
 use yew_agent::Registrable;
 
 fn main() {

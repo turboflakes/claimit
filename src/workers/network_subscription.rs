@@ -1,3 +1,4 @@
+use crate::providers::network::SubscriptionId;
 use crate::runtimes::support::SupportedRelayRuntime;
 use std::time::Duration;
 
@@ -9,30 +10,31 @@ use subxt::{OnlineClient, PolkadotConfig};
 use yew::platform::time::sleep;
 use yew_agent::{prelude::reactor, reactor::ReactorScope};
 
+pub type BlockNumber = u32;
+
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Input {
-    Start,
+    Start(SubscriptionId, SupportedRelayRuntime),
     Finish,
-    StartSubscription(SupportedRelayRuntime),
 }
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Output {
-    Active,
-    BlockNumber(u32),
-    Err,
+    Active(SubscriptionId),
+    BlockNumber(SubscriptionId, BlockNumber),
+    Err(SubscriptionId),
 }
 
 #[reactor(BlockSubscription)]
 pub async fn block_subscription(mut scope: ReactorScope<Input, Output>) {
     'outer: while let Some(input) = scope.next().await {
-        if let Input::StartSubscription(runtime) = input {
+        if let Input::Start(sub_id, runtime) = input {
             let api = OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
                 .await
                 .expect("expect valid RPC connection");
 
             // Inform the reactor is active
-            if scope.send(Output::Active).await.is_err() {
+            if scope.send(Output::Active(sub_id)).await.is_err() {
                 // sender closed, the bridge is disconnected
                 break;
             }
@@ -43,7 +45,7 @@ pub async fn block_subscription(mut scope: ReactorScope<Input, Output>) {
                         match result {
                             Ok(block) => {
                                 if scope
-                                    .send(Output::BlockNumber(block.number().into()))
+                                    .send(Output::BlockNumber(sub_id, block.number().into()))
                                     .await
                                     .is_err()
                                 {
@@ -66,8 +68,8 @@ pub async fn block_subscription(mut scope: ReactorScope<Input, Output>) {
                     }
                 }
                 Err(e) => {
-                    error!("{}", e);
-                    if scope.send(Output::Err).await.is_err() {
+                    error!("error: {:?}", e);
+                    if scope.send(Output::Err(sub_id)).await.is_err() {
                         break;
                     }
                 }

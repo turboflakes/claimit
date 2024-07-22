@@ -1,6 +1,9 @@
 use crate::runtimes::utils::get_child_bounty_id_from_storage_key;
+use crate::runtimes::utils::str;
 use crate::types::child_bounties::{ChildBounties, ChildBounty, Status};
-use node_runtime::runtime_types::pallet_child_bounties::ChildBountyStatus;
+use node_runtime::runtime_types::{
+    bounded_collections::bounded_vec::BoundedVec, pallet_child_bounties::ChildBountyStatus,
+};
 use subxt::{OnlineClient, PolkadotConfig};
 
 #[subxt::subxt(
@@ -27,9 +30,23 @@ pub async fn fetch_child_bounties(
                 unlock_at,
             } => {
                 let id = get_child_bounty_id_from_storage_key(storage.key_bytes);
+
+                // Fetch child bounty description
+                let address = node_runtime::storage()
+                    .child_bounties()
+                    .child_bounty_descriptions(id);
+                let description = if let Some(BoundedVec(data)) =
+                    api.storage().at_latest().await?.fetch(&address).await?
+                {
+                    str(data)
+                } else {
+                    String::new()
+                };
+
                 let cb = ChildBounty {
                     id,
-                    parent_bounty: storage.value.parent_bounty,
+                    parent_id: storage.value.parent_bounty,
+                    description,
                     value: storage.value.value,
                     status: Status::Pending,
                     beneficiary: beneficiary.clone(),

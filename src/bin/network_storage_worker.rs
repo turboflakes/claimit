@@ -1,4 +1,4 @@
-use claimly::StorageQueries;
+use claimeer::StorageQueries;
 use yew_agent::Registrable;
 
 fn main() {

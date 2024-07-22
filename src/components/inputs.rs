@@ -1,11 +1,10 @@
 use std::str::FromStr;
+use subxt::utils::AccountId32;
 use web_sys::{HtmlInputElement, MouseEvent};
 use yew::{
-    events::KeyboardEvent, function_component, html, use_state, AttrValue, Callback, Html,
-    Properties, TargetCast,
+    events::KeyboardEvent, function_component, html, use_node_ref, use_state, AttrValue, Callback,
+    Html, Properties, TargetCast,
 };
-
-use subxt::utils::AccountId32;
 
 #[derive(PartialEq, Properties, Clone)]
 pub struct InputProps {
@@ -15,6 +14,7 @@ pub struct InputProps {
 
 #[function_component(AccountInput)]
 pub fn account_input(props: &InputProps) -> Html {
+    let input_node_ref = use_node_ref();
     let error = use_state(|| "".to_string());
 
     let onkeypress = {
@@ -23,15 +23,18 @@ pub fn account_input(props: &InputProps) -> Html {
 
         move |e: KeyboardEvent| {
             if e.key() == "Enter" {
-                let input: HtmlInputElement = e.target_unchecked_into();
+                let input = e.target_unchecked_into::<HtmlInputElement>();
                 let value = input.value();
                 // Validate if input is a valid SS58 account
-                if AccountId32::from_str(&value).is_ok() {
-                    input.set_value("");
-                    error.set("".to_string());
-                    onenter.emit(value);
-                } else {
-                    error.set("Invalid SS58 Acccount".to_string());
+                match AccountId32::from_str(&value) {
+                    Ok(account) => {
+                        input.set_value("");
+                        error.set("".to_string());
+                        onenter.emit(account.to_string());
+                    }
+                    Err(_) => {
+                        error.set("Invalid SS58 Acccount".to_string());
+                    }
                 }
             }
         }
@@ -43,13 +46,50 @@ pub fn account_input(props: &InputProps) -> Html {
             .unwrap_or_default();
     };
 
+    let onclick = {
+        let input_node_ref = input_node_ref.clone();
+        let onenter = props.onenter.clone();
+        let error = error.clone();
+
+        move |_| {
+            if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
+                let value = input.value();
+                match AccountId32::from_str(&value) {
+                    Ok(account) => {
+                        input.set_value("");
+                        error.set("".to_string());
+                        onenter.emit(account.to_string());
+                    }
+                    Err(_) => {
+                        error.set("Invalid SS58 Acccount".to_string());
+                    }
+                }
+            }
+        }
+    };
+
     html! {
-        <div class="action__input">
-            <input class="account" placeholder={props.placeholder.to_string()}
-                {onkeypress}
-                {onmouseover}
-            />
-            <span class="error">{error.to_string()}</span>
+        <div class="py-6 w-full">
+            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">{"Search"}</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-1 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input ref={input_node_ref} id="search" type="text" class="account__input" placeholder={props.placeholder.to_string()}
+                    {onkeypress} {onmouseover} />
+                <div class="absolute inset-y-0 end-0 flex items-center pe-3">
+                    <button type="button" class="btn btn__icon" {onclick} >
+                        <svg class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+                        </svg>
+                        <span class="sr-only">{"Search Account"}</span>
+                    </button>
+
+                </div>
+            </div>
+            <div class="ps-6 mt-1 text-sm text-red">{error.to_string()}</div>
         </div>
     }
 }

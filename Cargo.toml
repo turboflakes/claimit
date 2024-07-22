@@ -1,10 +1,10 @@
 [package]
-name = "claimly"
+name = "claimeer"
 version = "0.1.0"
 license = "Apache-2.0"
-repository = "https://github.com/turboflakes/claimly"
+repository = "https://github.com/turboflakes/claimeer"
 authors = ["Paulo <paulo@turboflakes.io>"]
-description = "Claimly ― Easy lookup and child bounties claimer for Polkadot and Kusama network."
+description = "Claimeer ― A dApp to easy lookup and claim child bounties for Polkadot and Kusama network."
 edition = "2021"
 
 [dependencies]
@@ -25,6 +25,10 @@ serde_json = "1.0.96"
 log = "0.4"
 js-sys = "0.3.66"
 gloo = "0.11.0"
+plot_icon = "0.3.0"
+num-format = "0.4"
+rand = "0.8.5"
+humantime = "2"
 
 [dependencies.web-sys]
 version = "0.3"

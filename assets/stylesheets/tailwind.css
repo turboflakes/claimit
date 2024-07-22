@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add your custom styles here */
+
+html, body {
+    @apply bg-gray-200 dark:bg-gray-900 text-gray-600 dark:text-gray-300 overflow-y-hidden;
+}
+
+hr {
+    @apply dark:border-gray-600;
+}
+
+.account__input {
+    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 placeholder-gray-600  focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+}
+
+.btn {
+    @apply inline-flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
+}
+
+.btn.btn__icon {
+    @apply text-white bg-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 ms-2 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+}
+
+.btn.btn__claim {
+    @apply ms-8 px-8 py-3 border-2 border-gray-900 text-base font-semibold text-center inline-flex items-center text-gray-900 bg-yellow rounded-full shadow-2xl hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
+}
+
+.tab.tab__filters {
+    @apply flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400;
+}
+
+.account__item .btn__icon {
+    @apply dark:bg-transparent;
+}
+
+.menu_dropdown {
+    @apply absolute z-10 top-12 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44 dark:bg-gray-700;
+}
