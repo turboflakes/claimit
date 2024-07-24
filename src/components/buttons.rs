@@ -1,7 +1,8 @@
 use crate::router::{Query, Routes};
 use crate::runtimes::support::SupportedRelayRuntime;
+use crate::state::Action;
 use crate::state::StateContext;
-use crate::types::child_bounties::ChildBounty;
+use crate::types::child_bounties::Id;
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
@@ -53,7 +54,7 @@ pub fn network_button(props: &NetworkButtonProps) -> Html {
     let onclick = props.onclick.reform(move |_| chain);
 
     html! {
-        <button class={classes!("btn", optional_class)} {onclick} disabled={props.disabled.clone()}>
+        <button class={classes!("btn", "btn__link", optional_class)} {onclick} disabled={props.disabled.clone()}>
             {props.children.clone()}
         </button>
     }
@@ -103,7 +104,7 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
 pub fn claim_button() -> Html {
     let state = use_context::<StateContext>().unwrap();
 
-    let cbs: Vec<ChildBounty> = if let Some(block_number) = state.network.finalized_block_number {
+    let cbs: Vec<Id> = if let Some(block_number) = state.network.finalized_block_number {
         if let Some(child_bounties_raw) = &state.child_bounties_raw {
             let accounts = state
                 .accounts
@@ -115,8 +116,8 @@ pub fn claim_button() -> Html {
                 .filter(|(_, cb)| {
                     cb.is_claimable(block_number) && accounts.contains(&cb.beneficiary)
                 })
-                .map(|(_, cb)| cb.clone())
-                .collect::<Vec<ChildBounty>>();
+                .map(|(_, cb)| cb.id.clone())
+                .collect::<Vec<Id>>();
             cbs
         } else {
             Vec::new()
@@ -126,15 +127,22 @@ pub fn claim_button() -> Html {
     };
 
     let visibility = if cbs.len() > 0 {
-        Some("visible")
+        Some("inline-flex")
     } else {
         Some("hidden")
     };
 
+    let onclick = {
+        let cbs = cbs.clone();
+        Callback::from(move |_| {
+            state.dispatch(Action::StartClaim(cbs.clone()));
+        })
+    };
+
     html! {
-        <button type="button" class={classes!(visibility, "btn btn__claim".to_string())}>
+        <button type="button" class={classes!("btn__claim", visibility)} {onclick} >
             {"Claim"}
-            <span class="inline-flex items-center justify-center w-5 h-5 ms-2 text-xs font-semibold text-gray-900 bg-white rounded-full">
+            <span class="inline-flex items-center justify-center w-5 h-5 ms-2 text-xs font-semibold text-gray-100 bg-gray-900 rounded-full">
             {cbs.len()}
             </span>
         </button>

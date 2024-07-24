@@ -30,12 +30,12 @@ let getPolkadotJsExtensionMod = (() => {
  */
 async function getAccounts() {
     const extensionMod = await getPolkadotJsExtensionMod();
-    await extensionMod.web3Enable("Claimeer.app");
+    await extensionMod.web3Enable("localhost:8080");
     const allAccounts = await extensionMod.web3Accounts();
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
         source: account.meta.source, // e.g. "talisman", "polkadot-js"
-        ty: account.type, // e.g. "sr25519"
+        type: account.type, // e.g. "sr25519"
         address: account.address // e.g. "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
     }));
     console.log(accountObjects);

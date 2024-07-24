@@ -18,6 +18,7 @@ pub fn account(props: &AccountChipProps) -> Html {
         .any(|account| *account.address == props.account.to_string());
 
     let onclick = {
+        let state = state.clone();
         let account = props.account.to_string();
         Callback::from(move |_| {
             state.dispatch(Action::Add(account.clone()));

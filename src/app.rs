@@ -1,8 +1,11 @@
 use crate::providers::network::NetworkStatus;
 use crate::router::Query;
 use crate::runtimes::support::SupportedRelayRuntime;
-use crate::state::{account_key, Action, State, StateContext};
-use crate::types::{accounts::Account, child_bounties::Filter};
+use crate::state::{account_key, signer_key, Action, State, StateContext};
+use crate::types::{
+    accounts::{Account, ExtensionAccount},
+    child_bounties::Filter,
+};
 use crate::workers::{
     network_storage::{Query as StorageQuery, Response as StorageResponse, StorageQueries},
     network_subscription::{
@@ -13,6 +16,7 @@ use crate::{
     components::{
         inputs::AccountInput,
         items::{AccountItem, ChildBountyItem, FilterItem},
+        modals::ClaimModal,
         nav::{Footer, Navbar},
     },
     providers::network::NetworkState,
@@ -25,7 +29,7 @@ use subxt::config::substrate::AccountId32;
 use yew::{
     classes, function_component, html,
     platform::spawn_local,
-    prelude::{use_effect_with, use_reducer, UseReducerHandle},
+    prelude::{use_reducer, UseReducerHandle},
     use_callback, Callback, ContextProvider, Html,
 };
 use yew_agent::{
@@ -59,55 +63,56 @@ pub fn main() -> Html {
             _ => Filter::Following(following),
         };
 
+        let signer: Option<ExtensionAccount> =
+            LocalStorage::get(signer_key(current_runtime.clone())).unwrap_or_default();
+
         State {
             accounts,
             network: NetworkState::new(current_runtime.clone()),
             child_bounties_raw: None,
             filter,
+            signer,
+            claim: None,
         }
     });
 
-    // Effect
-    use_effect_with(state.clone(), |_state| {
-        debug!("state changed!");
-    });
-
     // Handle subscription responses over bridge
-    let state_cloned = state.clone();
-    let subscription_bridge: UseReactorBridgeHandle<BlockSubscription> =
-        use_reactor_bridge(move |response| match response {
+    let subscription_bridge: UseReactorBridgeHandle<BlockSubscription> = use_reactor_bridge({
+        let state = state.clone();
+        move |response| match response {
             ReactorEvent::Output(output) => match output {
                 SubscriptionOutput::Active(_sub_id) => {
-                    state_cloned.dispatch(Action::ChangeNetworkStatus(NetworkStatus::Active));
+                    state.dispatch(Action::ChangeNetworkStatus(NetworkStatus::Active));
 
                     // Query all child bounties
                     let storage_task = storage_task.clone();
                     let runtime = current_runtime.clone();
 
-                    let state_cloned = state_cloned.clone();
+                    let state = state.clone();
                     spawn_local(async move {
-                        state_cloned.dispatch(Action::AddFetch);
+                        state.dispatch(Action::IncreaseFetch);
                         let response = storage_task
                             .run(StorageQuery::FetchChildBounties(runtime))
                             .await;
                         match response {
                             StorageResponse::ChildBounties(data) => {
-                                state_cloned.dispatch(Action::UpdateChildBountiesRaw(data))
+                                state.dispatch(Action::UpdateChildBountiesRaw(data))
                             }
                         };
                     });
                 }
                 SubscriptionOutput::BlockNumber(sub_id, block_number) => {
-                    if state_cloned.network.subscription_id == sub_id {
-                        state_cloned.dispatch(Action::UpdateBlockNumber(block_number));
+                    if state.network.subscription_id == sub_id {
+                        state.dispatch(Action::UpdateBlockNumber(block_number));
                     }
                 }
                 SubscriptionOutput::Err(_) => {
-                    state_cloned.dispatch(Action::ChangeNetworkStatus(NetworkStatus::Inactive));
+                    state.dispatch(Action::ChangeNetworkStatus(NetworkStatus::Inactive));
                 }
             },
             ReactorEvent::Finished => debug!("subscription finished"),
-        });
+        }
+    });
 
     // Start subscription
     subscription_bridge.send(SubscriptionInput::Start(
@@ -172,7 +177,7 @@ pub fn main() -> Html {
                                     if state.accounts.len() > 0 {
                                         html! {
                                             <div>
-                                                <h4 class="text-sm text-gray-500 dark:text-gray-100 mb-2">{"Favourite accounts"}</h4>
+                                                <h4 class="text-sm font-bold text-gray-500 dark:text-gray-100 mb-2">{"Favourite Accounts"}</h4>
                                                 <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
                                                     { for state.accounts.iter().cloned().map(|account|
                                                         html! {
@@ -180,7 +185,6 @@ pub fn main() -> Html {
                                                     }) }
                                                 </ul>
                                             </div>
-
                                         }
                                     } else { html! {} }
                                 }
@@ -220,8 +224,10 @@ pub fn main() -> Html {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
+                    <ClaimModal />
                 </ContextProvider<StateContext>>
             </div>
         </>

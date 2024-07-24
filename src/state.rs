@@ -1,10 +1,12 @@
 use crate::providers::network::NetworkStatus;
 use crate::types::{
-    accounts::Account,
-    child_bounties::{ChildBounties, Filter},
+    accounts::{Account, ExtensionAccount},
+    child_bounties::{ChildBounties, Filter, Id},
+    claims::ClaimState,
 };
 use crate::{providers::network::NetworkState, runtimes::support::SupportedRelayRuntime};
 use gloo::storage::{LocalStorage, Storage};
+use log::info;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::{collections::BTreeSet, rc::Rc};
@@ -12,6 +14,7 @@ use subxt::utils::AccountId32;
 use yew::{Reducible, UseReducerHandle};
 
 const ACCOUNTS_KEY: &str = "accounts";
+const SIGNER_KEY: &str = "signer";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct State {
@@ -19,6 +22,8 @@ pub struct State {
     pub network: NetworkState,
     pub child_bounties_raw: Option<ChildBounties>,
     pub filter: Filter,
+    pub signer: Option<ExtensionAccount>,
+    pub claim: Option<ClaimState>,
 }
 
 pub enum Action {
@@ -26,13 +31,18 @@ pub enum Action {
     Add(String),
     Remove(usize),
     Toggle(usize),
+    /// Signer actions
+    StartClaim(Vec<Id>),
+    CancelClaim,
+    SignClaim,
+    ChangeSigner(ExtensionAccount),
     /// Network actions
     ChangeNetworkStatus(NetworkStatus),
     ChangeNetwork(SupportedRelayRuntime),
     UpdateBlockNumber(u32),
     UpdateChildBountiesRaw(ChildBounties),
-    AddFetch,
-    // Filter Child Bounties
+    IncreaseFetch,
+    /// Filter child bounties actions
     SetFilter(Filter),
 }
 
@@ -44,7 +54,11 @@ impl Reducible for State {
             Action::Add(address) => {
                 let mut accounts = self.accounts.clone();
                 // Verify if account is not already being followed
-                if accounts.iter().find(|&acc| acc.address == address).is_none() {
+                if accounts
+                    .iter()
+                    .find(|&acc| acc.address == address)
+                    .is_none()
+                {
                     // Check if there are already some child bounties available to be linked
                     let child_bounty_ids =
                         if let Some(child_bounties) = self.child_bounties_raw.clone() {
@@ -62,9 +76,6 @@ impl Reducible for State {
 
                     accounts.push(Account {
                         id: accounts.last().map(|account| account.id + 1).unwrap_or(1),
-                        name: "".to_string(),
-                        source: "".to_string(),
-                        r#type: "".to_string(),
                         address,
                         identity: None,
                         disabled: false,
@@ -77,6 +88,8 @@ impl Reducible for State {
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -89,6 +102,8 @@ impl Reducible for State {
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -103,6 +118,63 @@ impl Reducible for State {
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
+                }
+                .into()
+            }
+            Action::StartClaim(child_bounty_ids) => {
+                let claim = ClaimState::new(child_bounty_ids.clone(), self.signer.clone());
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: Some(claim),
+                }
+                .into()
+            }
+            Action::CancelClaim => State {
+                accounts: self.accounts.clone(),
+                network: self.network.clone(),
+                child_bounties_raw: self.child_bounties_raw.clone(),
+                filter: self.filter.clone(),
+                signer: self.signer.clone(),
+                claim: None,
+            }
+            .into(),
+            Action::SignClaim => {
+                // TODO: sign and submit
+                info!("TODO: sign and submit");
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
+                }
+                .into()
+            }
+            Action::ChangeSigner(account) => {
+                LocalStorage::set(self.signer_key(), account.clone()).expect("failed to set");
+
+                // If claim is avaialable change the signer
+                let claim = if let Some(mut claim) = self.claim.clone() {
+                    claim.signer = Some(account.clone());
+                    Some(claim)
+                } else {
+                    None
+                };
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    signer: Some(account.clone()),
+                    claim,
                 }
                 .into()
             }
@@ -115,6 +187,8 @@ impl Reducible for State {
                     network,
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -126,6 +200,8 @@ impl Reducible for State {
                     network,
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -138,10 +214,12 @@ impl Reducible for State {
                     network,
                     child_bounties_raw: None,
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
-            Action::AddFetch => {
+            Action::IncreaseFetch => {
                 let mut network = self.network.clone();
                 network.fetches_counter += 1;
                 State {
@@ -149,6 +227,8 @@ impl Reducible for State {
                     network,
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -181,6 +261,8 @@ impl Reducible for State {
                     network,
                     child_bounties_raw: Some(data.clone()),
                     filter: self.filter.clone(),
+                    signer: self.signer.clone(),
+                    claim: self.claim.clone(),
                 }
                 .into()
             }
@@ -189,6 +271,8 @@ impl Reducible for State {
                 network: self.network.clone(),
                 child_bounties_raw: self.child_bounties_raw.clone(),
                 filter,
+                signer: self.signer.clone(),
+                claim: self.claim.clone(),
             }
             .into(),
         }
@@ -199,10 +283,18 @@ impl State {
     pub fn account_key(&self) -> String {
         account_key(self.network.runtime)
     }
+
+    pub fn signer_key(&self) -> String {
+        signer_key(self.network.runtime)
+    }
 }
 
 pub fn account_key(runtime: SupportedRelayRuntime) -> String {
     format!("{}:{}", runtime.to_string(), ACCOUNTS_KEY)
+}
+
+pub fn signer_key(runtime: SupportedRelayRuntime) -> String {
+    format!("{}:{}", runtime.to_string(), SIGNER_KEY)
 }
 
 pub type StateContext = UseReducerHandle<State>;

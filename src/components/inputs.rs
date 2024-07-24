@@ -15,11 +15,11 @@ pub struct InputProps {
 #[function_component(AccountInput)]
 pub fn account_input(props: &InputProps) -> Html {
     let input_node_ref = use_node_ref();
-    let error = use_state(|| "".to_string());
+    let err = use_state(|| "".to_string());
 
     let onkeypress = {
         let onenter = props.onenter.clone();
-        let error = error.clone();
+        let err = err.clone();
 
         move |e: KeyboardEvent| {
             if e.key() == "Enter" {
@@ -29,11 +29,11 @@ pub fn account_input(props: &InputProps) -> Html {
                 match AccountId32::from_str(&value) {
                     Ok(account) => {
                         input.set_value("");
-                        error.set("".to_string());
+                        err.set("".to_string());
                         onenter.emit(account.to_string());
                     }
                     Err(_) => {
-                        error.set("Invalid SS58 Acccount".to_string());
+                        err.set("Invalid SS58 Acccount".to_string());
                     }
                 }
             }
@@ -49,7 +49,7 @@ pub fn account_input(props: &InputProps) -> Html {
     let onclick = {
         let input_node_ref = input_node_ref.clone();
         let onenter = props.onenter.clone();
-        let error = error.clone();
+        let err = err.clone();
 
         move |_| {
             if let Some(input) = input_node_ref.cast::<HtmlInputElement>() {
@@ -57,11 +57,11 @@ pub fn account_input(props: &InputProps) -> Html {
                 match AccountId32::from_str(&value) {
                     Ok(account) => {
                         input.set_value("");
-                        error.set("".to_string());
+                        err.set("".to_string());
                         onenter.emit(account.to_string());
                     }
                     Err(_) => {
-                        error.set("Invalid SS58 Acccount".to_string());
+                        err.set("Invalid SS58 Acccount".to_string());
                     }
                 }
             }
@@ -89,7 +89,7 @@ pub fn account_input(props: &InputProps) -> Html {
 
                 </div>
             </div>
-            <div class="ps-6 mt-1 text-sm text-red">{error.to_string()}</div>
+            <div class="ps-6 mt-1 text-sm text-red">{err.to_string()}</div>
         </div>
     }
 }

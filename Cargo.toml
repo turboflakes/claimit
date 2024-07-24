@@ -29,6 +29,7 @@ plot_icon = "0.3.0"
 num-format = "0.4"
 rand = "0.8.5"
 humantime = "2"
+hex = "0.4.3"
 
 [dependencies.web-sys]
 version = "0.3"
