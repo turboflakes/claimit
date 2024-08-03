@@ -3,15 +3,15 @@ module.exports = {
     purge: {
       mode: "all",
       content: [
-        "./src/**/*.rs",
-        "./index.html",
-        "./src/**/*.html",
-        "./src/**/*.css",
+        "./app/**/*.rs",
+        "./app/index.html",
+        "./app/**/*.html",
+        "./app/**/*.css",
       ],
     },
     theme: {
       borderRadius: {
-        'lg': '0.75rem',
+        'lg': '1.5rem',
         'full': '9999px',
       },
       colors: {
