@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "HelveticaNowTextExtraBold";
+    src:
+        local("Helvetica Now Text"),
+        local("Helvetica Now Text"),
+        url("/fonts/HelveticaNowText/HelveticaNowText-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "HelveticaNowTextExtraBold";
+    src:
+        local("Helvetica Now Text"),
+        local("Helvetica Now Text"),
+        url("/fonts/HelveticaNowText/HelveticaNowText-ExtraBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "HelveticaNowTextRegular";
+    src:
+        local("Helvetica Now Text"),
+        local("Helvetica Now Text"),
+        url("/fonts/HelveticaNowText/HelveticaNowText-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}

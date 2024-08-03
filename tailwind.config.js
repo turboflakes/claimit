@@ -11,7 +11,7 @@ module.exports = {
     },
     theme: {
       borderRadius: {
-        'lg': '0.75rem',
+        'lg': '1.5rem',
         'full': '9999px',
       },
       colors: {
