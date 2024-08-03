@@ -1,10 +1,9 @@
 use crate::runtimes::utils::compact;
 use anyhow::anyhow;
 use js_sys::Promise;
-use log::info;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::{collections::BTreeSet, str::FromStr};
+use std::str::FromStr;
 use subxt::{
     config::substrate::AccountId32,
     ext::codec::{Compact, Encode},

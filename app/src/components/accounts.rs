@@ -1,19 +1,6 @@
 use crate::components::items::AccountItem;
-use crate::router::{Query, Routes};
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
-    accounts::Account,
-    child_bounties::{amount_human, Filter},
-    extensions::ExtensionAccount,
-    extensions::ExtensionState,
-};
-use std::str::FromStr;
-use strum::IntoEnumIterator;
-use subxt::config::substrate::AccountId32;
-use yew::{
-    classes, function_component, html, use_context, AttrValue, Callback, Children, Html, Properties,
-};
+use yew::{function_component, html, use_context, Callback, Html};
 
 #[function_component(AccountsCard)]
 pub fn accounts_card() -> Html {

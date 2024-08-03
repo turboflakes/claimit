@@ -9,7 +9,6 @@ use claimeer_common::types::{
     extensions::{ExtensionState, ExtensionStatus},
 };
 use gloo::storage::{LocalStorage, Storage};
-use log::info;
 use serde::{Deserialize, Serialize};
 use std::{
     env,

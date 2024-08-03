@@ -12,7 +12,6 @@ use crate::{
         accounts::AccountsCard,
         child_bounties::ChildBountiesCard,
         inputs::AccountInput,
-        items::{AccountItem, ChildBountyItem, FilterItem},
         modals::ClaimModal,
         nav::{Footer, Navbar},
     },
@@ -25,9 +24,7 @@ use claimeer_common::types::{
 };
 use gloo::storage::{LocalStorage, Storage};
 use log::debug;
-use log::info;
 use std::str::FromStr;
-use strum::IntoEnumIterator;
 use subxt::config::substrate::AccountId32;
 use yew::{
     classes, function_component, html,
@@ -101,7 +98,6 @@ pub fn main() -> Html {
                             StorageResponse::ChildBounties(data) => {
                                 state.dispatch(Action::UpdateChildBountiesRaw(data))
                             }
-                            _ => {}
                         };
                     });
                 }
@@ -157,18 +153,17 @@ pub fn main() -> Html {
             <div class={classes!("flex", "h-screen", current_runtime.class())}>
                 <ContextProvider<StateContext> context={state.clone()}>
 
-                    <Navbar runtime={current_runtime.clone()} />
-
                     <div class="flex flex-col w-full items-center justify-center">
 
-                        <div class="mx-1 max-w-[610px] flex flex-col flex-1 justify-between h-full overflow-y-auto">
+                        <div class="px-2 max-w-[610px] md:w-[610px] flex flex-col flex-1 justify-between h-full overflow-y-auto">
 
+                            <Navbar runtime={current_runtime.clone()} />
 
-                            <div class="flex flex-col w-full items-center my-4 mt-16 md:mt-32">
+                            <div class="flex flex-col items-center my-4 mt-20 md:mt-32">
 
-                                <div class="flex flex-col w-full items-center">
+                                <div class="flex flex-col max-w-[500px] items-center">
                                     <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
-                                    <p class="text-lg text-light text-gray-900">{"Everything you need to stay on top and claim your favourite Child Bounties."}</p>
+                                    <p class="text-lg text-light text-center text-gray-900">{"Everything you need to stay on top and claim your favourite Child Bounties"}</p>
                                 </div>
 
                                 <AccountInput placeholder="Enter the child bounty beneficiary account you wish to keep track of..." onenter={&onadd} />

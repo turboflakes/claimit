@@ -4,7 +4,7 @@ use claimeer_common::runtimes::utils::str;
 use claimeer_common::types::child_bounties::ChildBountiesKeys;
 use claimeer_common::types::extensions::ExtensionAccount;
 use claimeer_common::types::{
-    child_bounties::{ChildBounties, ChildBounty, ChildBountyId, ParentBountyId, Status},
+    child_bounties::{ChildBounties, ChildBounty, Status},
     extensions::extension_signature_for_extrinsic,
 };
 use log::info;
@@ -13,17 +13,15 @@ use node_runtime::runtime_types::{
 };
 use std::str::FromStr;
 use subxt::{
-    backend::{legacy::LegacyRpcMethods, rpc::RpcClient},
     config::DefaultExtrinsicParamsBuilder as TxParams,
-    dynamic::{At, Value},
-    ext::codec::{Decode, Encode},
+    ext::codec::Decode,
     tx::SubmittableExtrinsic,
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
 
 #[subxt::subxt(
-    runtime_metadata_path = "../artifacts/metadata/polkadot_metadata_small.scale",
+    runtime_metadata_path = "artifacts/metadata/polkadot_metadata.scale",
     derive_for_all_types = "PartialEq, Clone"
 )]
 

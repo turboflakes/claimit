@@ -5,3 +5,7 @@ target = "app/index.html"
 release = false
 # The output dir for all final assets.
 dist = "dist"
+
+[watch]
+# Paths to watch. The `build.target`'s parent folder is watched by default.
+watch = ["common", "kusama", "polkadot"]

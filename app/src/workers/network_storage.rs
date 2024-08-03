@@ -1,5 +1,5 @@
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::child_bounties::{ChildBounties, ChildBountiesKeys};
+use claimeer_common::types::child_bounties::ChildBounties;
 use claimeer_kusama::kusama;
 use claimeer_polkadot::polkadot;
 use serde::{Deserialize, Serialize};

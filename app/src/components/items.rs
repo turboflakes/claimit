@@ -2,12 +2,10 @@ use crate::components::{chips::AccountChip, icons::Identicon};
 use crate::state::StateContext;
 use claimeer_common::types::{
     accounts::Account,
-    child_bounties::{ChildBounty, Filter, Id},
+    child_bounties::{Filter, Id},
     extensions::ExtensionAccount,
 };
-use humantime::format_duration;
 use std::str::FromStr;
-use std::time::Duration;
 use subxt::config::substrate::AccountId32;
 use yew::{
     classes, function_component, html, use_context, use_state, Callback, Classes, Html, MouseEvent,

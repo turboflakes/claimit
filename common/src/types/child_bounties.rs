@@ -3,7 +3,6 @@ use humantime::format_duration;
 use num_format::{Locale, ToFormattedString};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::str::FromStr;
 use std::time::Duration;
 use strum_macros::{Display, EnumIter};
 use subxt::utils::AccountId32;

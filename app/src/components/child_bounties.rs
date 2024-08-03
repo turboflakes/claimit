@@ -1,27 +1,8 @@
-use crate::router::{Query, Routes};
+use crate::components::items::{ChildBountyItem, FilterItem};
 use crate::state::{Action, StateContext};
-use crate::{
-    components::{
-        inputs::AccountInput,
-        items::{AccountItem, ChildBountyItem, FilterItem},
-        modals::ClaimModal,
-        nav::{Footer, Navbar},
-    },
-    providers::network::NetworkState,
-};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
-    accounts::Account,
-    child_bounties::{amount_human, Filter},
-    extensions::ExtensionAccount,
-    extensions::ExtensionState,
-};
-use std::str::FromStr;
+use claimeer_common::types::child_bounties::{amount_human, Filter};
 use strum::IntoEnumIterator;
-use subxt::config::substrate::AccountId32;
-use yew::{
-    classes, function_component, html, use_context, AttrValue, Callback, Children, Html, Properties,
-};
+use yew::{function_component, html, use_context, Callback, Html};
 
 #[function_component(ChildBountiesCard)]
 pub fn child_bounties_card() -> Html {

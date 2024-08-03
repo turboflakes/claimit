@@ -7,7 +7,7 @@ use futures::{FutureExt, StreamExt};
 use log::error;
 use serde::{Deserialize, Serialize};
 use subxt::{OnlineClient, PolkadotConfig};
-use yew::platform::{spawn_local, time::sleep};
+use yew::platform::time::sleep;
 use yew_agent::{prelude::reactor, reactor::ReactorScope};
 
 pub type BlockNumber = u32;
