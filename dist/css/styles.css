@@ -748,16 +748,16 @@ video {
   margin-top: 4rem;
 }
 
-.mt-32 {
-  margin-top: 8rem;
+.mt-20 {
+  margin-top: 5rem;
 }
 
 .mt-24 {
   margin-top: 6rem;
 }
 
-.mt-20 {
-  margin-top: 5rem;
+.mt-32 {
+  margin-top: 8rem;
 }
 
 .block {
@@ -864,10 +864,6 @@ video {
   width: 100%;
 }
 
-.w-\[500px\] {
-  width: 500px;
-}
-
 .min-w-24 {
   min-width: 6rem;
 }
@@ -880,16 +876,12 @@ video {
   max-width: 256px;
 }
 
-.max-w-\[610px\] {
-  max-width: 610px;
-}
-
-.max-w-\[580px\] {
-  max-width: 580px;
-}
-
 .max-w-\[500px\] {
   max-width: 500px;
+}
+
+.max-w-\[610px\] {
+  max-width: 610px;
 }
 
 .flex-1 {
@@ -922,16 +914,16 @@ video {
   resize: both;
 }
 
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .flex-col {
@@ -1855,10 +1847,6 @@ hr:where(.dark, .dark *) {
 
   .sm\:justify-end {
     justify-content: flex-end;
-  }
-
-  .sm\:justify-center {
-    justify-content: center;
   }
 
   .sm\:justify-between {
