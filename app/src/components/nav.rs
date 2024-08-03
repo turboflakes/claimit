@@ -19,7 +19,7 @@ pub fn navbar(props: &NavbarProps) -> Html {
     html! {
         <nav class="fixed w-full z-20 top-0 start-0 bg-transparent dark:bg-gray-900">
             <div class="flex flex-wrap items-center justify-between mx-4 p-4 h-20">
-                <a class="sm:hidden" href="https://claimeer.app/">
+                <a class="hidden sm:block" href="https://claimeer.app/">
                     <img class="h-8" src="/images/claimeer_logo_gray_600.svg" alt="Claimeer logo" />
                 </a>
 
