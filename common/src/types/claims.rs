@@ -1,13 +1,14 @@
 use crate::types::child_bounties::Id;
 use serde::{Deserialize, Serialize};
+use subxt::{tx::SubmittableExtrinsic, OnlineClient, PolkadotConfig};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ClaimStatus {
     Initializing,
     Signing,
-    //
-    Inprocess,
+    Inprogress,
     Completed,
+    Error,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -24,5 +25,21 @@ impl ClaimState {
             child_bounty_ids,
             status: ClaimStatus::Initializing,
         }
+    }
+
+    pub fn is_initializing(&self) -> bool {
+        self.status == ClaimStatus::Initializing
+    }
+
+    pub fn is_signing(&self) -> bool {
+        self.status == ClaimStatus::Signing
+    }
+
+    pub fn is_inprogress(&self) -> bool {
+        self.status == ClaimStatus::Inprogress
+    }
+
+    pub fn is_error(&self) -> bool {
+        self.status == ClaimStatus::Error
     }
 }

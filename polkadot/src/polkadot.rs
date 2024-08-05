@@ -16,6 +16,7 @@ use subxt::{
     config::DefaultExtrinsicParamsBuilder as TxParams,
     ext::codec::Decode,
     tx::SubmittableExtrinsic,
+    tx::TxStatus,
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
@@ -143,10 +144,47 @@ pub async fn create_and_sign_tx(
         partial_signed.sign_with_address_and_signature(&account_id.into(), &multi_signature);
 
     // check the TX validity (to debug in the js console if the extrinsic would work)
-    let dry_res = signed_extrinsic.validate().await;
-    info!("___dry_res: {:?}", dry_res);
-    // web_sys::console::log_1(&format!("Validation Result: {:?}", dry_res).into());
+    // let dry_res = signed_extrinsic.validate().await;
+    // info!("dry_res: {:?}", dry_res);
 
-    // return the signature and signed extrinsic
     Ok((multi_signature, signed_extrinsic))
+}
+
+async fn submit_and_watch_tx(
+    extrinsic: SubmittableExtrinsic<PolkadotConfig, OnlineClient<PolkadotConfig>>,
+) -> Result<(), ClaimeerError> {
+    let mut tx_progress = extrinsic.submit_and_watch().await?;
+
+    while let Some(status) = tx_progress.next().await {
+        match status? {
+            TxStatus::InFinalizedBlock(in_block) => {
+                info!(
+                    "Transaction {:?} is finalized in block {:?}",
+                    in_block.extrinsic_hash(),
+                    in_block.block_hash()
+                );
+
+                let events = in_block.wait_for_success().await?;
+                let success =
+                    events.find_first::<node_runtime::system::events::ExtrinsicSuccess>()?;
+                if success.is_some() {
+                    return Ok(());
+                }
+                return Err(ClaimeerError::Other(
+                    "ExtrinsicSuccess not found in events".into(),
+                ));
+            }
+            TxStatus::Error { message } => {
+                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+            }
+            TxStatus::Invalid { message } => {
+                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+            }
+            TxStatus::Dropped { message } => {
+                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+            }
+            _ => {}
+        }
+    }
+    Err(ClaimeerError::Other("TxStatus not available".into()))
 }

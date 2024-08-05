@@ -40,6 +40,8 @@ pub enum Action {
     StartClaim(Vec<Id>),
     CancelClaim,
     SignClaim(ClaimState),
+    SubmitClaim(ClaimState),
+    ErrorClaim(ClaimState),
     /// Extension actions
     ConnectExtension,
     ChangeExtensionStatus(ExtensionStatus),
@@ -155,6 +157,34 @@ impl Reducible for State {
             Action::SignClaim(claim) => {
                 let mut claim = claim.clone();
                 claim.status = ClaimStatus::Signing;
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: Some(claim),
+                }
+                .into()
+            }
+            Action::SubmitClaim(claim) => {
+                let mut claim = claim.clone();
+                claim.status = ClaimStatus::Inprogress;
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: Some(claim),
+                }
+                .into()
+            }
+            Action::ErrorClaim(claim) => {
+                let mut claim = claim.clone();
+                claim.status = ClaimStatus::Error;
 
                 State {
                     accounts: self.accounts.clone(),

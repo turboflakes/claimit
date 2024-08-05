@@ -1,3 +1,4 @@
+use crate::components::spinners::Spinner;
 use crate::router::{Query, Routes};
 use crate::state::Action;
 use crate::state::StateContext;
@@ -165,5 +166,38 @@ pub fn claim_button() -> Html {
             {cbs.len()}
             </span>
         </button>
+    }
+}
+
+#[function_component(SignButton)]
+pub fn sign_button() -> Html {
+    let state = use_context::<StateContext>().unwrap();
+    let extension = state.extension.clone();
+    let claim = state.claim.clone();
+
+    if let Some(claim) = claim {
+        let onclick = {
+            let state = state.clone();
+            let claim = state.claim.clone();
+            Callback::from(move |_| {
+                if let Some(claim) = claim.clone() {
+                    state.dispatch(Action::SignClaim(claim));
+                }
+            })
+        };
+
+        let label = if claim.is_signing() {
+            html! {
+                <span class="inline-flex items-center"><Spinner is_visible={true} />{"Signing"}</span>
+            }
+        } else {
+            html! { "Sign and Submit" }
+        };
+
+        html! {
+            <button type="button" class="btn btn__primary" {onclick} disabled={!extension.is_ready() || claim.is_signing()} >{label}</button>
+        }
+    } else {
+        html! {}
     }
 }

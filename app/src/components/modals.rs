@@ -1,5 +1,5 @@
 use crate::components::{
-    buttons::Button,
+    buttons::{Button, SignButton},
     items::{ChildBountyItemSmall, ExtensionAccountDropdown},
 };
 use crate::state::{Action, StateContext};
@@ -44,9 +44,8 @@ pub fn claim_modal() -> Html {
                         }
                     }
                     ClaimStatus::Signing => {
-                        // TODO: sign and submit
-                        info!("TODO: sign and submit");
                         if extension.is_ready() {
+                            err.set("".to_string());
                             let runtime = state.network.runtime.clone();
                             let signer = extension.signer.as_ref().unwrap().clone();
                             let child_bounties_keys = state
@@ -66,6 +65,7 @@ pub fn claim_modal() -> Html {
                                 })
                                 .collect::<ChildBountiesKeys>();
 
+                            let claim = claim.clone();
                             spawn_local(async move {
                                 let api = OnlineClient::<PolkadotConfig>::from_url(
                                     runtime.default_rpc_url(),
@@ -73,28 +73,39 @@ pub fn claim_modal() -> Html {
                                 .await
                                 .expect("expect valid RPC connection");
 
-                                match runtime {
+                                let res = match runtime {
                                     SupportedRelayRuntime::Polkadot => {
-                                        let res = polkadot::create_and_sign_tx(
+                                        polkadot::create_and_sign_tx(
                                             &api.clone(),
                                             signer.clone(),
                                             child_bounties_keys.clone(),
                                         )
-                                        .await;
+                                        .await
                                     }
                                     SupportedRelayRuntime::Kusama => {
-                                        let res = kusama::create_and_sign_tx(
+                                        kusama::create_and_sign_tx(
                                             &api.clone(),
                                             signer.clone(),
                                             child_bounties_keys.clone(),
                                         )
-                                        .await;
+                                        .await
+                                    }
+                                };
+                                match res {
+                                    Ok((_, extrinsic)) => {
+                                        state.dispatch(Action::SubmitClaim(claim));
+                                        // TODO; call submit_and_watch
+                                    }
+                                    Err(e) => {
+                                        error!("error: {:?}", e);
+                                        err.set(e.to_string());
+                                        state.dispatch(Action::ErrorClaim(claim));
                                     }
                                 }
                             });
                         }
                     }
-                    _ => todo!(),
+                    _ => {}
                 }
             }
         }
@@ -163,16 +174,6 @@ pub fn claim_modal() -> Html {
         let state = state.clone();
         Callback::from(move |_| {
             state.dispatch(Action::ConnectExtension);
-        })
-    };
-
-    let onconfirm = {
-        let state = state.clone();
-        let claim = state.claim.clone();
-        Callback::from(move |_| {
-            if let Some(claim) = claim.clone() {
-                state.dispatch(Action::SignClaim(claim));
-            }
         })
     };
 
@@ -253,11 +254,15 @@ pub fn claim_modal() -> Html {
 
                     <div class="flex items-center justify-between p-4 md:p-5 bg-gray-50 rounded-b-lg">
                         <button type="button" class="btn btn__default" onclick={&oncancel}>{"Cancel"}</button>
+
                         {
                             if extension.is_connected_or_ready() {
-                                html! { <button type="button" class="btn btn__primary" onclick={onconfirm} disabled={!extension.is_ready()} >{"Sign and Submit"}</button> }
-                            } else { html! {} }
+                                html! { <SignButton /> }
+                            } else {
+                                html! {}
+                            }
                         }
+
                     </div>
                     <div class="ps-6 mt-1 text-sm text-red">{err.to_string()}</div>
                 </div>
