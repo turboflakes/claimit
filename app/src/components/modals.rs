@@ -36,7 +36,7 @@ pub fn claim_modal() -> Html {
             info!("claim state changed! {:?}", claim);
 
             if let Some(claim) = claim {
-                match claim.status {
+                match &claim.status {
                     ClaimStatus::Initializing => {
                         is_visible.set(true);
                         if extension.signer.is_some() {
@@ -92,9 +92,8 @@ pub fn claim_modal() -> Html {
                                     }
                                 };
                                 match res {
-                                    Ok((_, extrinsic)) => {
-                                        state.dispatch(Action::SubmitClaim(claim));
-                                        // TODO; call submit_and_watch
+                                    Ok(tx_bytes) => {
+                                        state.dispatch(Action::SubmitClaim(claim, tx_bytes));
                                     }
                                     Err(e) => {
                                         error!("error: {:?}", e);
@@ -104,6 +103,39 @@ pub fn claim_modal() -> Html {
                                 }
                             });
                         }
+                    }
+                    ClaimStatus::Submitting(tx_bytes) => {
+                        let tx_bytes = tx_bytes.clone();
+                        let runtime = state.network.runtime.clone();
+                        let claim = claim.clone();
+                        spawn_local(async move {
+                            let api =
+                                OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
+                                    .await
+                                    .expect("expect valid RPC connection");
+
+                            let res = match runtime {
+                                SupportedRelayRuntime::Polkadot => {
+                                    polkadot::submit_and_watch_tx(&api.clone(), tx_bytes).await
+                                }
+                                SupportedRelayRuntime::Kusama => {
+                                    kusama::submit_and_watch_tx(&api.clone(), tx_bytes).await
+                                }
+                            };
+                            match res {
+                                Ok(()) => {
+                                    state.dispatch(Action::CompleteClaim(claim));
+                                }
+                                Err(e) => {
+                                    error!("error: {:?}", e);
+                                    err.set(e.to_string());
+                                    state.dispatch(Action::ErrorClaim(claim));
+                                }
+                            }
+                        });
+                    }
+                    ClaimStatus::Completed => {
+                        is_visible.set(false);
                     }
                     _ => {}
                 }

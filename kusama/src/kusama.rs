@@ -82,13 +82,7 @@ pub async fn create_and_sign_tx(
     api: &OnlineClient<PolkadotConfig>,
     signer: ExtensionAccount,
     child_bounties_keys: ChildBountiesKeys,
-) -> Result<
-    (
-        MultiSignature,
-        SubmittableExtrinsic<PolkadotConfig, OnlineClient<PolkadotConfig>>,
-    ),
-    ClaimeerError,
-> {
+) -> Result<Vec<u8>, ClaimeerError> {
     let account_address = signer.address.clone();
     let account_id = AccountId32::from_str(&account_address).unwrap();
 
@@ -147,12 +141,15 @@ pub async fn create_and_sign_tx(
     // let dry_res = signed_extrinsic.validate().await;
     // info!("dry_res: {:?}", dry_res);
 
-    Ok((multi_signature, signed_extrinsic))
+    Ok(signed_extrinsic.into_encoded())
 }
 
-async fn submit_and_watch_tx(
-    extrinsic: SubmittableExtrinsic<PolkadotConfig, OnlineClient<PolkadotConfig>>,
+pub async fn submit_and_watch_tx(
+    api: &OnlineClient<PolkadotConfig>,
+    tx_bytes: Vec<u8>,
 ) -> Result<(), ClaimeerError> {
+    let extrinsic = SubmittableExtrinsic::from_bytes(api.clone(), tx_bytes);
+
     let mut tx_progress = extrinsic.submit_and_watch().await?;
 
     while let Some(status) = tx_progress.next().await {

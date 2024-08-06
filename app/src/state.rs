@@ -21,7 +21,7 @@ use yew::{Reducible, UseReducerHandle};
 const ACCOUNTS_KEY: &str = "accounts";
 const SIGNER_KEY: &str = "signer";
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 pub struct State {
     pub accounts: Vec<Account>,
     pub network: NetworkState,
@@ -40,7 +40,8 @@ pub enum Action {
     StartClaim(Vec<Id>),
     CancelClaim,
     SignClaim(ClaimState),
-    SubmitClaim(ClaimState),
+    SubmitClaim(ClaimState, Vec<u8>),
+    CompleteClaim(ClaimState),
     ErrorClaim(ClaimState),
     /// Extension actions
     ConnectExtension,
@@ -168,9 +169,23 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::SubmitClaim(claim) => {
+            Action::SubmitClaim(claim, tx_bytes) => {
                 let mut claim = claim.clone();
-                claim.status = ClaimStatus::Inprogress;
+                claim.status = ClaimStatus::Submitting(tx_bytes);
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: Some(claim),
+                }
+                .into()
+            }
+            Action::CompleteClaim(claim) => {
+                let mut claim = claim.clone();
+                claim.status = ClaimStatus::Completed;
 
                 State {
                     accounts: self.accounts.clone(),

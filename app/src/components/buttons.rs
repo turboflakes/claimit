@@ -186,16 +186,16 @@ pub fn sign_button() -> Html {
             })
         };
 
-        let label = if claim.is_signing() {
+        let label = if claim.is_signing_or_submitting() {
             html! {
-                <span class="inline-flex items-center"><Spinner is_visible={true} />{"Signing"}</span>
+                <span class="inline-flex items-center"><Spinner is_visible={true} />{claim.status.to_string()}</span>
             }
         } else {
             html! { "Sign and Submit" }
         };
 
         html! {
-            <button type="button" class="btn btn__primary" {onclick} disabled={!extension.is_ready() || claim.is_signing()} >{label}</button>
+            <button type="button" class="btn btn__primary" {onclick} disabled={!extension.is_ready() || claim.is_signing_or_submitting()} >{label}</button>
         }
     } else {
         html! {}
