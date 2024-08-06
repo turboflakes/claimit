@@ -165,6 +165,7 @@ pub async fn submit_and_watch_tx(
                 let success =
                     events.find_first::<node_runtime::system::events::ExtrinsicSuccess>()?;
                 if success.is_some() {
+                    // TODO: return the list of child bounties successfully executed
                     return Ok(());
                 }
                 return Err(ClaimeerError::Other(

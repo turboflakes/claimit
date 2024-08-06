@@ -38,10 +38,10 @@ pub enum Action {
     Toggle(usize),
     /// Claim actions
     StartClaim(Vec<Id>),
-    CancelClaim,
     SignClaim(ClaimState),
     SubmitClaim(ClaimState, Vec<u8>),
     CompleteClaim(ClaimState),
+    ResetClaim,
     ErrorClaim(ClaimState),
     /// Extension actions
     ConnectExtension,
@@ -146,7 +146,7 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::CancelClaim => State {
+            Action::ResetClaim => State {
                 accounts: self.accounts.clone(),
                 network: self.network.clone(),
                 child_bounties_raw: self.child_bounties_raw.clone(),
@@ -186,6 +186,8 @@ impl Reducible for State {
             Action::CompleteClaim(claim) => {
                 let mut claim = claim.clone();
                 claim.status = ClaimStatus::Completed;
+                // TODO: Get the child bounties successfully claimed and remove them from the current claim
+                // If all were claimed 
 
                 State {
                     accounts: self.accounts.clone(),

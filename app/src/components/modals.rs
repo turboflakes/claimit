@@ -135,7 +135,10 @@ pub fn claim_modal() -> Html {
                         });
                     }
                     ClaimStatus::Completed => {
+                        // TODO: wait 1 or 2 seconds close and dispatch action
+                        // TODO: add a green tick on all successfull child bounties in the modal before closing it
                         is_visible.set(false);
+                        state.dispatch(Action::ResetClaim);
                     }
                     _ => {}
                 }
@@ -191,7 +194,7 @@ pub fn claim_modal() -> Html {
         let is_visible = is_visible.clone();
         Callback::from(move |_| {
             is_visible.set(false);
-            state.dispatch(Action::CancelClaim);
+            state.dispatch(Action::ResetClaim);
         })
     };
 
