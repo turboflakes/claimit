@@ -659,6 +659,14 @@ video {
   z-index: 50;
 }
 
+.m-2\.5 {
+  margin: 0.625rem;
+}
+
+.m-2 {
+  margin: 0.5rem;
+}
+
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
@@ -792,6 +800,10 @@ video {
   display: none;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
 .h-20 {
   height: 5rem;
 }
@@ -802,6 +814,10 @@ video {
 
 .h-4 {
   height: 1rem;
+}
+
+.h-48 {
+  height: 12rem;
 }
 
 .h-5 {
@@ -848,6 +864,10 @@ video {
   width: 0.25rem;
 }
 
+.w-12 {
+  width: 3rem;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -856,8 +876,16 @@ video {
   width: 1rem;
 }
 
+.w-48 {
+  width: 12rem;
+}
+
 .w-5 {
   width: 1.25rem;
+}
+
+.w-64 {
+  width: 16rem;
 }
 
 .w-full {
@@ -958,6 +986,10 @@ video {
   justify-content: space-between;
 }
 
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
 .gap-4 {
   gap: 1rem;
 }
@@ -1024,9 +1056,27 @@ video {
   border-width: 2px;
 }
 
+.border-dashed {
+  border-style: dashed;
+}
+
+.border-dotted {
+  border-style: dotted;
+}
+
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: hsl(210 16% 93% / var(--tw-border-opacity));
+}
+
+.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: hsl(210 14% 83% / var(--tw-border-opacity));
+}
+
+.border-gray-600 {
+  --tw-border-opacity: 1;
+  border-color: hsl(208 7% 46% / var(--tw-border-opacity));
 }
 
 .border-gray-900 {
@@ -1200,12 +1250,26 @@ video {
   padding-top: 1.25rem;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .text-center {
   text-align: center;
 }
 
 .text-start {
   text-align: start;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-base {
@@ -1221,6 +1285,11 @@ video {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .text-xs {
@@ -1643,6 +1712,50 @@ hr:where(.dark, .dark *) {
   background-color: hsl(210 9% 31% / var(--tw-bg-opacity));
 }
 
+.btn__add_account {
+  display: flex;
+  height: 12rem;
+  width: 16rem;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-radius: 1.5rem;
+  border-width: 2px;
+  border-style: dashed;
+  --tw-border-opacity: 1;
+  border-color: hsl(210 14% 83% / var(--tw-border-opacity));
+  padding: 0.625rem;
+}
+
+.btn__add_account:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 16% 93% / var(--tw-bg-opacity));
+}
+
+.btn__add_account:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 14% 89% / var(--tw-ring-opacity));
+}
+
+.btn__add_account:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 9% 31% / var(--tw-bg-opacity));
+}
+
+.btn__add_account:hover:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(208 7% 46% / var(--tw-bg-opacity));
+}
+
+.btn__add_account:focus:where(.dark, .dark *) {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
+}
+
 .tab.tab__filters {
   display: flex;
   flex-wrap: wrap;
@@ -1660,8 +1773,9 @@ hr:where(.dark, .dark *) {
 }
 
 .account__item {
-  margin-inline-end: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0.625rem;
+  height: 12rem;
+  width: 16rem;
   background-color: transparent;
 }
 
@@ -1671,6 +1785,21 @@ hr:where(.dark, .dark *) {
 }
 
 .account__item .btn__icon:where(.dark, .dark *) {
+  background-color: transparent;
+}
+
+.account__item_small {
+  margin-inline-end: 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: transparent;
+}
+
+.account__item_small:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 9% 31% / var(--tw-bg-opacity));
+}
+
+.account__item_small .btn__icon:where(.dark, .dark *) {
   background-color: transparent;
 }
 
@@ -1752,6 +1881,33 @@ hr:where(.dark, .dark *) {
 }
 
 .modal__claim:where(.dark, .dark *) {
+  background-color: hsl(210 11% 15% / 0.8);
+}
+
+.modal__add_account {
+  position: fixed;
+  inset: 0px;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  z-index: 50;
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: hsl(210 11% 15% / 0.5);
+}
+
+@media (min-width: 768px) {
+  .modal__add_account {
+    inset: 0px;
+  }
+}
+
+.modal__add_account:where(.dark, .dark *) {
   background-color: hsl(210 11% 15% / 0.8);
 }
 

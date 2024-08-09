@@ -52,15 +52,27 @@ hr {
     @apply ms-8 px-8 py-2 border-2 border-gray-900 text-base font-semibold text-center items-center text-gray-900 bg-yellow rounded-full shadow-2xl hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
 }
 
+.btn__add_account {
+    @apply w-64 h-48 p-2.5 flex flex-col justify-evenly border-2 border-dashed border-gray-400 hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+}
+
 .tab.tab__filters {
     @apply flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400;
 }
 
 .account__item {
-    @apply me-2 mb-2 bg-transparent dark:bg-gray-700;
+    @apply w-64 h-48 m-2.5 bg-transparent dark:bg-gray-700;
 }
 
 .account__item .btn__icon {
+    @apply dark:bg-transparent;
+}
+
+.account__item_small {
+    @apply me-2 mb-2 bg-transparent dark:bg-gray-700;
+}
+
+.account__item_small .btn__icon {
     @apply dark:bg-transparent;
 }
 
@@ -73,5 +85,9 @@ hr {
 }
 
 .modal__claim {
+    @apply overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full bg-gray-900/50 dark:bg-gray-900/80 inset-0 md:inset-0 h-full max-h-full;
+}
+
+.modal__add_account {
     @apply overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full bg-gray-900/50 dark:bg-gray-900/80 inset-0 md:inset-0 h-full max-h-full;
 }

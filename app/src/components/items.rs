@@ -1,5 +1,6 @@
 use crate::components::{chips::AccountChip, icons::Identicon};
 use crate::state::StateContext;
+use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
     child_bounties::{Filter, Id},
@@ -13,14 +14,14 @@ use yew::{
 };
 
 #[derive(PartialEq, Properties, Clone)]
-pub struct AccountItemProps {
+pub struct AccountItemSmallProps {
     pub account: Account,
     // pub ontoggle: Callback<usize>,
     pub onunfollow: Callback<usize>,
 }
 
-#[function_component(AccountItem)]
-pub fn account(props: &AccountItemProps) -> Html {
+#[function_component(AccountItemSmall)]
+pub fn account_item_small(props: &AccountItemSmallProps) -> Html {
     let is_dropdown_hidden = use_state(|| true);
 
     let id = props.account.id;
@@ -48,7 +49,7 @@ pub fn account(props: &AccountItemProps) -> Html {
     });
 
     html! {
-        <li class="account__item">
+        <li class="account__item_small">
             <div class="relative flex justify-between items-center px-3 py-2 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 w-full dark:bg-gray-800">
                 <div class="inline-flex items-center">
                     <Identicon address={props.account.address.clone()} size={24} class="me-2" />
@@ -95,6 +96,123 @@ pub fn account(props: &AccountItemProps) -> Html {
                         }
                     } else { html! {} }
                 }
+            </div>
+        </li>
+    }
+}
+
+#[derive(PartialEq, Properties, Clone)]
+pub struct AccountItemProps {
+    pub account: Account,
+    pub runtime: SupportedRelayRuntime,
+    pub onunfollow: Callback<usize>,
+}
+
+#[function_component(AccountItem)]
+pub fn account_item(props: &AccountItemProps) -> Html {
+    let is_dropdown_hidden = use_state(|| true);
+
+    let id = props.account.id;
+
+    let btn_dropdown_onclick = {
+        let is_dropdown_hidden = is_dropdown_hidden.clone();
+        Callback::from(move |_| {
+            is_dropdown_hidden.set(!(*is_dropdown_hidden));
+        })
+    };
+
+    let dropdown_onmouseleave = {
+        let is_dropdown_hidden = is_dropdown_hidden.clone();
+
+        Callback::from(move |e: MouseEvent| {
+            e.stop_propagation();
+            is_dropdown_hidden.set(true);
+        })
+    };
+
+    // let toggle_onclick = props.ontoggle.reform(move |_| id);
+    let unfollow_onclick = props.onunfollow.reform(move |e: MouseEvent| {
+        e.stop_propagation();
+        id
+    });
+
+    html! {
+        <li class="account__item">
+            <div class="relative flex flex-col justify-between w-full h-full p-4 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 w-full dark:bg-gray-800">
+                <div class="inline-flex justify-between">
+                    {
+                        match props.runtime.clone() {
+                            SupportedRelayRuntime::Polkadot => html! {
+                                <div class="inline-flex items-center">
+                                    <img class="h-12" src="/images/polkadot_icon.svg" alt="polkadot logo" />
+                                    <p class="ms-2 text-xl font-semibold">{props.runtime.unit()}</p>
+                                </div>
+                            },
+                            SupportedRelayRuntime::Kusama => html! {
+                                <div class="inline-flex items-center">
+                                    <img class="h-12" src="/images/kusama_icon.svg" alt="kusama logo" />
+                                    <p class="ms-2 text-xl font-semibold">{props.runtime.unit()}</p>
+                                </div>
+                            },
+                            SupportedRelayRuntime::Rococo => html! {
+                                <div class="inline-flex items-center">
+                                    <img class="h-12" src="/images/rococo_icon.svg" alt="rococo logo" />
+                                    <p class="ms-2 text-xl font-semibold">{props.runtime.unit()}</p>
+                                </div>
+                            },
+                        }
+                    }
+                    <div>
+                        <div class="inline-flex items-center">
+                            <button type="button" class="btn btn__icon btn__white" onclick={btn_dropdown_onclick} >
+                                <svg class="w-3 h-3 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                    <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                                </svg>
+                                <span class="sr-only">{"Open dropdown"}</span>
+                            </button>
+                        </div>
+                        <div class={classes!("menu_dropdown", (*is_dropdown_hidden).then(|| Some("hidden")))}
+                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+                            onmouseleave={dropdown_onmouseleave}>
+                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                // <li>
+                                //     <a href="" class="flex items-center px-4 py-2 hover:underline hover:underline-offset-4 dark:hover:text-white"
+                                //         onclick={toggle_onclick} >
+                                //         {"Disable"}
+                                //     </a>
+                                // </li>
+                                // <hr/>
+                                <li>
+                                    <div type="button" class="flex items-center px-4 py-2 hover:underline hover:underline-offset-4 dark:hover:text-white cursor-pointer"
+                                        onclick={unfollow_onclick}>
+                                        <svg class="w-4 h-4 text-gray-800 dark:text-white me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                        </svg>
+                                        {"Unfollow"}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="inline-flex items-center">
+                        <Identicon address={props.account.address.clone()} size={24} class="me-2" />
+                        {props.account.to_compact_string()}
+                    </div>
+
+                </div>
+                // {
+                //     if props.account.child_bounty_ids.len() > 0 {
+                //         html! {
+                //             <div class="absolute -top-1 -left-1">
+                //                 <span class="inline-flex items-center justify-center w-4 h-4 text-xs text-gray-100 bg-gray-900 rounded-full">
+                //                 {props.account.child_bounty_ids.len()}
+                //                 </span>
+                //             </div>
+                //         }
+                //     } else { html! {} }
+                // }
             </div>
         </li>
     }

@@ -11,8 +11,7 @@ use crate::{
     components::{
         accounts::AccountsCard,
         child_bounties::ChildBountiesCard,
-        inputs::AccountInput,
-        modals::ClaimModal,
+        modals::{AddAccountModal, ClaimModal},
         nav::{Footer, Navbar},
     },
     providers::network::NetworkState,
@@ -20,17 +19,15 @@ use crate::{
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account, child_bounties::Filter, extensions::ExtensionAccount,
-    extensions::ExtensionState,
+    extensions::ExtensionState, layout::LayoutState,
 };
 use gloo::storage::{LocalStorage, Storage};
 use log::debug;
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
-    classes, function_component, html,
-    platform::spawn_local,
-    prelude::{use_reducer, UseReducerHandle},
-    use_callback, Callback, ContextProvider, Html,
+    classes, function_component, html, platform::spawn_local, prelude::use_reducer, use_callback,
+    ContextProvider, Html,
 };
 use yew_agent::{
     oneshot::{use_oneshot_runner, OneshotProvider},
@@ -73,6 +70,7 @@ pub fn main() -> Html {
             filter,
             extension: ExtensionState::new(signer.clone()),
             claim: None,
+            layout: LayoutState::new(),
         }
     });
 
@@ -120,18 +118,6 @@ pub fn main() -> Html {
         state.network.runtime,
     ));
 
-    // Callbacks
-    fn make_callback<E, F>(state: &UseReducerHandle<State>, f: F) -> Callback<E>
-    where
-        F: Fn(E) -> Action + 'static,
-    {
-        let state = state.clone();
-        Callback::from(move |e: E| state.dispatch(f(e)))
-    }
-
-    let onadd = make_callback(&state, Action::Add);
-    let _ontoggle = make_callback(&state, Action::Toggle);
-    // let onchange_network = make_callback(&state, Action::ChangeNetwork);
     let onchange_network = use_callback(
         (state.clone(), subscription_bridge.clone()),
         |runtime, (state, subscription_bridge)| {
@@ -163,12 +149,10 @@ pub fn main() -> Html {
 
                                 <div class="flex flex-col max-w-[500px] items-center">
                                     <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
-                                    <p class="text-lg text-light text-center text-gray-900">{"Everything you need to stay on top and claim your favourite Child Bounties"}</p>
+                                    <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                                 </div>
 
-                                <AccountInput placeholder="Enter the child bounty beneficiary account you wish to keep track of..." onenter={&onadd} />
-
-                                <AccountsCard />
+                                <AccountsCard runtime={current_runtime.clone()} />
 
                                 <ChildBountiesCard />
 
@@ -180,6 +164,7 @@ pub fn main() -> Html {
                     </div>
 
                     <ClaimModal />
+                    <AddAccountModal />
                 </ContextProvider<StateContext>>
             </div>
         </>

@@ -1,5 +1,6 @@
 use crate::components::{
     buttons::{Button, SignButton},
+    inputs::AccountInput,
     items::{ChildBountyItemSmall, ExtensionAccountDropdown},
 };
 use crate::state::{Action, StateContext};
@@ -34,8 +35,6 @@ pub fn claim_modal() -> Html {
         let extension = state.extension.clone();
 
         move |claim| {
-            info!("claim state changed! {:?}", claim);
-
             if let Some(claim) = claim {
                 match &claim.status {
                     ClaimStatus::Initializing => {
@@ -163,41 +162,37 @@ pub fn claim_modal() -> Html {
         let extension_accounts = extension_accounts.clone();
         let state = state.clone();
 
-        move |extension| {
-            info!("extension state changed! {:?}", extension);
-
-            match extension.status {
-                ExtensionStatus::Connecting => {
-                    info!("checking pjs extension and fetch enabled accounts");
-                    spawn_local(async move {
-                        match get_accounts().await {
-                            Ok(accounts) => {
-                                if accounts.len() > 0 {
-                                    extension_accounts.set(accounts);
-                                    state.dispatch(Action::ChangeExtensionStatus(
-                                        ExtensionStatus::Connected,
-                                    ));
-                                } else {
-                                    let message = "Please make sure polkadot-js extension is installed and at least one account is enabled to work with this site claimeer.app";
-                                    err.set(message.to_string());
-                                }
-                            }
-                            Err(e) => {
-                                error!("error: {:?}", e);
-                                err.set(e.to_string());
+        move |extension| match extension.status {
+            ExtensionStatus::Connecting => {
+                info!("checking pjs extension and fetch enabled accounts");
+                spawn_local(async move {
+                    match get_accounts().await {
+                        Ok(accounts) => {
+                            if accounts.len() > 0 {
+                                extension_accounts.set(accounts);
+                                state.dispatch(Action::ChangeExtensionStatus(
+                                    ExtensionStatus::Connected,
+                                ));
+                            } else {
+                                let message = "Please make sure polkadot-js extension is installed and at least one account is enabled to work with this site claimeer.app";
+                                err.set(message.to_string());
                             }
                         }
-                    });
-                }
-                ExtensionStatus::Connected => {
-                    if let Some(signer) = extension.signer.as_ref() {
-                        if extension_accounts.contains(&signer) {
-                            state.dispatch(Action::ChangeExtensionStatus(ExtensionStatus::Ready));
+                        Err(e) => {
+                            error!("error: {:?}", e);
+                            err.set(e.to_string());
                         }
                     }
-                }
-                _ => {}
+                });
             }
+            ExtensionStatus::Connected => {
+                if let Some(signer) = extension.signer.as_ref() {
+                    if extension_accounts.contains(&signer) {
+                        state.dispatch(Action::ChangeExtensionStatus(ExtensionStatus::Ready));
+                    }
+                }
+            }
+            _ => {}
         }
     });
 
@@ -312,6 +307,66 @@ pub fn claim_modal() -> Html {
 
                     </div>
                     <div class="ps-6 mt-1 text-sm text-red">{err.to_string()}</div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+#[function_component(AddAccountModal)]
+pub fn add_account_modal() -> Html {
+    let is_visible = use_state(|| false);
+    let state = use_context::<StateContext>().unwrap();
+
+    use_effect_with(state.layout.clone(), {
+        let is_visible = is_visible.clone();
+
+        move |layout| {
+            is_visible.set(layout.is_add_account_modal_visible);
+        }
+    });
+
+    let onadd = {
+        let state = state.clone();
+        Callback::from(move |account| {
+            state.dispatch(Action::AddAccount(account));
+            state.dispatch(Action::ToggleLayoutAddAccountModal);
+        })
+    };
+
+    let oncancel = {
+        let state = state.clone();
+        Callback::from(move |_| {
+            state.dispatch(Action::ToggleLayoutAddAccountModal);
+        })
+    };
+
+    let visibility = if *is_visible {
+        Some("flex")
+    } else {
+        Some("hidden")
+    };
+
+    html! {
+        <div class={classes!("modal__add_account", visibility)}>
+            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 z-60">
+                    <div class="flex items-center justify-between px-4 pt-4 md:px-5 md:pt-5 rounded-t-lg">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            {"Add Account"}
+                        </h3>
+                        <button type="button" class="btn btn__icon btn__white" onclick={&oncancel} >
+                            <svg class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                            </svg>
+                            <span class="sr-only">{"Close"}</span>
+                        </button>
+                    </div>
+                    <div class="p-4 md:p-5 space-y-4">
+
+                        <AccountInput placeholder="Enter the child bounty beneficiary account you wish to keep track of..." onenter={&onadd} />
+
+                    </div>
                 </div>
             </div>
         </div>

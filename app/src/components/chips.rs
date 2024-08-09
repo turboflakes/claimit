@@ -21,7 +21,7 @@ pub fn account(props: &AccountChipProps) -> Html {
         let state = state.clone();
         let account = props.account.to_string();
         Callback::from(move |_| {
-            state.dispatch(Action::Add(account.clone()));
+            state.dispatch(Action::AddAccount(account.clone()));
         })
     };
 

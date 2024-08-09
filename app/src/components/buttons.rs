@@ -207,3 +207,37 @@ pub fn sign_button() -> Html {
         html! {}
     }
 }
+
+#[derive(Properties, PartialEq)]
+pub struct AddAccountButtonProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    #[prop_or_default]
+    pub class: AttrValue,
+    // pub onclick: Callback<()>,
+}
+
+#[function_component(AddAccountButton)]
+pub fn add_account_button(props: &AddAccountButtonProps) -> Html {
+    let state = use_context::<StateContext>().unwrap();
+
+    let onclick = {
+        let state = state.clone();
+        Callback::from(move |_| {
+            state.dispatch(Action::ToggleLayoutAddAccountModal);
+        })
+    };
+
+    html! {
+        <button class={classes!("btn__add_account", props.class.clone())} {onclick}>
+            <div class="inline-flex items-center">
+                <svg class="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                </svg>
+                <p class="ms-2 text-gray-800 text-3xl">{"Add"}</p>
+            </div>
+
+            <p class="font-light text-xs text-left text-gray-800">{"Add a child bounty beneficiary account you want to track and claim!"}</p>
+        </button>
+    }
+}

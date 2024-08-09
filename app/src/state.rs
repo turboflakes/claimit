@@ -8,6 +8,7 @@ use claimeer_common::types::{
     claims::{ClaimState, ClaimStatus},
     extensions::ExtensionAccount,
     extensions::{ExtensionState, ExtensionStatus},
+    layout::LayoutState,
 };
 use gloo::storage::{LocalStorage, Storage};
 use serde::{Deserialize, Serialize};
@@ -30,13 +31,14 @@ pub struct State {
     pub filter: Filter,
     pub extension: ExtensionState,
     pub claim: Option<ClaimState>,
+    pub layout: LayoutState,
 }
 
 pub enum Action {
     /// Account actions
-    Add(String),
-    Remove(usize),
-    Toggle(usize),
+    AddAccount(String),
+    RemoveAccountId(usize),
+    DisableAccountId(usize),
     /// Claim actions
     StartClaim(Vec<Id>),
     SignClaim(ClaimState),
@@ -56,6 +58,8 @@ pub enum Action {
     IncreaseFetch,
     /// Filter child bounties actions
     SetFilter(Filter),
+    /// Layout actions
+    ToggleLayoutAddAccountModal,
 }
 
 impl Reducible for State {
@@ -63,7 +67,7 @@ impl Reducible for State {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Action::Add(address) => {
+            Action::AddAccount(address) => {
                 let mut accounts = self.accounts.clone();
                 // Verify if account is not already being followed
                 if accounts
@@ -102,10 +106,11 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
-            Action::Remove(id) => {
+            Action::RemoveAccountId(id) => {
                 let mut accounts = self.accounts.clone();
                 accounts.retain(|account| account.id != id);
                 LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
@@ -116,10 +121,11 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
-            Action::Toggle(id) => {
+            Action::DisableAccountId(id) => {
                 let mut accounts = self.accounts.clone();
                 let account = accounts.iter_mut().find(|account| account.id == id);
                 if let Some(account) = account {
@@ -132,6 +138,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -144,6 +151,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -154,6 +162,7 @@ impl Reducible for State {
                 filter: self.filter.clone(),
                 extension: self.extension.clone(),
                 claim: None,
+                layout: self.layout.clone(),
             }
             .into(),
             Action::SignClaim(claim) => {
@@ -167,6 +176,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -181,6 +191,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -222,6 +233,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -236,6 +248,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -250,6 +263,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension,
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -264,6 +278,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension,
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -281,6 +296,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension,
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -295,6 +311,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -308,6 +325,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -322,6 +340,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -335,6 +354,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -369,6 +389,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
+                    layout: self.layout.clone(),
                 }
                 .into()
             }
@@ -379,8 +400,24 @@ impl Reducible for State {
                 filter,
                 extension: self.extension.clone(),
                 claim: self.claim.clone(),
+                layout: self.layout.clone(),
             }
             .into(),
+            Action::ToggleLayoutAddAccountModal => {
+                let mut layout = self.layout.clone();
+                layout.is_add_account_modal_visible = !layout.is_add_account_modal_visible;
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout,
+                }
+                .into()
+            }
         }
     }
 }
