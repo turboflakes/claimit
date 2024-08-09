@@ -11,6 +11,7 @@ use claimeer_common::types::{
 };
 use claimeer_kusama::kusama;
 use claimeer_polkadot::polkadot;
+use claimeer_rococo::rococo;
 use log::{error, info};
 use subxt::{OnlineClient, PolkadotConfig};
 use yew::{
@@ -90,6 +91,14 @@ pub fn claim_modal() -> Html {
                                         )
                                         .await
                                     }
+                                    SupportedRelayRuntime::Rococo => {
+                                        rococo::create_and_sign_tx(
+                                            &api.clone(),
+                                            signer.clone(),
+                                            child_bounties_keys.clone(),
+                                        )
+                                        .await
+                                    }
                                 };
                                 match res {
                                     Ok(tx_bytes) => {
@@ -121,10 +130,13 @@ pub fn claim_modal() -> Html {
                                 SupportedRelayRuntime::Kusama => {
                                     kusama::submit_and_watch_tx(&api.clone(), tx_bytes).await
                                 }
+                                SupportedRelayRuntime::Rococo => {
+                                    rococo::submit_and_watch_tx(&api.clone(), tx_bytes).await
+                                }
                             };
                             match res {
-                                Ok(()) => {
-                                    state.dispatch(Action::CompleteClaim(claim));
+                                Ok(claimed) => {
+                                    state.dispatch(Action::CompleteClaim(claim, claimed));
                                 }
                                 Err(e) => {
                                     error!("error: {:?}", e);

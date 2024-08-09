@@ -8,4 +8,4 @@ dist = "dist"
 
 [watch]
 # Paths to watch. The `build.target`'s parent folder is watched by default.
-watch = ["app", "common", "kusama", "polkadot"]
+watch = ["app", "common", "kusama", "polkadot", "rococo"]

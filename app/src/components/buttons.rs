@@ -115,6 +115,12 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
                         <span>{"Switch to Polkadot"}</span>
                     </NetworkButton>
                 },
+                SupportedRelayRuntime::Rococo => html! {
+                    <NetworkButton chain={SupportedRelayRuntime::Polkadot} disabled={props.disabled.clone()} onclick={onclick.clone()} >
+                        <img class="h-8" src="/images/polkadot_icon.svg" alt="polkadot logo" />
+                        <span>{"Switch to Polkadot"}</span>
+                    </NetworkButton>
+                },
             }}
         </>
     }

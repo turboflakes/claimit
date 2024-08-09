@@ -3,7 +3,8 @@ members = [
     "app",
     "common",
     "kusama",
-    "polkadot"
+    "polkadot",
+    "rococo"
 ]
 
 resolver = "2"

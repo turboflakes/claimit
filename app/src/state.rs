@@ -3,6 +3,7 @@ use crate::providers::network::NetworkStatus;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
+    child_bounties::ChildBountyId,
     child_bounties::{ChildBounties, Filter, Id},
     claims::{ClaimState, ClaimStatus},
     extensions::ExtensionAccount,
@@ -40,7 +41,7 @@ pub enum Action {
     StartClaim(Vec<Id>),
     SignClaim(ClaimState),
     SubmitClaim(ClaimState, Vec<u8>),
-    CompleteClaim(ClaimState),
+    CompleteClaim(ClaimState, Vec<ChildBountyId>),
     ResetClaim,
     ErrorClaim(ClaimState),
     /// Extension actions
@@ -183,16 +184,41 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::CompleteClaim(claim) => {
+            Action::CompleteClaim(claim, claimed) => {
                 let mut claim = claim.clone();
                 claim.status = ClaimStatus::Completed;
-                // TODO: Get the child bounties successfully claimed and remove them from the current claim
-                // If all were claimed 
+
+                let accounts = self
+                    .accounts
+                    .clone()
+                    .into_iter()
+                    .map(|account| {
+                        let mut account = account.clone();
+                        let ids = account
+                            .child_bounty_ids
+                            .into_iter()
+                            .filter(|id| !claimed.contains(&(id)))
+                            .collect::<BTreeSet<ChildBountyId>>();
+
+                        account.child_bounty_ids = ids;
+                        account
+                    })
+                    .collect::<Vec<Account>>();
+
+                let child_bounties_raw =
+                    if let Some(child_bounties) = self.child_bounties_raw.clone() {
+                        child_bounties
+                            .into_iter()
+                            .filter(|(id, _)| !claimed.contains(&(id)))
+                            .collect::<ChildBounties>()
+                    } else {
+                        ChildBounties::new()
+                    };
 
                 State {
-                    accounts: self.accounts.clone(),
+                    accounts,
                     network: self.network.clone(),
-                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    child_bounties_raw: Some(child_bounties_raw),
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: Some(claim),

@@ -2,6 +2,7 @@ use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::child_bounties::ChildBounties;
 use claimeer_kusama::kusama;
 use claimeer_polkadot::polkadot;
+use claimeer_rococo::rococo;
 use serde::{Deserialize, Serialize};
 use subxt::{OnlineClient, PolkadotConfig};
 use yew_agent::prelude::oneshot;
@@ -28,6 +29,7 @@ pub async fn storage_queries(q: Query) -> Response {
                     polkadot::fetch_child_bounties(&api.clone()).await
                 }
                 SupportedRelayRuntime::Kusama => kusama::fetch_child_bounties(&api.clone()).await,
+                SupportedRelayRuntime::Rococo => rococo::fetch_child_bounties(&api.clone()).await,
             }
             .unwrap();
             Response::ChildBounties(cbs)

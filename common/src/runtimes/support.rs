@@ -7,6 +7,7 @@ pub type ChainPrefix = u16;
 pub enum SupportedRelayRuntime {
     Polkadot,
     Kusama,
+    Rococo,
 }
 
 impl SupportedRelayRuntime {
@@ -14,6 +15,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => 0,
             Self::Kusama => 2,
+            Self::Rococo => 42,
         }
     }
 
@@ -21,6 +23,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "wss://rpc.ibp.network:443/polkadot",
             Self::Kusama => "wss://rpc.ibp.network:443/kusama",
+            Self::Rococo => "wss://rococo-rpc.polkadot.io:443",
         }
     }
 
@@ -28,6 +31,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "DOT",
             Self::Kusama => "KSM",
+            Self::Rococo => "ROC",
         }
     }
 
@@ -35,6 +39,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => 10,
             Self::Kusama => 12,
+            Self::Rococo => 12,
         }
     }
 
@@ -52,6 +57,9 @@ impl From<AttrValue> for SupportedRelayRuntime {
             "Kusama" => Self::Kusama,
             "kusama" => Self::Kusama,
             "KSM" => Self::Kusama,
+            "Rococo" => Self::Rococo,
+            "rococo" => Self::Rococo,
+            "ROC" => Self::Rococo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -66,6 +74,9 @@ impl From<String> for SupportedRelayRuntime {
             "Kusama" => Self::Kusama,
             "kusama" => Self::Kusama,
             "KSM" => Self::Kusama,
+            "Rococo" => Self::Rococo,
+            "rococo" => Self::Rococo,
+            "ROC" => Self::Rococo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -76,6 +87,7 @@ impl From<ChainPrefix> for SupportedRelayRuntime {
         match v {
             0 => Self::Polkadot,
             2 => Self::Kusama,
+            42 => Self::Rococo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -86,6 +98,7 @@ impl std::fmt::Display for SupportedRelayRuntime {
         match self {
             Self::Polkadot => write!(f, "Polkadot"),
             Self::Kusama => write!(f, "Kusama"),
+            Self::Rococo => write!(f, "Rococo"),
         }
     }
 }
