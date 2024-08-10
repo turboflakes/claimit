@@ -1,6 +1,7 @@
 use crate::components::items::{ChildBountyItem, FilterItem};
 use crate::state::{Action, StateContext};
-use claimeer_common::types::child_bounties::{amount_human, Filter};
+use claimeer_common::runtimes::utils::amount_human;
+use claimeer_common::types::child_bounties::Filter;
 use strum::IntoEnumIterator;
 use yew::{function_component, html, use_context, Callback, Html};
 

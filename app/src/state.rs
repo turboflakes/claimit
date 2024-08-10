@@ -39,6 +39,7 @@ pub enum Action {
     AddAccount(String),
     RemoveAccountId(usize),
     DisableAccountId(usize),
+    UpdateAccountIdBalance(usize, u128),
     /// Claim actions
     StartClaim(Vec<Id>),
     SignClaim(ClaimState),
@@ -96,6 +97,7 @@ impl Reducible for State {
                         identity: None,
                         disabled: false,
                         child_bounty_ids,
+                        free_balance: 0,
                     });
                     LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
                 }
@@ -130,6 +132,23 @@ impl Reducible for State {
                 let account = accounts.iter_mut().find(|account| account.id == id);
                 if let Some(account) = account {
                     account.disabled = !account.disabled;
+                }
+                State {
+                    accounts,
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout: self.layout.clone(),
+                }
+                .into()
+            }
+            Action::UpdateAccountIdBalance(id, free_balance) => {
+                let mut accounts = self.accounts.clone();
+                let account = accounts.iter_mut().find(|account| account.id == id);
+                if let Some(account) = account {
+                    account.free_balance = free_balance;
                 }
                 State {
                     accounts,

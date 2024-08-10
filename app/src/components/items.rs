@@ -1,16 +1,20 @@
 use crate::components::{chips::AccountChip, icons::Identicon};
-use crate::state::StateContext;
+use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
     child_bounties::{Filter, Id},
     extensions::ExtensionAccount,
 };
+use claimeer_kusama::kusama;
+use claimeer_polkadot::polkadot;
+use claimeer_rococo::rococo;
+use log::{error};
 use std::str::FromStr;
-use subxt::config::substrate::AccountId32;
+use subxt::{config::substrate::AccountId32, OnlineClient, PolkadotConfig};
 use yew::{
-    classes, function_component, html, use_context, use_state, Callback, Classes, Html, MouseEvent,
-    Properties,
+    classes, function_component, html, platform::spawn_local, use_context, use_effect_with,
+    use_state, Callback, Classes, Html, MouseEvent, Properties,
 };
 
 #[derive(PartialEq, Properties, Clone)]
@@ -110,9 +114,46 @@ pub struct AccountItemProps {
 
 #[function_component(AccountItem)]
 pub fn account_item(props: &AccountItemProps) -> Html {
+    let state = use_context::<StateContext>().unwrap();
     let is_dropdown_hidden = use_state(|| true);
 
-    let id = props.account.id;
+    // fetch account balances
+    use_effect_with((), {
+        let state = state.clone();
+        let runtime = state.network.runtime.clone();
+        let account_id = AccountId32::from_str(&props.account.address).unwrap();
+        let id = props.account.id.clone();
+
+        move |_| {
+            spawn_local(async move {
+                let api = OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
+                    .await
+                    .expect("expect valid RPC connection");
+
+                let response = match runtime {
+                    SupportedRelayRuntime::Polkadot => {
+                        polkadot::fetch_account_balance(&api.clone(), account_id).await
+                    }
+                    SupportedRelayRuntime::Kusama => {
+                        kusama::fetch_account_balance(&api.clone(), account_id).await
+                    }
+                    SupportedRelayRuntime::Rococo => {
+                        rococo::fetch_account_balance(&api.clone(), account_id).await
+                    }
+                };
+
+                match response {
+                    Ok(free_balance) => {
+                        state.dispatch(Action::UpdateAccountIdBalance(id, free_balance));
+                    }
+                    Err(e) => {
+                        error!("error: {:?}", e);
+                        // TODO: dispatch general action error
+                    }
+                }
+            });
+        }
+    });
 
     let btn_dropdown_onclick = {
         let is_dropdown_hidden = is_dropdown_hidden.clone();
@@ -131,14 +172,18 @@ pub fn account_item(props: &AccountItemProps) -> Html {
     };
 
     // let toggle_onclick = props.ontoggle.reform(move |_| id);
-    let unfollow_onclick = props.onunfollow.reform(move |e: MouseEvent| {
-        e.stop_propagation();
-        id
+    let unfollow_onclick = props.onunfollow.reform({
+        let id = props.account.id.clone();
+
+        move |e: MouseEvent| {
+            e.stop_propagation();
+            id
+        }
     });
 
     html! {
         <li class="account__item">
-            <div class="relative flex flex-col justify-between w-full h-full p-4 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 w-full dark:bg-gray-800">
+            <div class="w-64 h-48 flex flex-col justify-between p-4 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
                 <div class="inline-flex justify-between">
                     {
                         match props.runtime.clone() {
@@ -196,9 +241,13 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                     </div>
                 </div>
                 <div>
-                    <div class="inline-flex items-center">
+                    <div class="inline-flex items-center mb-2">
                         <Identicon address={props.account.address.clone()} size={24} class="me-2" />
                         {props.account.to_compact_string()}
+                    </div>
+
+                    <div>
+                        <p class="text-xl text-gray-800">{props.account.free_balance_human(props.runtime.clone())}</p>
                     </div>
 
                 </div>

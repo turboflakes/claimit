@@ -1,3 +1,4 @@
+use num_format::{Locale, ToFormattedString};
 use subxt::config::substrate::AccountId32;
 
 pub fn get_child_bounty_id_from_storage_key(key: Vec<u8>) -> u32 {
@@ -13,4 +14,12 @@ pub fn str(bytes: Vec<u8>) -> String {
 pub fn compact(account: &AccountId32) -> String {
     let a = account.to_string();
     [&a[0..4], &a[a.len() - 4..a.len()]].join("...")
+}
+
+pub fn amount_human(value: u128, decimals: u32) -> String {
+    let base: u128 = 10;
+    let n = value / base.pow(decimals) as u128;
+    let r = (value % base.pow(decimals) as u128) / base.pow((decimals - 2).into()) as u128;
+    let s = n.to_formatted_string(&Locale::en);
+    format!("{s}.{r}")
 }

@@ -1,4 +1,7 @@
-use crate::runtimes::utils::compact;
+use crate::runtimes::{
+    support::SupportedRelayRuntime,
+    utils::{amount_human, compact},
+};
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeSet, str::FromStr};
 use subxt::config::substrate::AccountId32;
@@ -14,6 +17,8 @@ pub struct Account {
     pub disabled: bool,
     /// child bounty ids where the account is a beneficiary
     pub child_bounty_ids: BTreeSet<u32>,
+    /// account transferable balance
+    pub free_balance: u128,
 }
 
 impl Account {
@@ -22,5 +27,9 @@ impl Account {
             Ok(account) => compact(&account),
             _ => String::new(),
         }
+    }
+
+    pub fn free_balance_human(&self, runtime: SupportedRelayRuntime) -> String {
+        amount_human(self.free_balance, runtime.decimals().into())
     }
 }

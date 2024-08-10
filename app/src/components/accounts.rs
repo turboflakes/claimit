@@ -1,7 +1,4 @@
-use crate::components::{
-    buttons::AddAccountButton,
-    items::{AccountItem, AccountItemSmall},
-};
+use crate::components::{items::{AccountItem, AccountItemSmall}, buttons::AddAccountButton};
 use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use yew::{function_component, html, use_context, Callback, Html, Properties};
@@ -51,14 +48,16 @@ pub fn accounts_card(props: &AccountsCardProps) -> Html {
 
     if state.accounts.len() > 0 {
         html! {
-            <div class="mb-4">
-                <ul class="flex flex-nowrap items-center mx-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+            <div class="relative px-4 max-w-[375px] md:max-w-[620px] overflow-auto">
+                <ul class="flex flex-nowrap gap-4 items-center py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
                     { for state.accounts.iter().cloned().map(|account|
                         html! {
                             <AccountItem {account} runtime={props.runtime.clone()} onunfollow={&onunfollow} />
                     }) }
 
-                    <AddAccountButton />
+                    <li class="account__item">
+                        <AddAccountButton />
+                    </li>
 
                 </ul>
             </div>

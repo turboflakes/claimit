@@ -73,7 +73,7 @@ pub fn claim_modal() -> Html {
                                 .await
                                 .expect("expect valid RPC connection");
 
-                                let res = match runtime {
+                                let response = match runtime {
                                     SupportedRelayRuntime::Polkadot => {
                                         polkadot::create_and_sign_tx(
                                             &api.clone(),
@@ -99,7 +99,7 @@ pub fn claim_modal() -> Html {
                                         .await
                                     }
                                 };
-                                match res {
+                                match response {
                                     Ok(tx_bytes) => {
                                         state.dispatch(Action::SubmitClaim(claim, tx_bytes));
                                     }
@@ -122,7 +122,7 @@ pub fn claim_modal() -> Html {
                                     .await
                                     .expect("expect valid RPC connection");
 
-                            let res = match runtime {
+                            let response = match runtime {
                                 SupportedRelayRuntime::Polkadot => {
                                     polkadot::submit_and_watch_tx(&api.clone(), tx_bytes).await
                                 }
@@ -133,7 +133,7 @@ pub fn claim_modal() -> Html {
                                     rococo::submit_and_watch_tx(&api.clone(), tx_bytes).await
                                 }
                             };
-                            match res {
+                            match response {
                                 Ok(claimed) => {
                                     state.dispatch(Action::CompleteClaim(claim, claimed));
                                 }

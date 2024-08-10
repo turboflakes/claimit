@@ -85,6 +85,19 @@ pub async fn fetch_child_bounties(
     return Ok(out);
 }
 
+pub async fn fetch_account_balance(
+    api: &OnlineClient<PolkadotConfig>,
+    account: AccountId32,
+) -> Result<u128, ClaimeerError> {
+    let address = node_runtime::storage().system().account(&account);
+
+    if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
+        return Ok(result.data.free);
+    }
+
+    return Ok(0);
+}
+
 pub async fn create_and_sign_tx(
     api: &OnlineClient<PolkadotConfig>,
     signer: ExtensionAccount,

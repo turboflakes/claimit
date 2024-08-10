@@ -141,13 +141,13 @@ pub fn main() -> Html {
 
                     <div class="flex flex-col w-full items-center justify-center">
 
-                        <div class="px-2 max-w-[610px] md:w-[610px] flex flex-col flex-1 justify-between h-full overflow-y-auto">
+                        <div class="px-4 max-w-[375px] md:max-w-[620px] flex flex-col flex-1 justify-between h-full overflow-auto">
 
                             <Navbar runtime={current_runtime.clone()} />
 
                             <div class="flex flex-col items-center my-4 mt-20 md:mt-32">
 
-                                <div class="flex flex-col max-w-[500px] items-center">
+                                <div class="flex flex-col max-w-[375px] md:max-w-[500px] items-center mb-10">
                                     <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
                                     <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                                 </div>

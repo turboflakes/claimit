@@ -1,6 +1,5 @@
-use crate::runtimes::support::SupportedRelayRuntime;
+use crate::runtimes::{support::SupportedRelayRuntime, utils::amount_human};
 use humantime::format_duration;
-use num_format::{Locale, ToFormattedString};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::time::Duration;
@@ -46,14 +45,6 @@ impl ChildBounty {
             "".into()
         }
     }
-}
-
-pub fn amount_human(value: u128, decimals: u32) -> String {
-    let base: u128 = 10;
-    let n = value / base.pow(decimals) as u128;
-    let r = (value % base.pow(decimals) as u128) / base.pow((decimals - 2).into()) as u128;
-    let s = n.to_formatted_string(&Locale::en);
-    format!("{s}.{r}")
 }
 
 pub type ChildBounties = BTreeMap<Id, ChildBounty>;

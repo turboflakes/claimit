@@ -80,7 +80,7 @@ pub fn footer(props: &FooterProps) -> Html {
     html! {
         <footer class="w-full bg-transparent mb-2 dark:bg-gray-900">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
-                <div class="flex items-center justify-center sm:mt-0">
+                <div class="inline-flex items-center justify-center sm:mt-0">
                     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">{"© 2024 Claimeer · Built by "}
                         <a href="https://turboflakes.io/" target="_blank" class="hover:underline hover:underline-offset-2 hover:text-gray-900">{"Turboflakes"}</a>
                     </span>
