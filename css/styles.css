@@ -659,10 +659,6 @@ video {
   z-index: 50;
 }
 
-.m-2\.5 {
-  margin: 0.625rem;
-}
-
 .m-2 {
   margin: 0.5rem;
 }
@@ -690,6 +686,11 @@ video {
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.my-6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .mb-0 {
@@ -766,6 +767,10 @@ video {
 
 .mt-32 {
   margin-top: 8rem;
+}
+
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 
 .block {
@@ -868,6 +873,10 @@ video {
   width: 3rem;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .w-3 {
   width: 0.75rem;
 }
@@ -912,6 +921,14 @@ video {
   max-width: 610px;
 }
 
+.max-w-\[620px\] {
+  max-width: 620px;
+}
+
+.max-w-\[375px\] {
+  max-width: 375px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -948,6 +965,10 @@ video {
 
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-cols-4 {
@@ -1010,6 +1031,14 @@ video {
   --tw-divide-y-reverse: 0;
   border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
   border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .overflow-y-auto {
@@ -1109,8 +1138,8 @@ video {
   background-color: hsl(210 11% 15% / var(--tw-bg-opacity));
 }
 
-.bg-gray-900\/50 {
-  background-color: hsl(210 11% 15% / 0.5);
+.bg-gray-900\/70 {
+  background-color: hsl(210 11% 15% / 0.7);
 }
 
 .bg-red {
@@ -1316,6 +1345,11 @@ video {
 .text-gray-100 {
   --tw-text-opacity: 1;
   color: hsl(210 17% 98% / var(--tw-text-opacity));
+}
+
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: hsl(210 14% 83% / var(--tw-text-opacity));
 }
 
 .text-gray-500 {
@@ -1773,9 +1807,6 @@ hr:where(.dark, .dark *) {
 }
 
 .account__item {
-  margin: 0.625rem;
-  height: 12rem;
-  width: 16rem;
   background-color: transparent;
 }
 
@@ -1871,7 +1902,7 @@ hr:where(.dark, .dark *) {
   justify-content: center;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: hsl(210 11% 15% / 0.5);
+  background-color: hsl(210 11% 15% / 0.7);
 }
 
 @media (min-width: 768px) {
@@ -1898,7 +1929,7 @@ hr:where(.dark, .dark *) {
   justify-content: center;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: hsl(210 11% 15% / 0.5);
+  background-color: hsl(210 11% 15% / 0.7);
 }
 
 @media (min-width: 768px) {
@@ -2029,6 +2060,18 @@ hr:where(.dark, .dark *) {
 
   .md\:w-\[610px\] {
     width: 610px;
+  }
+
+  .md\:w-\[620px\] {
+    width: 620px;
+  }
+
+  .md\:max-w-\[620px\] {
+    max-width: 620px;
+  }
+
+  .md\:max-w-\[500px\] {
+    max-width: 500px;
   }
 
   .md\:p-5 {
