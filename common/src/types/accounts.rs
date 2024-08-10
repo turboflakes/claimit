@@ -8,7 +8,7 @@ use subxt::config::substrate::AccountId32;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Account {
-    pub id: usize,
+    pub id: u32,
     /// ss58 formatted address as string.
     pub address: String,
     /// account identity retrieved from people chain
@@ -17,8 +17,8 @@ pub struct Account {
     pub disabled: bool,
     /// child bounty ids where the account is a beneficiary
     pub child_bounty_ids: BTreeSet<u32>,
-    /// account transferable balance
-    pub free_balance: u128,
+    /// account balance
+    pub balance: Balance,
 }
 
 impl Account {
@@ -28,8 +28,31 @@ impl Account {
             _ => String::new(),
         }
     }
+}
 
-    pub fn free_balance_human(&self, runtime: SupportedRelayRuntime) -> String {
-        amount_human(self.free_balance, runtime.decimals().into())
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Balance {
+    pub free: u128,
+    pub reserved: u128,
+}
+
+impl Balance {
+    pub fn new() -> Self {
+        Self {
+            free: 0,
+            reserved: 0,
+        }
+    }
+
+    pub fn free_human(&self, runtime: SupportedRelayRuntime) -> String {
+        amount_human(self.free, runtime.decimals().into())
+    }
+
+    pub fn reserved_human(&self, runtime: SupportedRelayRuntime) -> String {
+        amount_human(self.reserved, runtime.decimals().into())
+    }
+
+    pub fn total_human(&self, runtime: SupportedRelayRuntime) -> String {
+        amount_human(self.free + self.reserved, runtime.decimals().into())
     }
 }

@@ -2,7 +2,7 @@ use crate::providers::network::NetworkState;
 use crate::providers::network::NetworkStatus;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
-    accounts::Account,
+    accounts::{Account, Balance},
     child_bounties::ChildBountyId,
     child_bounties::{ChildBounties, Filter, Id},
     claims::{ClaimState, ClaimStatus},
@@ -11,6 +11,7 @@ use claimeer_common::types::{
     layout::LayoutState,
 };
 use gloo::storage::{LocalStorage, Storage};
+use log::info;
 use serde::{Deserialize, Serialize};
 use std::{
     env,
@@ -37,9 +38,9 @@ pub struct State {
 pub enum Action {
     /// Account actions
     AddAccount(String),
-    RemoveAccountId(usize),
-    DisableAccountId(usize),
-    UpdateAccountIdBalance(usize, u128),
+    RemoveAccountId(u32),
+    DisableAccountId(u32),
+    UpdateAccountIdBalance(u32, Balance),
     /// Claim actions
     StartClaim(Vec<Id>),
     SignClaim(ClaimState),
@@ -97,7 +98,7 @@ impl Reducible for State {
                         identity: None,
                         disabled: false,
                         child_bounty_ids,
-                        free_balance: 0,
+                        balance: Balance::new(),
                     });
                     LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
                 }
@@ -144,12 +145,13 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::UpdateAccountIdBalance(id, free_balance) => {
+            Action::UpdateAccountIdBalance(id, balance) => {
                 let mut accounts = self.accounts.clone();
                 let account = accounts.iter_mut().find(|account| account.id == id);
                 if let Some(account) = account {
-                    account.free_balance = free_balance;
+                    account.balance = balance;
                 }
+
                 State {
                     accounts,
                     network: self.network.clone(),

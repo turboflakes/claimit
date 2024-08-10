@@ -1,11 +1,10 @@
 use claimeer_common::errors::ClaimeerError;
 use claimeer_common::runtimes::utils::get_child_bounty_id_from_storage_key;
 use claimeer_common::runtimes::utils::str;
-use claimeer_common::types::child_bounties::{ChildBountiesKeys, ChildBountyId};
-use claimeer_common::types::extensions::ExtensionAccount;
 use claimeer_common::types::{
-    child_bounties::{ChildBounties, ChildBounty, Status},
-    extensions::extension_signature_for_extrinsic,
+    accounts::Balance,
+    child_bounties::{ChildBounties, ChildBountiesKeys, ChildBounty, ChildBountyId, Status},
+    extensions::{extension_signature_for_extrinsic, ExtensionAccount},
 };
 use log::{error, info};
 use node_runtime::{
@@ -88,14 +87,19 @@ pub async fn fetch_child_bounties(
 pub async fn fetch_account_balance(
     api: &OnlineClient<PolkadotConfig>,
     account: AccountId32,
-) -> Result<u128, ClaimeerError> {
+) -> Result<Balance, ClaimeerError> {
     let address = node_runtime::storage().system().account(&account);
 
     if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
-        return Ok(result.data.free);
+        return Ok(Balance {
+            free: result.data.free,
+            reserved: result.data.reserved,
+        });
     }
 
-    return Ok(0);
+    return Err(ClaimeerError::Other(
+        "An unexpected error occurred, balance couldn't be retrieved.".into(),
+    ));
 }
 
 pub async fn create_and_sign_tx(

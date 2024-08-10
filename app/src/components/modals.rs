@@ -367,6 +367,10 @@ pub fn add_account_modal() -> Html {
                         <AccountInput placeholder="Enter the child bounty beneficiary account you wish to keep track of..." onenter={&onadd} />
 
                     </div>
+
+                    <div class="flex items-center justify-between p-4 md:p-5 rounded-b-lg">
+
+                    </div>
                 </div>
             </div>
         </div>

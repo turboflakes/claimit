@@ -9,7 +9,7 @@ use claimeer_common::types::{
 use claimeer_kusama::kusama;
 use claimeer_polkadot::polkadot;
 use claimeer_rococo::rococo;
-use log::{error};
+use log::{error, info};
 use std::str::FromStr;
 use subxt::{config::substrate::AccountId32, OnlineClient, PolkadotConfig};
 use yew::{
@@ -21,7 +21,7 @@ use yew::{
 pub struct AccountItemSmallProps {
     pub account: Account,
     // pub ontoggle: Callback<usize>,
-    pub onunfollow: Callback<usize>,
+    pub onunfollow: Callback<u32>,
 }
 
 #[function_component(AccountItemSmall)]
@@ -49,7 +49,7 @@ pub fn account_item_small(props: &AccountItemSmallProps) -> Html {
     // let toggle_onclick = props.ontoggle.reform(move |_| id);
     let unfollow_onclick = props.onunfollow.reform(move |e: MouseEvent| {
         e.stop_propagation();
-        id
+        id.try_into().unwrap()
     });
 
     html! {
@@ -109,7 +109,7 @@ pub fn account_item_small(props: &AccountItemSmallProps) -> Html {
 pub struct AccountItemProps {
     pub account: Account,
     pub runtime: SupportedRelayRuntime,
-    pub onunfollow: Callback<usize>,
+    pub onunfollow: Callback<u32>,
 }
 
 #[function_component(AccountItem)]
@@ -132,19 +132,19 @@ pub fn account_item(props: &AccountItemProps) -> Html {
 
                 let response = match runtime {
                     SupportedRelayRuntime::Polkadot => {
-                        polkadot::fetch_account_balance(&api.clone(), account_id).await
+                        polkadot::fetch_account_balance(&api.clone(), account_id.clone()).await
                     }
                     SupportedRelayRuntime::Kusama => {
-                        kusama::fetch_account_balance(&api.clone(), account_id).await
+                        kusama::fetch_account_balance(&api.clone(), account_id.clone()).await
                     }
                     SupportedRelayRuntime::Rococo => {
-                        rococo::fetch_account_balance(&api.clone(), account_id).await
+                        rococo::fetch_account_balance(&api.clone(), account_id.clone()).await
                     }
                 };
 
                 match response {
-                    Ok(free_balance) => {
-                        state.dispatch(Action::UpdateAccountIdBalance(id, free_balance));
+                    Ok(balance) => {
+                        state.dispatch(Action::UpdateAccountIdBalance(id, balance));
                     }
                     Err(e) => {
                         error!("error: {:?}", e);
@@ -247,7 +247,7 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                     </div>
 
                     <div>
-                        <p class="text-xl text-gray-800">{props.account.free_balance_human(props.runtime.clone())}</p>
+                        <p class="text-xl text-gray-800">{props.account.balance.total_human(props.runtime.clone())}</p>
                     </div>
 
                 </div>
