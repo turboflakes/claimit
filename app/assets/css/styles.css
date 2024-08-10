@@ -643,8 +643,24 @@ video {
   top: 0px;
 }
 
+.top-10 {
+  top: 2.5rem;
+}
+
+.top-12 {
+  top: 3rem;
+}
+
 .top-14 {
   top: 3.5rem;
+}
+
+.top-4 {
+  top: 1rem;
+}
+
+.top-8 {
+  top: 2rem;
 }
 
 .z-10 {
@@ -695,6 +711,10 @@ video {
 
 .mb-0 {
   margin-bottom: 0px;
+}
+
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 
 .mb-2 {
@@ -767,10 +787,6 @@ video {
 
 .mt-32 {
   margin-top: 8rem;
-}
-
-.mb-10 {
-  margin-bottom: 2.5rem;
 }
 
 .block {
@@ -911,18 +927,6 @@ video {
 
 .max-w-\[256px\] {
   max-width: 256px;
-}
-
-.max-w-\[500px\] {
-  max-width: 500px;
-}
-
-.max-w-\[610px\] {
-  max-width: 610px;
-}
-
-.max-w-\[620px\] {
-  max-width: 620px;
 }
 
 .max-w-\[375px\] {
@@ -1860,11 +1864,11 @@ hr:where(.dark, .dark *) {
 
 .menu_dropdown {
   position: absolute;
-  top: 3.5rem;
-  inset-inline-start: 0px;
+  top: 2rem;
+  inset-inline-end: 0px;
   z-index: 10;
   max-height: 15rem;
-  width: 100%;
+  width: 12rem;
 }
 
 .menu_dropdown > :not([hidden]) ~ :not([hidden]) {
@@ -2058,20 +2062,12 @@ hr:where(.dark, .dark *) {
     margin-top: 8rem;
   }
 
-  .md\:w-\[610px\] {
-    width: 610px;
-  }
-
-  .md\:w-\[620px\] {
-    width: 620px;
+  .md\:max-w-\[500px\] {
+    max-width: 500px;
   }
 
   .md\:max-w-\[620px\] {
     max-width: 620px;
-  }
-
-  .md\:max-w-\[500px\] {
-    max-width: 500px;
   }
 
   .md\:p-5 {

@@ -81,7 +81,7 @@ hr {
 }
 
 .menu_dropdown {
-    @apply absolute z-10 top-14 start-0 w-full max-h-60 overflow-y-auto bg-white divide-y rounded-lg shadow-lg dark:bg-gray-700;
+    @apply absolute z-10 top-8 end-0 w-48 max-h-60 overflow-y-auto bg-white divide-y rounded-lg shadow-lg dark:bg-gray-700;
 }
 
 .modal__claim {

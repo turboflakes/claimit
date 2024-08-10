@@ -46,23 +46,20 @@ pub fn accounts_card(props: &AccountsCardProps) -> Html {
         })
     };
 
-    if state.accounts.len() > 0 {
-        html! {
-            <div class="relative px-4 max-w-[375px] md:max-w-[620px] overflow-auto">
-                <ul class="flex flex-nowrap gap-4 items-center py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
-                    { for state.accounts.iter().cloned().map(|account|
-                        html! {
-                            <AccountItem {account} runtime={props.runtime.clone()} onunfollow={&onunfollow} />
-                    }) }
+    html! {
+        <div class="relative px-4 max-w-[375px] md:max-w-[620px] overflow-auto">
+            <ul class="flex flex-nowrap gap-4 items-center py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
+                { for state.accounts.iter().cloned().map(|account|
+                    html! {
+                        <AccountItem {account} runtime={props.runtime.clone()} onunfollow={&onunfollow} />
+                }) }
 
-                    <li class="account__item">
-                        <AddAccountButton />
-                    </li>
+                <li class="account__item">
+                    <AddAccountButton />
+                </li>
 
-                </ul>
-            </div>
-        }
-    } else {
-        html! {}
+            </ul>
+        </div>
     }
+    
 }

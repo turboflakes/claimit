@@ -207,7 +207,7 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                             },
                         }
                     }
-                    <div>
+                    <div class="relative">
                         <div class="inline-flex items-center">
                             <button type="button" class="btn btn__icon btn__white" onclick={btn_dropdown_onclick} >
                                 <svg class="w-3 h-3 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
