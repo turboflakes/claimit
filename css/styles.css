@@ -675,6 +675,10 @@ video {
   z-index: 50;
 }
 
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
 .m-2 {
   margin: 0.5rem;
 }
@@ -911,6 +915,10 @@ video {
 
 .w-64 {
   width: 16rem;
+}
+
+.w-\[375px\] {
+  width: 375px;
 }
 
 .w-full {
@@ -1598,6 +1606,8 @@ hr:where(.dark, .dark *) {
 .btn.btn__link {
   padding-top: 0px;
   padding-bottom: 0px;
+  font-size: 0.75rem;
+  line-height: 1rem;
   --tw-text-opacity: 1;
   color: hsl(210 11% 71% / var(--tw-text-opacity));
 }
@@ -2068,6 +2078,10 @@ hr:where(.dark, .dark *) {
 
   .md\:mt-32 {
     margin-top: 8rem;
+  }
+
+  .md\:w-\[620px\] {
+    width: 620px;
   }
 
   .md\:max-w-\[500px\] {
