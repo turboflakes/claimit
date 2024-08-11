@@ -141,7 +141,7 @@ pub fn main() -> Html {
 
                     <div class="flex flex-col w-full items-center justify-center">
 
-                        <div class="px-4 max-w-[375px] md:max-w-[620px] flex flex-col flex-1 justify-between h-full overflow-auto">
+                        <div class="px-4 w-[375px] md:w-[620px] flex flex-col flex-1 justify-between h-full overflow-auto">
 
                             <Navbar runtime={current_runtime.clone()} />
 
