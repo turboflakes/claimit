@@ -1,4 +1,7 @@
-use crate::components::items::{ChildBountyItem, FilterItem};
+use crate::components::{
+    buttons::ClaimButton,
+    items::{ChildBountyItem, FilterItem},
+};
 use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::utils::amount_human;
 use claimeer_common::types::child_bounties::Filter;
@@ -13,9 +16,7 @@ pub fn child_bounties_card() -> Html {
         html! {
             <div class="p-4 md:p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
 
-                <ChildBountiesFilters />
-
-                <ChildBountiesStats />
+                <ChildBountiesTitle />
 
                 <ChildBountiesBody />
 
@@ -59,6 +60,31 @@ pub fn child_bounties_filters() -> Html {
                         }
                     }) }
                 </ul>
+            </div>
+        }
+    } else {
+        html! {}
+    }
+}
+
+#[function_component(ChildBountiesTitle)]
+pub fn child_bounties_title() -> Html {
+    let state = use_context::<StateContext>().unwrap();
+
+    if let Some(child_bounties_raw) = &state.child_bounties_raw {
+        let child_bountes_total = child_bounties_raw
+            .into_iter()
+            .filter(|(_, cb)| state.filter.check(cb))
+            .count();
+
+        html! {
+            <div class="flex md:mb-4 justify-between items-center ">
+                <div class="inline-flex mb-2">
+                    <h3 class="md:text-lg text-gray-900 dark:text-gray-100 me-1">{child_bountes_total}</h3>
+                    <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Child Bounties"}</h3>
+                </div>
+
+                <ClaimButton />
             </div>
         }
     } else {

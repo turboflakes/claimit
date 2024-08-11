@@ -9,7 +9,7 @@ use claimeer_common::types::{
 use claimeer_kusama::kusama;
 use claimeer_polkadot::polkadot;
 use claimeer_rococo::rococo;
-use log::{error, info};
+use log::error;
 use std::str::FromStr;
 use subxt::{config::substrate::AccountId32, OnlineClient, PolkadotConfig};
 use yew::{

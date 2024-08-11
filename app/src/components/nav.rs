@@ -1,7 +1,4 @@
-use crate::components::{
-    buttons::{ClaimButton, NetworkSubscriber},
-    spinners::Spinner,
-};
+use crate::components::{buttons::NetworkSubscriber, spinners::Spinner};
 use crate::state::StateContext;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use num_format::{Locale, ToFormattedString};
@@ -60,7 +57,7 @@ pub fn navbar(props: &NavbarProps) -> Html {
                         }
                     </div>
 
-                    <ClaimButton />
+                    // <ClaimButton />
                 </div>
             </div>
         </nav>

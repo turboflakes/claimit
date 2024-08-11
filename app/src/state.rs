@@ -11,7 +11,6 @@ use claimeer_common::types::{
     layout::LayoutState,
 };
 use gloo::storage::{LocalStorage, Storage};
-use log::info;
 use serde::{Deserialize, Serialize};
 use std::{
     env,
@@ -117,11 +116,19 @@ impl Reducible for State {
                 let mut accounts = self.accounts.clone();
                 accounts.retain(|account| account.id != id);
                 LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
+
+                let following = accounts
+                    .iter()
+                    .map(|a| AccountId32::from_str(&a.address).unwrap())
+                    .collect::<Vec<AccountId32>>();
+
+                let filter = Filter::Following(following);
+
                 State {
                     accounts,
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
-                    filter: self.filter.clone(),
+                    filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout: self.layout.clone(),

@@ -88,7 +88,7 @@ pub fn total_balances_card(props: &TotalBalancesCardProps) -> Html {
 
     html! {
         <div class="inline-flex gap-8 w-full items-start">
-            
+
             <TotalBalanceTitle runtime={props.runtime.clone()} />
 
             <TotalAwardedTitle runtime={props.runtime.clone()} />
@@ -103,7 +103,7 @@ pub struct TotalBalanceTitleProps {
 }
 
 #[function_component(TotalBalanceTitle)]
-pub fn total_balances_card(props: &TotalBalanceTitleProps) -> Html {
+pub fn total_balance_title(props: &TotalBalanceTitleProps) -> Html {
     let state = use_context::<StateContext>().unwrap();
 
     let total_balance = state
@@ -112,16 +112,20 @@ pub fn total_balances_card(props: &TotalBalanceTitleProps) -> Html {
         .map(|account| account.balance.total())
         .sum::<u128>();
 
-    html! {
-        <div>
-            <p>{"Total balance"}</p>
-            <div class="inline-flex">
-                <h3 class="font-medium text-2xl text-gray-900">
-                    {amount_human(total_balance, props.runtime.decimals().into())}
-                    <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
-                </h3>
+    if total_balance > 0 {
+        html! {
+            <div>
+                <p>{"Total balance"}</p>
+                <div class="inline-flex">
+                    <h3 class="font-medium text-2xl text-gray-900">
+                        {amount_human(total_balance, props.runtime.decimals().into())}
+                        <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
+                    </h3>
+                </div>
             </div>
-        </div>
+        }
+    } else {
+        html! {}
     }
 }
 

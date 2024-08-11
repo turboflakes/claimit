@@ -1,11 +1,10 @@
 use claimeer_common::errors::ClaimeerError;
 use claimeer_common::runtimes::utils::get_child_bounty_id_from_storage_key;
 use claimeer_common::runtimes::utils::str;
-use claimeer_common::types::child_bounties::{ChildBountiesKeys, ChildBountyId};
-use claimeer_common::types::extensions::ExtensionAccount;
 use claimeer_common::types::{
-    child_bounties::{ChildBounties, ChildBounty, Status},
-    extensions::extension_signature_for_extrinsic,
+    accounts::Balance,
+    child_bounties::{ChildBounties, ChildBountiesKeys, ChildBounty, ChildBountyId, Status},
+    extensions::{extension_signature_for_extrinsic, ExtensionAccount},
 };
 use log::{error, info};
 use node_runtime::{
@@ -15,6 +14,7 @@ use node_runtime::{
     },
     system::events::ExtrinsicFailed,
     system::events::ExtrinsicSuccess,
+    system::events::Remarked,
     utility::events::BatchCompleted,
     utility::events::BatchCompletedWithErrors,
 };
@@ -83,6 +83,24 @@ pub async fn fetch_child_bounties(
         }
     }
     return Ok(out);
+}
+
+pub async fn fetch_account_balance(
+    api: &OnlineClient<PolkadotConfig>,
+    account: AccountId32,
+) -> Result<Balance, ClaimeerError> {
+    let address = node_runtime::storage().system().account(&account);
+
+    if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
+        return Ok(Balance {
+            free: result.data.free,
+            reserved: result.data.reserved,
+        });
+    }
+
+    return Err(ClaimeerError::Other(
+        "An unexpected error occurred, balance couldn't be retrieved.".into(),
+    ));
 }
 
 pub async fn create_and_sign_tx(
@@ -181,6 +199,9 @@ pub async fn submit_and_watch_tx(
                     let event = event?;
                     if let Some(ev) = event.as_event::<Claimed>()? {
                         out.push(ev.child_index);
+                    } else if let Some(ev) = event.as_event::<Remarked>()? {
+                        info!("__Remarked: {}", ev.sender);
+                        out.push(4);
                     } else if let Some(_ev) = event.as_event::<BatchCompleted>()? {
                         info!(
                             "Batch fully completed at block {} extrinsic {:?}",
