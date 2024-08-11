@@ -9,7 +9,7 @@ use crate::workers::{
 };
 use crate::{
     components::{
-        accounts::AccountsCard,
+        accounts::{AccountsCard, TotalBalancesCard},
         child_bounties::ChildBountiesCard,
         modals::{AddAccountModal, ClaimModal},
         nav::{Footer, Navbar},
@@ -151,6 +151,8 @@ pub fn main() -> Html {
                                     <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
                                     <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                                 </div>
+
+                                <TotalBalancesCard runtime={current_runtime.clone()} />
 
                                 <AccountsCard runtime={current_runtime.clone()} />
 

@@ -44,6 +44,10 @@ impl Balance {
         }
     }
 
+    pub fn total(&self) -> u128 {
+        self.free + self.reserved
+    }
+
     pub fn free_human(&self, runtime: SupportedRelayRuntime) -> String {
         amount_human(self.free, runtime.decimals().into())
     }
