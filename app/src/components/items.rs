@@ -1,4 +1,4 @@
-use crate::components::{chips::AccountChip, icons::Identicon};
+use crate::components::{accounts::AccountBalance, chips::AccountChip, icons::Identicon};
 use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
@@ -240,28 +240,15 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="flex flex-col">
                     <div class="inline-flex items-center mb-2">
                         <Identicon address={props.account.address.clone()} size={24} class="me-2" />
                         {props.account.to_compact_string()}
                     </div>
 
-                    <div>
-                        <p class="text-xl text-gray-800">{props.account.balance.total_human(props.runtime.clone())}</p>
-                    </div>
+                    <AccountBalance runtime={props.runtime.clone()} account={props.account.clone()} />
 
                 </div>
-                // {
-                //     if props.account.child_bounty_ids.len() > 0 {
-                //         html! {
-                //             <div class="absolute -top-1 -left-1">
-                //                 <span class="inline-flex items-center justify-center w-4 h-4 text-xs text-gray-100 bg-gray-900 rounded-full">
-                //                 {props.account.child_bounty_ids.len()}
-                //                 </span>
-                //             </div>
-                //         }
-                //     } else { html! {} }
-                // }
             </div>
         </li>
     }
