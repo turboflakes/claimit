@@ -55,7 +55,7 @@ pub fn accounts_card(props: &AccountsCardProps) -> Html {
     };
 
     html! {
-        <div class="relative px-4 max-w-[375px] md:max-w-[620px] overflow-auto">
+        <div class="relative w-full max-w-[375px] md:max-w-[828px] overflow-auto">
             <ul class="flex flex-nowrap gap-4 items-center py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
                 { for state.accounts.iter().rev().cloned().map(|account|
                     html! {
@@ -87,12 +87,14 @@ pub fn total_balances_card(props: &TotalBalancesCardProps) -> Html {
         .sum::<u128>();
 
     html! {
-        <div class="inline-flex gap-8 w-full items-start">
+        <div class="w-full max-w-[375px] md:max-w-[828px]">
+            <div class="inline-flex gap-8 w-full items-start">
 
-            <TotalBalanceTitle runtime={props.runtime.clone()} />
+                <TotalBalanceTitle runtime={props.runtime.clone()} />
 
-            <TotalAwardedTitle runtime={props.runtime.clone()} />
+                <TotalAwardedTitle runtime={props.runtime.clone()} />
 
+            </div>
         </div>
     }
 }

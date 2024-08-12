@@ -14,7 +14,7 @@ pub fn child_bounties_card() -> Html {
 
     if state.child_bounties_raw.is_some() {
         html! {
-            <div class="p-4 md:p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+            <div class="p-4 md:p-6 bg-gray-50 max-w-[375px] md:max-w-[828px] text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
 
                 <ChildBountiesTitle />
 

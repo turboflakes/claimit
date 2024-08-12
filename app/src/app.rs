@@ -136,30 +136,43 @@ pub fn main() -> Html {
     // Html
     html! {
         <>
-            <div class={classes!("flex", "h-screen", current_runtime.class())}>
+            <div class={classes!("mx-auto", "h-screen", "overflow-auto", "sm:overflow-hidden", current_runtime.class())}>
                 <ContextProvider<StateContext> context={state.clone()}>
 
-                    <div class="flex flex-col w-full items-center justify-center">
+                    <Navbar runtime={current_runtime.clone()} />
 
-                        <div class="px-4 w-[375px] md:w-[620px] flex flex-col flex-1 justify-between h-full overflow-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-3">
 
-                            <Navbar runtime={current_runtime.clone()} />
+                        <div class="px-4 flex flex-col justify-center items-center h-screen">
+                            <div class="flex flex-col flex-1 justify-center items-center">
+                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
+                                <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                            </div>
 
-                            <div class="flex flex-col items-center my-4 mt-20 md:mt-32">
+                            <div class="hidden sm:flex">
+                                <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
+                            </div>
+                        </div>
 
-                                <div class="flex flex-col max-w-[375px] md:max-w-[500px] items-center mb-10">
-                                    <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
-                                    <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                        <div class="sm:col-span-2"> 
+
+                            <div class="flex-auto sm:h-screen w-full overflow-hidden sm:overflow-auto">
+
+                                <div class="flex flex-col items-center my-4 mt-20 md:mt-32 px-4 sm:px-0">
+
+                                    <TotalBalancesCard runtime={current_runtime.clone()} />
+
+                                    <AccountsCard runtime={current_runtime.clone()} />
+
+                                    <ChildBountiesCard />
+
                                 </div>
-
-                                <TotalBalancesCard runtime={current_runtime.clone()} />
-
-                                <AccountsCard runtime={current_runtime.clone()} />
-
-                                <ChildBountiesCard />
 
                             </div>
 
+                        </div>
+
+                        <div class="sm:hidden">
                             <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
                         </div>
 

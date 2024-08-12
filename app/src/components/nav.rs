@@ -14,11 +14,11 @@ pub fn navbar(props: &NavbarProps) -> Html {
     let state = use_context::<StateContext>().unwrap();
 
     html! {
-        <nav class="sm:fixed w-full z-20 top-0 start-0 bg-transparent dark:bg-gray-900">
-            <div class="flex items-center justify-end sm:justify-between mx-4 p-4 h-20">
-                <a class="hidden sm:block" href="https://claimeer.app/">
-                    <img class="h-8" src="/images/claimeer_logo_gray_600.svg" alt="Claimeer logo" />
-                </a>
+        <nav class="fixed w-full z-20 top-0 start-0 bg-gray-200 dark:bg-gray-900">
+            <div class="flex items-center justify-end mx-4 p-4 h-20">
+                // <a class="hidden sm:block" href="https://claimeer.app/">
+                //     <img class="h-8" src="/images/claimeer_logo_gray_600.svg" alt="Claimeer logo" />
+                // </a>
 
                 <div class="inline-flex items-center">
 
@@ -75,9 +75,9 @@ pub struct FooterProps {
 pub fn footer(props: &FooterProps) -> Html {
     let onchange = props.onchange.reform(move |e| e);
     html! {
-        <footer class="w-full bg-transparent mb-2 dark:bg-gray-900">
+        <footer class="w-full bg-transparent my-8 sm:my-2 dark:bg-gray-900">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
-                <div class="inline-flex items-center sm:mt-0">
+                <div class="inline-flex items-center justify-center sm:mt-0">
                     <span class="inline-flex text-xs text-gray-500 sm:text-center dark:text-gray-400">
                         <span class="me-1">{"© 2024 Claimeer · Built by"}</span>
                         <a href="https://turboflakes.io/" target="_blank" class="flex items-center hover:underline hover:underline-offset-2 hover:text-gray-900">
