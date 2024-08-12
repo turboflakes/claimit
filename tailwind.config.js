@@ -11,6 +11,7 @@ module.exports = {
     },
     theme: {
       borderRadius: {
+        'md': '1rem',
         'lg': '1.5rem',
         'full': '9999px',
       },

@@ -228,8 +228,8 @@ pub fn claim_modal() -> Html {
     html! {
         <div class={classes!("modal__claim", visibility)}>
             <div class="relative p-4 w-full max-w-2xl max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 z-60">
-                    <div class="flex items-center justify-between px-4 pt-4 md:px-5 md:pt-5 rounded-t-lg">
+                <div class="relative bg-gray-200 rounded-lg shadow dark:bg-gray-700 z-60">
+                    <div class="flex items-center justify-between px-4 pt-4 md:px-5 md:pt-5 bg-gray-200 rounded-t-lg">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                             {
                                 if extension.is_connected_or_ready() {
@@ -252,7 +252,7 @@ pub fn claim_modal() -> Html {
                             if extension.is_connected_or_ready() {
                                 html! {
                                     <div>
-                                        <h4 class="ms-2 mb-2 text-sm text-gray-500 dark:text-gray-100">{"Claim from account"}</h4>
+                                        <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Claim from account"}</h4>
                                         <ExtensionAccountDropdown selected={extension.signer.clone()}
                                             options={(*extension_accounts).clone()} onchange={&onchange_extension_account} />
                                     </div>
@@ -261,7 +261,7 @@ pub fn claim_modal() -> Html {
 
                                 html! {
                                     <div>
-                                        <h4 class="ms-2 mb-2 text-sm text-gray-500 dark:text-gray-100">{"Supported wallets"}</h4>
+                                        <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Supported wallets"}</h4>
                                         <div class="">
                                             <Button label={"Polkadot JS"} class="btn__logo" onclick={&onclick_polkadotjs} >
                                                 <img class="h-6" src="/images/polkadot_js_logo.svg" alt="polkadot js extension" />
@@ -278,8 +278,8 @@ pub fn claim_modal() -> Html {
 
                                     html! {
                                         <div>
-                                            <h4 class="ms-2 mb-2 text-sm text-gray-500 dark:text-gray-100">{"Claimable child bounties"}</h4>
-                                            <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 overflow-y-scroll h-96">
+                                            <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Claimable child bounties"}</h4>
+                                            <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-600 dark:text-gray-400 overflow-y-scroll h-96">
                                                 { for state.claim.clone().unwrap().child_bounty_ids.into_iter().map(|id|
                                                     html! {
                                                         <ChildBountyItemSmall id={id} />
@@ -294,7 +294,7 @@ pub fn claim_modal() -> Html {
 
                     </div>
 
-                    <div class="flex items-center justify-between p-4 md:p-5 bg-gray-50 rounded-b-lg">
+                    <div class="flex items-center justify-between p-4 md:p-5 rounded-b-lg">
                         <button type="button" class="btn btn__default" onclick={&oncancel}>{"Cancel"}</button>
 
                         {
@@ -350,7 +350,7 @@ pub fn add_account_modal() -> Html {
     html! {
         <div class={classes!("modal__add_account", visibility)}>
             <div class="relative p-4 w-full max-w-2xl max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 z-60">
+                <div class="relative bg-gray-200 rounded-lg shadow dark:bg-gray-700 z-60">
                     <div class="flex items-center justify-between px-4 pt-4 md:px-5 md:pt-5 rounded-t-lg">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                             {"Add Account"}

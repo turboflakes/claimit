@@ -269,7 +269,7 @@ pub fn extension_account_item(props: &ExtensionAccountItemProps) -> Html {
 
     html! {
         <li class="account__item">
-            <div type="button" class={classes!("relative flex justify-between items-center px-4 py-3 text-gray-600 dark:text-gray-100 hover:bg-gray-200 w-full rounded-lg dark:bg-gray-800 cursor-pointer".to_string(), props.highlight.then(|| Some("bg-gray-100")))}
+            <div type="button" class={classes!("relative flex justify-between items-center px-4 py-3 text-gray-600 dark:text-gray-100 hover:bg-gray-200 w-full rounded-md dark:bg-gray-800 cursor-pointer".to_string(), props.highlight.then(|| Some("bg-gray-100")))}
                 {onclick}>
                 <div class="inline-flex items-center">
                     <Identicon address={props.account.address.clone()} size={24} class="me-2" />
@@ -578,7 +578,7 @@ pub fn child_bounty_item_small(props: &ChildBountyItemSmallProps) -> Html {
     if let Some(child_bounties) = &state.child_bounties_raw {
         if let Some(child_bounty) = child_bounties.get(&props.id) {
             return html! {
-                <li class="flex rounded-lg bg-gray-50 dark:bg-gray-700">
+                <li class="flex rounded-md bg-gray-50 dark:bg-gray-700">
                     <div class="flex-auto p-6 ">
                         <div class="flex items-center justify-between">
                             <h4 class="flex-auto text-sm text-gray-800 dark:text-gray-200 block truncate w-1">
