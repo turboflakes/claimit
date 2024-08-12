@@ -3,7 +3,7 @@ use crate::router::{Query, Routes};
 use crate::state::Action;
 use crate::state::StateContext;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::child_bounties::Id;
+use claimeer_common::types::{child_bounties::Id, layout::BalanceMode};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
@@ -238,6 +238,68 @@ pub fn add_account_button(props: &AddAccountButtonProps) -> Html {
             </div>
 
             <p class="font-light text-xs text-left text-gray-800">{"Add a child bounty beneficiary account you want to track and claim!"}</p>
+        </button>
+    }
+}
+
+#[function_component(BalanceButtonGroup)]
+pub fn balance_button_group() -> Html {
+    let state = use_context::<StateContext>().unwrap();
+
+    let onclick = {
+        let state = state.clone();
+        Callback::from(move |e| {
+            state.dispatch(Action::ChangeBalanceMode(e));
+        })
+    };
+
+    html! {
+        <div class="inline-flex">
+            <TotalBalanceIconButton onclick={&onclick} disabled={state.layout.is_total_balance_mode()} />
+            <TotalAwardedIconButton onclick={&onclick} disabled={state.layout.is_total_awarded_mode()} />
+        </div>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct TotalBalanceIconButtonProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    pub onclick: Callback<BalanceMode>,
+}
+
+#[function_component(TotalBalanceIconButton)]
+pub fn total_balance_icon_button(props: &TotalBalanceIconButtonProps) -> Html {
+    let onclick = props.onclick.reform(move |_| BalanceMode::TotalBalance);
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__white")} {onclick} disabled={props.disabled.clone()}>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M12 14a3 3 0 0 1 3-3h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4a3 3 0 0 1-3-3Zm3-1a1 1 0 1 0 0 2h4v-2h-4Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M12.293 3.293a1 1 0 0 1 1.414 0L16.414 6h-2.828l-1.293-1.293a1 1 0 0 1 0-1.414ZM12.414 6 9.707 3.293a1 1 0 0 0-1.414 0L5.586 6h6.828ZM4.586 7l-.056.055A2 2 0 0 0 3 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2h-4a5 5 0 0 1 0-10h4a2 2 0 0 0-1.53-1.945L17.414 7H4.586Z" clip-rule="evenodd"/>
+            </svg>
+        </button>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct TotalAwardedIconButtonProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    pub onclick: Callback<BalanceMode>,
+}
+
+#[function_component(TotalAwardedIconButton)]
+pub fn total_awarded_icon_button(props: &TotalAwardedIconButtonProps) -> Html {
+    let onclick = props.onclick.reform(move |_| BalanceMode::TotalAwarded);
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__white")} {onclick} disabled={props.disabled.clone()}>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11 9a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
+                <path fill-rule="evenodd" d="M9.896 3.051a2.681 2.681 0 0 1 4.208 0c.147.186.38.282.615.255a2.681 2.681 0 0 1 2.976 2.975.681.681 0 0 0 .254.615 2.681 2.681 0 0 1 0 4.208.682.682 0 0 0-.254.615 2.681 2.681 0 0 1-2.976 2.976.681.681 0 0 0-.615.254 2.682 2.682 0 0 1-4.208 0 .681.681 0 0 0-.614-.255 2.681 2.681 0 0 1-2.976-2.975.681.681 0 0 0-.255-.615 2.681 2.681 0 0 1 0-4.208.681.681 0 0 0 .255-.615 2.681 2.681 0 0 1 2.976-2.975.681.681 0 0 0 .614-.255ZM12 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" clip-rule="evenodd"/>
+                <path d="M5.395 15.055 4.07 19a1 1 0 0 0 1.264 1.267l1.95-.65 1.144 1.707A1 1 0 0 0 10.2 21.1l1.12-3.18a4.641 4.641 0 0 1-2.515-1.208 4.667 4.667 0 0 1-3.411-1.656Zm7.269 2.867 1.12 3.177a1 1 0 0 0 1.773.224l1.144-1.707 1.95.65A1 1 0 0 0 19.915 19l-1.32-3.93a4.667 4.667 0 0 1-3.4 1.642 4.643 4.643 0 0 1-2.53 1.21Z"/>
+            </svg>
         </button>
     }
 }

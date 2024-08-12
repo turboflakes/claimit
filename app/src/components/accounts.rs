@@ -1,11 +1,11 @@
 use crate::components::{
-    buttons::AddAccountButton,
+    buttons::{AddAccountButton, BalanceButtonGroup},
     items::{AccountItem, AccountItemSmall},
 };
 use crate::state::{Action, StateContext};
 use claimeer_common::{
     runtimes::{support::SupportedRelayRuntime, utils::amount_human},
-    types::child_bounties::Filter,
+    types::{child_bounties::Filter, layout::BalanceMode},
 };
 use std::str::FromStr;
 use subxt::utils::AccountId32;
@@ -80,19 +80,19 @@ pub struct TotalBalancesCardProps {
 pub fn total_balances_card(props: &TotalBalancesCardProps) -> Html {
     let state = use_context::<StateContext>().unwrap();
 
-    let total_balance = state
-        .accounts
-        .iter()
-        .map(|account| account.balance.total())
-        .sum::<u128>();
-
     html! {
         <div class="w-full max-w-[375px] md:max-w-[828px]">
-            <div class="inline-flex gap-8 w-full items-start">
+            <div class="inline-flex gap-8 w-full items-end">
 
-                <TotalBalanceTitle runtime={props.runtime.clone()} />
+                {
+                    match state.layout.balance_mode.clone() {
+                        BalanceMode::TotalBalance => html! { <TotalBalanceTitle runtime={props.runtime.clone()} /> },
+                        BalanceMode::TotalAwarded => html! { <TotalAwardedTitle runtime={props.runtime.clone()} /> }
+                    }
 
-                <TotalAwardedTitle runtime={props.runtime.clone()} />
+                }
+
+                <BalanceButtonGroup />
 
             </div>
         </div>

@@ -41,7 +41,7 @@ hr {
 }
 
 .btn.btn__icon.btn__white {
-    @apply bg-white;
+    @apply bg-white disabled:bg-gray-300;
 }
 
 .btn.btn__icon.btn__gray {

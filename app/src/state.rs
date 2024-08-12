@@ -8,7 +8,7 @@ use claimeer_common::types::{
     claims::{ClaimState, ClaimStatus},
     extensions::ExtensionAccount,
     extensions::{ExtensionState, ExtensionStatus},
-    layout::LayoutState,
+    layout::{BalanceMode, LayoutState},
 };
 use gloo::storage::{LocalStorage, Storage};
 use serde::{Deserialize, Serialize};
@@ -61,6 +61,7 @@ pub enum Action {
     SetFilter(Filter),
     /// Layout actions
     ToggleLayoutAddAccountModal,
+    ChangeBalanceMode(BalanceMode),
 }
 
 impl Reducible for State {
@@ -434,6 +435,21 @@ impl Reducible for State {
             Action::ToggleLayoutAddAccountModal => {
                 let mut layout = self.layout.clone();
                 layout.is_add_account_modal_visible = !layout.is_add_account_modal_visible;
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout,
+                }
+                .into()
+            }
+            Action::ChangeBalanceMode(balance_mode) => {
+                let mut layout = self.layout.clone();
+                layout.balance_mode = balance_mode;
 
                 State {
                     accounts: self.accounts.clone(),
