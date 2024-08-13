@@ -145,7 +145,7 @@ pub fn main() -> Html {
 
                         <div class="px-4 flex flex-col justify-center items-center h-screen">
                             <div class="flex flex-col flex-1 justify-center items-center">
-                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo_black.svg" alt="Claimeer logo" />
+                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
                                 <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                             </div>
 

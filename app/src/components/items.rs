@@ -493,7 +493,7 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
 
                                 { if child_bounty.is_claimable(block_number) {
                                     html! {
-                                        <span class="bg-yellow text-gray-900 text-xs font-medium px-2.5 py-1 rounded-full">
+                                        <span class={classes!("chip", state.network.runtime.class())}>
                                             {"Claimable"}
                                         </span>
                                     }
@@ -512,57 +512,6 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
             }
         }
     }
-
-    // let duration = if let Some(block_number) = state.network.finalized_block_number.as_ref() {
-    //     if !props.child_bounty.is_claimable(block_number) {
-    //         let n = props.child_bounty.unlock_at - block_number;
-    //         let d = Duration::new(n as u64 * 6, 0);
-    //         format_duration(d).to_string()
-    //     } else {
-    //         "".to_string()
-    //     }
-    // } else {
-    //     "".to_string()
-    // };
-
-    // html! {
-    //     <li class="flex rounded-lg bg-white dark:bg-gray-700">
-    //         <div class="flex-auto px-6 py-3">
-    //             <div class="flex items-center justify-between">
-    //                 <h4 class="flex-auto text-base text-gray-800 dark:text-gray-200 block truncate w-1">
-    //                     {props.child_bounty.description.clone()}
-    //                 </h4>
-    //                 <div class="inline-flex items-center ms-2">
-    //                     <div class="text-lg text-gray-800 dark:text-gray-200">
-    //                         {props.child_bounty.value_human(state.network.runtime)}
-    //                     </div>
-    //                     <div class="ml-1 text-lg text-gray-600 dark:text-gray-400">{state.network.runtime.unit()}</div>
-    //                 </div>
-    //             </div>
-    //             <p class="text-xs">{format!("# {} / {}", props.child_bounty.parent_id, props.child_bounty.id)}</p>
-    //             <hr class="my-2" />
-    //             <div class="flex items-center justify-between">
-
-    //                 <AccountChip account={props.child_bounty.beneficiary.clone()} />
-
-    //                 { if let Some(block_number) = state.network.finalized_block_number.is_some() && props.child_bounty.is_claimable(state.network.finalized_block_number.unwrap()) {
-    //                     html! {
-    //                         <span class="bg-yellow text-gray-900 text-xs font-medium px-2.5 py-1 rounded-full">
-    //                             {"Claimable"}
-    //                         </span>
-    //                     }
-    //                 } else {
-    //                     html! {
-    //                         <span class="text-xs">
-    //                             {format!("Claim in {}", duration)}
-    //                         </span>
-    //                     }
-    //                 }}
-
-    //             </div>
-    //         </div>
-    //     </li>
-    // }
     html! {}
 }
 

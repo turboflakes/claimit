@@ -19,6 +19,8 @@ module.exports = {
         transparent: 'transparent',
         current: 'currentColor',
         'white': '#ffffff',
+        'polkadot': '#E6007A',
+        'kusama': '#000000',
         'gray': {
           50: 'hsl(210, 17% 98%)',
           100: 'hsl(210, 17% 98%)',

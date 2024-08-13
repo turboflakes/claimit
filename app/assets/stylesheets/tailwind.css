@@ -49,8 +49,23 @@ hr {
 }
 
 .btn__claim {
-    @apply ms-8 px-8 py-2 border-2 border-gray-900 text-base font-semibold text-center items-center text-gray-900 bg-yellow rounded-full shadow-2xl hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
+    @apply px-4 py-2 border-2 border-white text-base font-semibold text-center items-center text-white rounded-full shadow-2xl hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
 }
+
+.chip {
+    @apply text-white text-xs font-medium px-2.5 py-1 rounded-full;
+}
+
+.chip.polkadot,
+.btn__claim.polkadot {
+    @apply bg-polkadot;
+}
+
+.chip.kusama,
+.btn__claim.kusama {
+    @apply bg-kusama;
+}
+
 
 .btn__add_account {
     @apply w-64 h-48 p-2.5 flex flex-col justify-evenly border-2 border-dashed border-gray-400 hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
