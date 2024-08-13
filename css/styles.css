@@ -1161,6 +1161,11 @@ video {
   border-color: hsl(210 14% 83% / var(--tw-border-opacity));
 }
 
+.border-gray-50 {
+  --tw-border-opacity: 1;
+  border-color: hsl(210 17% 98% / var(--tw-border-opacity));
+}
+
 .border-gray-600 {
   --tw-border-opacity: 1;
   border-color: hsl(208 7% 46% / var(--tw-border-opacity));
@@ -1169,6 +1174,11 @@ video {
 .border-gray-900 {
   --tw-border-opacity: 1;
   border-color: hsl(210 11% 15% / var(--tw-border-opacity));
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
 .bg-gray-100 {
@@ -1198,6 +1208,11 @@ video {
 
 .bg-gray-900\/70 {
   background-color: hsl(210 11% 15% / 0.7);
+}
+
+.bg-polkadot {
+  --tw-bg-opacity: 1;
+  background-color: rgb(230 0 122 / var(--tw-bg-opacity));
 }
 
 .bg-red {
@@ -1784,16 +1799,13 @@ hr:where(.dark, .dark *) {
 }
 
 .btn__claim {
-  margin-inline-start: 2rem;
   align-items: center;
   border-radius: 9999px;
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: hsl(210 11% 15% / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(58 100% 68% / var(--tw-bg-opacity));
-  padding-left: 2rem;
-  padding-right: 2rem;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+  padding-left: 1rem;
+  padding-right: 1rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   text-align: center;
@@ -1801,7 +1813,7 @@ hr:where(.dark, .dark *) {
   line-height: 1.5rem;
   font-weight: 600;
   --tw-text-opacity: 1;
-  color: hsl(210 11% 15% / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity));
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1820,6 +1832,31 @@ hr:where(.dark, .dark *) {
 .btn__claim:hover:where(.dark, .dark *) {
   --tw-bg-opacity: 1;
   background-color: hsl(210 9% 31% / var(--tw-bg-opacity));
+}
+
+.chip {
+  border-radius: 9999px;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.chip.polkadot,
+.btn__claim.polkadot {
+  --tw-bg-opacity: 1;
+  background-color: rgb(230 0 122 / var(--tw-bg-opacity));
+}
+
+.chip.kusama,
+.btn__claim.kusama {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .btn__add_account {
