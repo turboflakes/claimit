@@ -9,6 +9,7 @@ use yew::{
 #[derive(PartialEq, Properties, Clone)]
 pub struct InputProps {
     pub onenter: Callback<String>,
+    #[prop_or_default]
     pub placeholder: AttrValue,
 }
 

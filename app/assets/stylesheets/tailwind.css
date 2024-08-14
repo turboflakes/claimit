@@ -12,6 +12,18 @@ hr {
     @apply dark:border-gray-600;
 }
 
+.main {
+    @apply mx-auto h-screen overflow-auto sm:overflow-hidden;
+}
+
+.main.polkadot {
+    @apply bg-[url('/images/background_polkadot.svg')] bg-220 bg-center bg-no-repeat;
+}
+
+.main.kusama {
+    @apply bg-[url('/images/background_kusama.svg')] bg-220 bg-center bg-no-repeat;
+}
+
 .account__input {
     @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 placeholder-gray-600  focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
 }
@@ -29,7 +41,7 @@ hr {
 }
 
 .btn.btn__link {
-    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:underline hover:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
+    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-900 dark:text-gray-400 hover:underline hover:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
 }
 
 .btn.btn__logo {
@@ -37,15 +49,19 @@ hr {
 }
 
 .btn.btn__icon {
-    @apply text-white bg-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 ms-2 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+    @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 mx-1 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
 .btn.btn__icon.btn__white {
-    @apply bg-white disabled:bg-gray-300;
+    @apply bg-white disabled:bg-gray-300 hover:bg-gray-100;
 }
 
 .btn.btn__icon.btn__gray {
-    @apply bg-gray-50;
+    @apply bg-gray-50 hover:bg-gray-200;
+}
+
+.btn.btn__icon.btn__transparent {
+    @apply bg-transparent hover:bg-gray-300 text-gray-900 disabled:text-gray-500;
 }
 
 .btn__claim {
@@ -105,4 +121,12 @@ hr {
 
 .modal__add_account {
     @apply overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full bg-gray-900/70 dark:bg-gray-900/80 inset-0 md:inset-0 h-full max-h-full;
+}
+
+.step__index {
+    @apply w-28 text-gray-900 font-bold text-8xl;
+}
+
+.step__dot {
+    @apply inline-block w-2 h-2 rounded-full;
 }

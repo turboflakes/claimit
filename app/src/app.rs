@@ -13,6 +13,7 @@ use crate::{
         child_bounties::ChildBountiesCard,
         modals::{AddAccountModal, ClaimModal},
         nav::{Footer, Navbar},
+        steps::OnboardingSteps,
     },
     providers::network::NetworkState,
 };
@@ -136,7 +137,7 @@ pub fn main() -> Html {
     // Html
     html! {
         <>
-            <div class={classes!("mx-auto", "h-screen", "overflow-auto", "sm:overflow-hidden", current_runtime.class())}>
+            <div class={classes!("main", current_runtime.class())}>
                 <ContextProvider<StateContext> context={state.clone()}>
 
                     <Navbar runtime={current_runtime.clone()} />
@@ -144,10 +145,23 @@ pub fn main() -> Html {
                     <div class="grid grid-cols-1 sm:grid-cols-3">
 
                         <div class="px-4 flex flex-col justify-center items-center h-screen">
-                            <div class="flex flex-col flex-1 justify-center items-center">
-                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
-                                <p class="text-xl text-light text-center text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
-                            </div>
+                            // {
+                            //     if state.accounts.len() > 0 {
+                            //         html! {
+                                        <div class="flex flex-col flex-1 justify-center items-center">
+                                            <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
+                                            <p class="text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                                        </div>
+
+                            //         }
+                            //     } else {
+                            //         html! {
+                            //             <div class="flex flex-col flex-1 mt-28 items-center">
+                            //                 <OnboardingSteps runtime={current_runtime.clone()} />
+                            //             </div>
+                            //         }
+                            //     }
+                            // }
 
                             <div class="hidden sm:flex">
                                 <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
@@ -160,11 +174,23 @@ pub fn main() -> Html {
 
                                 <div class="flex flex-col items-center my-4 mt-20 md:mt-32 px-4 sm:px-0">
 
-                                    <TotalBalancesCard runtime={current_runtime.clone()} />
+                                    {
+                                        if state.accounts.len() > 0 {
+                                            html! {
+                                                <>
+                                                    <TotalBalancesCard runtime={current_runtime.clone()} />
+                                                    <AccountsCard runtime={current_runtime.clone()} />
+                                                    <ChildBountiesCard />
+                                                </>
+                                            }
+                                        } else {
+                                            html! {
+                                                <OnboardingSteps />
+                                            }
+                                        }
+                                    }
 
-                                    <AccountsCard runtime={current_runtime.clone()} />
 
-                                    <ChildBountiesCard />
 
                                 </div>
 

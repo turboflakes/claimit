@@ -61,7 +61,8 @@ pub fn accounts_card(props: &AccountsCardProps) -> Html {
                 { for state.accounts.iter().rev().cloned().map(|account|
                     html! {
                         <AccountItem {account} runtime={props.runtime.clone()} onunfollow={&onunfollow} />
-                }) }
+                    })
+                }
 
                 <li class="account__item">
                     <AddAccountButton />

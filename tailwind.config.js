@@ -15,6 +15,12 @@ module.exports = {
         'lg': '1.5rem',
         'full': '9999px',
       },
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '220': '220%',
+      },
       colors: {
         transparent: 'transparent',
         current: 'currentColor',

@@ -116,7 +116,6 @@ impl Reducible for State {
             Action::RemoveAccountId(id) => {
                 let mut accounts = self.accounts.clone();
                 accounts.retain(|account| account.id != id);
-                LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
 
                 let following = accounts
                     .iter()
@@ -124,6 +123,8 @@ impl Reducible for State {
                     .collect::<Vec<AccountId32>>();
 
                 let filter = Filter::Following(following);
+
+                LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
 
                 State {
                     accounts,

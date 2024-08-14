@@ -350,3 +350,43 @@ pub fn total_claimable_icon_button(props: &TotalClaimableIconButtonProps) -> Htm
         </button>
     }
 }
+
+#[derive(Properties, PartialEq)]
+pub struct NextIconButtonProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    pub onclick: Callback<()>,
+}
+
+#[function_component(NextIconButton)]
+pub fn next_icon_button(props: &NextIconButtonProps) -> Html {
+    let onclick = props.onclick.reform(move |_| ());
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__transparent")} {onclick} disabled={props.disabled.clone()}>
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+            </svg>
+        </button>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct BackIconButtonProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    pub onclick: Callback<()>,
+}
+
+#[function_component(BackIconButton)]
+pub fn back_icon_button(props: &BackIconButtonProps) -> Html {
+    let onclick = props.onclick.reform(move |_| ());
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__transparent")} {onclick} disabled={props.disabled.clone()}>
+            <svg class="w-6 h-6 text-inherent dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/>
+            </svg>
+        </button>
+    }
+}
