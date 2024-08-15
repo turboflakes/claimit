@@ -21,7 +21,8 @@ pub fn onboarding_steps() -> Html {
     let onclick_next = {
         let step = step.clone();
         if *step == 2 {
-            Callback::from(move |_| step.set(0))
+            let state = state.clone();
+            Callback::from(move |_| state.dispatch(Action::FinishOnboarding))
         } else {
             Callback::from(move |_| step.set(*step + 1))
         }
@@ -86,7 +87,7 @@ pub fn onboarding_steps() -> Html {
                                         {"You're all set!"}
                                     </h1>
                                     <p class="text-gray-900 text-lg tracking-wider leading-snug text-wrap">
-                                        {"Enjoy and start claiming your bounties!"}
+                                        {format!("Following {} account{}. Enjoy and start claiming your bounties!", state.accounts.len(), (state.accounts.len() > 1).then_some("s").unwrap_or(""))}
                                     </p>
                                 </div>
                             }
@@ -99,7 +100,7 @@ pub fn onboarding_steps() -> Html {
                             <li class={classes!{"step__dot", (*step >= 1).then(|| Some("bg-gray-900")), (*step == 0).then(|| Some("bg-gray-500"))}} />
                             <li class={classes!{"step__dot", (*step >= 2).then(|| Some("bg-gray-900")), (*step <= 1).then(|| Some("bg-gray-500"))}} />
                         </ul>
-                        <NextIconButton onclick={onclick_next} />
+                        <NextIconButton onclick={onclick_next} disabled={*step == 1 && state.accounts.len() == 0} />
                     </div>
                 </div>
             </div>

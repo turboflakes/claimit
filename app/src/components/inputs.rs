@@ -1,4 +1,3 @@
-use log::info;
 use std::str::FromStr;
 use subxt::utils::AccountId32;
 use web_sys::{HtmlInputElement, MouseEvent};

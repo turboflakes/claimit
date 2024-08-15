@@ -1,6 +1,6 @@
 use crate::providers::network::NetworkStatus;
 use crate::router::Query;
-use crate::state::{account_key, signer_key, Action, State, StateContext};
+use crate::state::{account_key, onboarded_key, signer_key, Action, State, StateContext};
 use crate::workers::{
     network_storage::{Query as StorageQuery, Response as StorageResponse, StorageQueries},
     network_subscription::{
@@ -51,14 +51,17 @@ pub fn main() -> Html {
         let accounts: Vec<Account> =
             LocalStorage::get(account_key(current_runtime.clone())).unwrap_or_else(|_| vec![]);
 
+        let is_onboarding =
+            accounts.len() == 0 || !LocalStorage::get(onboarded_key()).unwrap_or(false);
+
         let following = accounts
             .iter()
             .map(|a| AccountId32::from_str(&a.address).unwrap())
             .collect::<Vec<AccountId32>>();
 
-        let filter = match following.len() {
-            0 => Filter::All,
-            _ => Filter::Following(following),
+        let filter = match is_onboarding {
+            true => Filter::All,
+            false => Filter::Following(following),
         };
 
         let signer: Option<ExtensionAccount> =
@@ -71,7 +74,7 @@ pub fn main() -> Html {
             filter,
             extension: ExtensionState::new(signer.clone()),
             claim: None,
-            layout: LayoutState::new(),
+            layout: LayoutState::new(is_onboarding),
         }
     });
 
@@ -175,17 +178,17 @@ pub fn main() -> Html {
                                 <div class="flex flex-col items-center my-4 mt-20 md:mt-32 px-4 sm:px-0">
 
                                     {
-                                        if state.accounts.len() > 0 {
+                                        if state.layout.is_onboarding {
+                                            html! {
+                                                <OnboardingSteps />
+                                            }
+                                        } else {
                                             html! {
                                                 <>
                                                     <TotalBalancesCard runtime={current_runtime.clone()} />
                                                     <AccountsCard runtime={current_runtime.clone()} />
                                                     <ChildBountiesCard />
                                                 </>
-                                            }
-                                        } else {
-                                            html! {
-                                                <OnboardingSteps />
                                             }
                                         }
                                     }

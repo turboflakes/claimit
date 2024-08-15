@@ -22,6 +22,7 @@ use yew::{Reducible, UseReducerHandle};
 
 const ACCOUNTS_KEY: &str = "accounts";
 const SIGNER_KEY: &str = "signer";
+const ONBOARDED_KEY: &str = "onboarded";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 pub struct State {
@@ -62,6 +63,7 @@ pub enum Action {
     /// Layout actions
     ToggleLayoutAddAccountModal,
     ChangeBalanceMode(BalanceMode),
+    FinishOnboarding,
 }
 
 impl Reducible for State {
@@ -463,6 +465,23 @@ impl Reducible for State {
                 }
                 .into()
             }
+            Action::FinishOnboarding => {
+                let mut layout = self.layout.clone();
+                layout.is_onboarding = false;
+
+                LocalStorage::set(self.onboarded_key(), true).expect("failed to set");
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout,
+                }
+                .into()
+            }
         }
     }
 }
@@ -474,6 +493,10 @@ impl State {
 
     pub fn signer_key(&self) -> String {
         signer_key(self.network.runtime)
+    }
+
+    pub fn onboarded_key(&self) -> String {
+        onboarded_key()
     }
 }
 
@@ -493,6 +516,10 @@ pub fn signer_key(runtime: SupportedRelayRuntime) -> String {
         runtime.to_string().to_lowercase(),
         SIGNER_KEY
     )
+}
+
+pub fn onboarded_key() -> String {
+    format!("{}::{}", env!("CARGO_PKG_NAME"), ONBOARDED_KEY)
 }
 
 pub type StateContext = UseReducerHandle<State>;

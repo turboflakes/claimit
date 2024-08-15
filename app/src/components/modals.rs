@@ -364,7 +364,7 @@ pub fn add_account_modal() -> Html {
                     </div>
                     <div class="p-4 md:p-5 space-y-4">
 
-                        { 
+                        {
                             if *is_visible {
                                 html! { <AccountInput placeholder="Enter the child bounty beneficiary account you wish to keep track of..." onenter={&onadd} /> }
                             } else {
