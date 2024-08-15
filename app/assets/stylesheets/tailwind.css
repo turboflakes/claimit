@@ -25,7 +25,7 @@ hr {
 }
 
 .account__input {
-    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 placeholder-gray-600  focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 border-2 border-gray-500 placeholder-gray-600  focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
 }
 
 .btn {

@@ -109,7 +109,7 @@ pub fn onboarding_steps() -> Html {
                         <ChildBountiesCard />
                     },
                     1 => html! {
-                        <div class="h-60 p-4 md:p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+                        <div class="h-48 p-4 md:p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
                             <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Add Account"}</h3>
                             <AccountInput onenter={&onadd} />
                         </div>

@@ -1,9 +1,10 @@
+use log::info;
 use std::str::FromStr;
 use subxt::utils::AccountId32;
 use web_sys::{HtmlInputElement, MouseEvent};
 use yew::{
-    events::KeyboardEvent, function_component, html, use_node_ref, use_state, AttrValue, Callback,
-    Html, Properties, TargetCast,
+    events::KeyboardEvent, function_component, html, use_effect_with, use_node_ref, use_state,
+    AttrValue, Callback, Html, Properties, TargetCast,
 };
 
 #[derive(PartialEq, Properties, Clone)]
@@ -17,6 +18,12 @@ pub struct InputProps {
 pub fn account_input(props: &InputProps) -> Html {
     let input_node_ref = use_node_ref();
     let err = use_state(|| "".to_string());
+
+    use_effect_with(input_node_ref.clone(), |input_ref| {
+        if let Some(input) = input_ref.cast::<HtmlInputElement>() {
+            let _ = input.focus();
+        }
+    });
 
     let onkeypress = {
         let onenter = props.onenter.clone();
@@ -70,7 +77,7 @@ pub fn account_input(props: &InputProps) -> Html {
     };
 
     html! {
-        <div class="py-4 w-full">
+        <div class="my-2 py-4 w-full">
             <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">{"Search"}</label>
             <div class="relative">
                 <div class="absolute inset-y-0 start-1 flex items-center ps-3 pointer-events-none">
