@@ -134,5 +134,5 @@ hr {
 }
 
 .account__chip {
-    @apply inline-flex items-center me-2 text-xs min-h-9 text-gray-600 dark:text-gray-300;
+    @apply inline-flex items-center justify-between me-2 text-xs min-h-9 text-gray-600 dark:text-gray-300;
 }

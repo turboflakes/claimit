@@ -29,8 +29,10 @@ pub fn account(props: &AccountChipProps) -> Html {
 
     html! {
         <span class={classes!("account__chip", props.class.clone())}>
-            <Identicon address={props.account.to_string()} size={24} class="me-2" />
-            <span class="me-2">{compact(&props.account.clone())}</span>
+            <div class="inline-flex items-center">
+                <Identicon address={props.account.to_string()} size={24} class="me-2" />
+                <span class="me-2">{compact(&props.account.clone())}</span>
+            </div>
             {
                 if !is_already_following {
                     html! {
