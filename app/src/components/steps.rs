@@ -1,10 +1,13 @@
 use crate::components::{
     buttons::{BackIconButton, NextIconButton},
     child_bounties::ChildBountiesCard,
+    chips::AccountChip,
     inputs::AccountInput,
 };
 use crate::state::{Action, StateContext};
 use gloo::timers::callback::Timeout;
+use std::str::FromStr;
+use subxt::config::substrate::AccountId32;
 use yew::{
     classes, function_component, html, use_context, use_effect_with, use_state, Callback, Html,
 };
@@ -65,7 +68,7 @@ pub fn onboarding_steps() -> Html {
                         <img src="/images/step_3.svg" alt="Step 3" />
                     </li>
                 </ul>
-                <div class="flex flex-col justify-between w-full ms-8 h-42">
+                <div class="flex flex-col justify-between w-full ms-8 h-52">
                     {
                         match *step {
                             0 => html! {
@@ -100,14 +103,21 @@ pub fn onboarding_steps() -> Html {
                             }
                         }
                     }
-                    <div class="inline-flex items-center justify-end w-full">
-                        <BackIconButton onclick={onclick_back} disabled={*step == 0} />
-                        <ul class="inline-flex mx-4 gap-4">
-                            <li class={classes!{"step__dot", "bg-gray-900"}} />
-                            <li class={classes!{"step__dot", (*step >= 1).then(|| Some("bg-gray-900")), (*step == 0).then(|| Some("bg-gray-500"))}} />
-                            <li class={classes!{"step__dot", (*step >= 2).then(|| Some("bg-gray-900")), (*step <= 1).then(|| Some("bg-gray-500"))}} />
-                        </ul>
-                        <NextIconButton onclick={onclick_next} disabled={*step == 1 && state.accounts.len() == 0} />
+                    <div>
+                        <div class="mt-4 inline-flex flex-wrap gap-2 items-center justify-start w-full">
+                            { for state.accounts.iter().cloned().map(|account| html! {
+                                <AccountChip class="bg-white rounded-full px-2" account={AccountId32::from_str(&account.address).unwrap()} />
+                            })}
+                        </div>
+                        <div class="inline-flex items-center justify-end w-full">
+                            <BackIconButton onclick={onclick_back} disabled={*step == 0} />
+                            <ul class="inline-flex mx-4 gap-4">
+                                <li class={classes!{"step__dot", "bg-gray-900"}} />
+                                <li class={classes!{"step__dot", (*step >= 1).then(|| Some("bg-gray-900")), (*step == 0).then(|| Some("bg-gray-500"))}} />
+                                <li class={classes!{"step__dot", (*step >= 2).then(|| Some("bg-gray-900")), (*step <= 1).then(|| Some("bg-gray-500"))}} />
+                            </ul>
+                            <NextIconButton onclick={onclick_next} disabled={*step == 1 && state.accounts.len() == 0} />
+                        </div>
                     </div>
                 </div>
             </div>

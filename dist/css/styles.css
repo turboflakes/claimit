@@ -811,6 +811,10 @@ video {
   margin-top: 8rem;
 }
 
+.mt-4 {
+  margin-top: 1rem;
+}
+
 .block {
   display: block;
 }
@@ -921,6 +925,10 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-52 {
+  height: 13rem;
 }
 
 .max-h-60 {
@@ -1133,6 +1141,10 @@ video {
   gap: 2rem;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -1289,6 +1301,11 @@ video {
 
 .bg-gray-900\/70 {
   background-color: hsl(210 11% 15% / 0.7);
+}
+
+.bg-kusama {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .bg-polkadot {
@@ -2113,12 +2130,14 @@ hr:where(.dark, .dark *) {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.btn.btn__icon.polkadot,
 .btn.btn__primary.polkadot,
 .btn__claim.polkadot {
   --tw-bg-opacity: 1;
   background-color: rgb(230 0 122 / var(--tw-bg-opacity));
 }
 
+.btn.btn__icon.kusama,
 .btn.btn__primary.kusama,
 .btn__claim.kusama {
   --tw-bg-opacity: 1;
@@ -2335,6 +2354,22 @@ hr:where(.dark, .dark *) {
   height: 0.5rem;
   width: 0.5rem;
   border-radius: 9999px;
+}
+
+.account__chip {
+  margin-inline-end: 0.5rem;
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: hsl(208 7% 46% / var(--tw-text-opacity));
+}
+
+.account__chip:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: hsl(210 14% 89% / var(--tw-text-opacity));
 }
 
 .hover\:bg-gray-100:hover {

@@ -72,11 +72,13 @@ hr {
     @apply text-white bg-gray-500 text-xs font-medium px-2.5 py-1 rounded-full;
 }
 
+.btn.btn__icon.polkadot,
 .btn.btn__primary.polkadot,
 .btn__claim.polkadot {
     @apply bg-polkadot;
 }
 
+.btn.btn__icon.kusama,
 .btn.btn__primary.kusama,
 .btn__claim.kusama {
     @apply bg-kusama;
@@ -129,4 +131,8 @@ hr {
 
 .step__dot {
     @apply inline-block w-2 h-2 rounded-full;
+}
+
+.account__chip {
+    @apply inline-flex items-center me-2 text-xs min-h-9 text-gray-600 dark:text-gray-300;
 }
