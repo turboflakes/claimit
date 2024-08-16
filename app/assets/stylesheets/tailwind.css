@@ -41,7 +41,7 @@ hr {
 }
 
 .btn.btn__link {
-    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-900 dark:text-gray-400 hover:underline hover:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
+    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-500 enabled:text-gray-900 dark:text-gray-400 hover:enabled:underline hover:enabled:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
 }
 
 .btn.btn__logo {

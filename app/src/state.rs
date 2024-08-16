@@ -63,6 +63,7 @@ pub enum Action {
     /// Layout actions
     ToggleLayoutAddAccountModal,
     ChangeBalanceMode(BalanceMode),
+    StartOnboarding,
     FinishOnboarding,
 }
 
@@ -119,13 +120,17 @@ impl Reducible for State {
                 let mut accounts = self.accounts.clone();
                 accounts.retain(|account| account.id != id);
 
-                let following = accounts
+                let filter = if accounts.len() > 0 {
+                    let following = accounts
                     .iter()
                     .map(|a| AccountId32::from_str(&a.address).unwrap())
                     .collect::<Vec<AccountId32>>();
 
-                let filter = Filter::Following(following);
-
+                    Filter::Following(following)
+                } else {
+                    Filter::All
+                };
+                
                 LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
 
                 State {
@@ -465,17 +470,42 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::FinishOnboarding => {
+            Action::StartOnboarding => {
                 let mut layout = self.layout.clone();
-                layout.is_onboarding = false;
+                layout.is_onboarding = true;
 
-                LocalStorage::set(self.onboarded_key(), true).expect("failed to set");
+                LocalStorage::set(self.onboarded_key(), false).expect("failed to set");
 
                 State {
                     accounts: self.accounts.clone(),
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout,
+                }
+                .into()
+            }
+            Action::FinishOnboarding => {
+                let mut layout = self.layout.clone();
+                layout.is_onboarding = false;
+
+                LocalStorage::set(self.onboarded_key(), true).expect("failed to set");
+
+                let following = self
+                    .accounts
+                    .iter()
+                    .map(|a| AccountId32::from_str(&a.address).unwrap())
+                    .collect::<Vec<AccountId32>>();
+
+                let filter = Filter::Following(following);
+
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout,
@@ -496,7 +526,7 @@ impl State {
     }
 
     pub fn onboarded_key(&self) -> String {
-        onboarded_key()
+        onboarded_key(self.network.runtime)
     }
 }
 
@@ -518,8 +548,13 @@ pub fn signer_key(runtime: SupportedRelayRuntime) -> String {
     )
 }
 
-pub fn onboarded_key() -> String {
-    format!("{}::{}", env!("CARGO_PKG_NAME"), ONBOARDED_KEY)
+pub fn onboarded_key(runtime: SupportedRelayRuntime) -> String {
+    format!(
+        "{}::{}::{}",
+        env!("CARGO_PKG_NAME"),
+        runtime.to_string().to_lowercase(),
+        ONBOARDED_KEY
+    )
 }
 
 pub type StateContext = UseReducerHandle<State>;

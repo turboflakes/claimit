@@ -28,7 +28,7 @@ use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
     classes, function_component, html, platform::spawn_local, prelude::use_reducer, use_callback,
-    ContextProvider, Html,
+    use_effect_with, ContextProvider, Html,
 };
 use yew_agent::{
     oneshot::{use_oneshot_runner, OneshotProvider},
@@ -51,8 +51,8 @@ pub fn main() -> Html {
         let accounts: Vec<Account> =
             LocalStorage::get(account_key(current_runtime.clone())).unwrap_or_else(|_| vec![]);
 
-        let is_onboarding =
-            accounts.len() == 0 || !LocalStorage::get(onboarded_key()).unwrap_or(false);
+        let is_onboarding = accounts.len() == 0
+            || !LocalStorage::get(onboarded_key(current_runtime.clone())).unwrap_or(false);
 
         let following = accounts
             .iter()
@@ -75,6 +75,15 @@ pub fn main() -> Html {
             extension: ExtensionState::new(signer.clone()),
             claim: None,
             layout: LayoutState::new(is_onboarding),
+        }
+    });
+
+    use_effect_with(state.accounts.clone(), {
+        let state = state.clone();
+        move |accounts| {
+            if accounts.len() == 0 {
+                state.dispatch(Action::StartOnboarding);
+            }
         }
     });
 

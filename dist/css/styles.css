@@ -1896,17 +1896,19 @@ hr:where(.dark, .dark *) {
   font-size: 0.75rem;
   line-height: 1rem;
   --tw-text-opacity: 1;
-  color: hsl(210 11% 15% / var(--tw-text-opacity));
+  color: hsl(210 11% 71% / var(--tw-text-opacity));
 }
 
-.btn.btn__link:hover {
-  text-decoration-line: underline;
-  text-underline-offset: 2px;
+.btn.btn__link:enabled {
+  --tw-text-opacity: 1;
+  color: hsl(210 11% 15% / var(--tw-text-opacity));
 }
 
 .btn.btn__link:enabled:hover {
   --tw-text-opacity: 1;
   color: hsl(210 11% 15% / var(--tw-text-opacity));
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
 }
 
 .btn.btn__link:where(.dark, .dark *) {
@@ -2382,9 +2384,22 @@ hr:where(.dark, .dark *) {
   --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
 }
 
+.enabled\:text-gray-900:enabled {
+  --tw-text-opacity: 1;
+  color: hsl(210 11% 15% / var(--tw-text-opacity));
+}
+
 .hover\:enabled\:text-gray-900:enabled:hover {
   --tw-text-opacity: 1;
   color: hsl(210 11% 15% / var(--tw-text-opacity));
+}
+
+.hover\:enabled\:underline:enabled:hover {
+  text-decoration-line: underline;
+}
+
+.hover\:enabled\:underline-offset-2:enabled:hover {
+  text-underline-offset: 2px;
 }
 
 .disabled\:bg-gray-300:disabled {

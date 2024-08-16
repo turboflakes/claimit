@@ -4,19 +4,27 @@ use crate::components::{
     inputs::AccountInput,
 };
 use crate::state::{Action, StateContext};
-use yew::{classes, function_component, html, use_context, use_state, Callback, Html};
+use claimeer_common::runtimes::support::SupportedRelayRuntime;
+use gloo::timers::callback::Timeout;
+use yew::{
+    classes, function_component, html, use_context, use_effect_with, use_state, Callback, Html,
+};
 
 #[function_component(OnboardingSteps)]
 pub fn onboarding_steps() -> Html {
     let step = use_state(|| 0);
+    let timeout = use_state(|| None);
     let state = use_context::<StateContext>().unwrap();
 
-    // let onunfollow = {
-    //     let state = state.clone();
-    //     Callback::from(move |id| {
-    //         state.dispatch(Action::RemoveAccountId(id));
-    //     })
-    // };
+    use_effect_with(step.clone(), {
+        let state = state.clone();
+        move |step| {
+            if **step == 2 {
+                let handle = Timeout::new(5_000, move || state.dispatch(Action::FinishOnboarding));
+                timeout.set(Some(handle));
+            }
+        }
+    });
 
     let onclick_next = {
         let step = step.clone();

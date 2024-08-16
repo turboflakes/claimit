@@ -84,7 +84,14 @@ pub fn child_bounties_title() -> Html {
                     <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Child Bounties"}</h3>
                 </div>
 
-                <ClaimButton />
+                {
+                    if state.filter.is_following() {
+                        html!{ <ClaimButton /> }
+                    } else {
+                        html! {}
+                    }
+                }
+
             </div>
         }
     } else {

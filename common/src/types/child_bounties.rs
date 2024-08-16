@@ -88,6 +88,13 @@ impl Filter {
             _ => false,
         }
     }
+
+    pub fn is_following(&self) -> bool {
+        match self {
+            Filter::Following(_) => true,
+            _ => false,
+        }
+    }
 }
 
 impl std::fmt::Display for Filter {
