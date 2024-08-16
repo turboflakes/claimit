@@ -24,7 +24,7 @@ pub fn navbar(props: &NavbarProps) -> Html {
 
                     <Spinner is_visible={state.network.is_fetching()} />
 
-                    <div class="inline-flex items-center space-x-2 text-gray-900">
+                    <div class="ms-4 inline-flex items-center space-x-2 text-gray-900">
                         {
                             if state.network.finalized_block_number.is_some() {
                                 html! {

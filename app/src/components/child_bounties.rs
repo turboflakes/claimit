@@ -1,6 +1,7 @@
 use crate::components::{
     buttons::ClaimButton,
     items::{ChildBountyItem, FilterItem},
+    spinners::Spinner,
 };
 use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::utils::amount_human;
@@ -12,7 +13,13 @@ use yew::{function_component, html, use_context, Callback, Html};
 pub fn child_bounties_card() -> Html {
     let state = use_context::<StateContext>().unwrap();
 
-    if state.child_bounties_raw.is_some() {
+    if state.network.is_fetching() && state.child_bounties_raw.is_none() {
+        html! {
+            <div class="flex justify-end h-96 p-4 md:p-6 bg-gray-50 max-w-[375px] md:max-w-[828px] rounded-lg w-full">
+                <Spinner is_visible={state.network.is_fetching()} />
+            </div>
+        }
+    } else if state.child_bounties_raw.is_some() {
         html! {
             <div class="p-4 md:p-6 bg-gray-50 max-w-[375px] md:max-w-[828px] text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
 
