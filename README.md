@@ -1,6 +1,10 @@
 # claimeer
 
-Claimeer ― It's a simple UI to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
+<p align="center">
+  <img src="https://github.com/turboflakes/claimeer/blob/main/claimeer_github_header.png?raw=true">
+</p>
+
+Claimeer ― It's a simple UI (dApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
 
 ## Development / Build from Source
 
@@ -73,3 +77,27 @@ Open a new terminal window and run
 #!/bin/bash
 npm run watch
 ```
+
+## Collaboration
+
+Have an idea for a new feature, a fix or you found a bug, please open an [issue](https://github.com/turboflakes/crunch/issues) or submit a [pull request](https://github.com/turboflakes/crunch/pulls).
+
+Any feedback is welcome.
+
+## About
+
+Claimeer - was made by **Turboflakes**. Visit us at <a href="https://turboflakes.io" target="_blank" rel="noreferrer">turboflakes.io</a> to know more about our work.
+
+If you like this project
+  - 🚀 Share our work 
+  - ✌️ Visit us at <a href="https://turboflakes.io" target="_blank" rel="noreferrer">turboflakes.io</a>
+  - ✨ Or you could also star the Github project :)
+
+Tips are welcome
+
+- Polkadot 14Sqrs7dk6gmSiuPK7VWGbPmGr4EfESzZBcpT6U15W4ajJRf (turboflakes.io)
+- Kusama H1tAQMm3eizGcmpAhL9aA9gR844kZpQfkU7pkmMiLx9jSzE (turboflakes.io)
+
+### License
+
+Claimeer - The entire code within this repository is licensed under the [Apache License 2.0](./LICENSE).
