@@ -67,13 +67,14 @@ pub fn navbar(props: &NavbarProps) -> Html {
 #[derive(PartialEq, Properties, Clone)]
 pub struct FooterProps {
     pub runtime: SupportedRelayRuntime,
-    pub disabled: bool,
     pub onchange: Callback<SupportedRelayRuntime>,
 }
 
 #[function_component(Footer)]
 pub fn footer(props: &FooterProps) -> Html {
+    let state = use_context::<StateContext>().unwrap();
     let onchange = props.onchange.reform(move |e| e);
+
     html! {
         <footer class="w-full my-8 sm:my-2 dark:bg-gray-900">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 content-center">
@@ -96,7 +97,7 @@ pub fn footer(props: &FooterProps) -> Html {
                     </a>
                 </div>
                 <div class="flex items-center justify-center sm:justify-end sm:mt-0">
-                    <NetworkSubscriber selected={props.runtime.clone()} disabled={props.disabled.clone()} {onchange} />
+                    <NetworkSubscriber selected={props.runtime.clone()} disabled={state.network.is_busy()} {onchange} />
                 </div>
             </div>
         </footer>

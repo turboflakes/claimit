@@ -63,6 +63,10 @@ impl NetworkState {
         self.fetches_counter > 0
     }
 
+    pub fn is_busy(&self) -> bool {
+        !self.is_active() || self.is_fetching()
+    }
+
     pub fn _class(&self) -> String {
         self.runtime.to_string().to_lowercase()
     }

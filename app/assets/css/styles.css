@@ -1857,11 +1857,9 @@ hr:where(.dark, .dark *) {
 .btn.btn__primary {
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: hsl(210 11% 15% / var(--tw-border-opacity));
-  --tw-bg-opacity: 1;
-  background-color: hsl(58 100% 68% / var(--tw-bg-opacity));
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
-  color: hsl(210 11% 15% / var(--tw-text-opacity));
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .btn.btn__primary:hover {
@@ -2086,6 +2084,8 @@ hr:where(.dark, .dark *) {
 
 .chip {
   border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 11% 71% / var(--tw-bg-opacity));
   padding-left: 0.625rem;
   padding-right: 0.625rem;
   padding-top: 0.25rem;
@@ -2097,13 +2097,13 @@ hr:where(.dark, .dark *) {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.chip.polkadot,
+.btn.btn__primary.polkadot,
 .btn__claim.polkadot {
   --tw-bg-opacity: 1;
   background-color: rgb(230 0 122 / var(--tw-bg-opacity));
 }
 
-.chip.kusama,
+.btn.btn__primary.kusama,
 .btn__claim.kusama {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));

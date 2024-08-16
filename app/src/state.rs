@@ -122,15 +122,15 @@ impl Reducible for State {
 
                 let filter = if accounts.len() > 0 {
                     let following = accounts
-                    .iter()
-                    .map(|a| AccountId32::from_str(&a.address).unwrap())
-                    .collect::<Vec<AccountId32>>();
+                        .iter()
+                        .map(|a| AccountId32::from_str(&a.address).unwrap())
+                        .collect::<Vec<AccountId32>>();
 
                     Filter::Following(following)
                 } else {
                     Filter::All
                 };
-                
+
                 LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
 
                 State {
@@ -370,6 +370,10 @@ impl Reducible for State {
                 let network = NetworkState::new(runtime.clone());
                 let accounts =
                     LocalStorage::get(account_key(runtime.clone())).unwrap_or_else(|_| vec![]);
+
+                let mut layout = self.layout.clone();
+                layout.balance_mode = BalanceMode::TotalBalance;
+
                 State {
                     accounts,
                     network,
@@ -377,7 +381,7 @@ impl Reducible for State {
                     filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
-                    layout: self.layout.clone(),
+                    layout,
                 }
                 .into()
             }
@@ -419,11 +423,25 @@ impl Reducible for State {
                 }
                 LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
 
+                let is_onboarding = accounts.len() == 0
+                    || !LocalStorage::get(self.onboarded_key()).unwrap_or(false);
+
+                let filter = match is_onboarding {
+                    true => Filter::All,
+                    false => {
+                        let following = accounts
+                            .iter()
+                            .map(|a| AccountId32::from_str(&a.address).unwrap())
+                            .collect::<Vec<AccountId32>>();
+                        Filter::Following(following)
+                    }
+                };
+
                 State {
                     accounts,
                     network,
                     child_bounties_raw: Some(data.clone()),
-                    filter: self.filter.clone(),
+                    filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout: self.layout.clone(),

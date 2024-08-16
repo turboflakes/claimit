@@ -33,7 +33,7 @@ hr {
 }
 
 .btn.btn__primary {
-    @apply bg-yellow disabled:bg-gray-400 border-2 text-gray-900 border-gray-900 hover:bg-gray-300;
+    @apply disabled:bg-gray-400 border-2 text-white border-white hover:bg-gray-300;
 }
 
 .btn.btn__default {
@@ -69,15 +69,15 @@ hr {
 }
 
 .chip {
-    @apply text-white text-xs font-medium px-2.5 py-1 rounded-full;
+    @apply text-white bg-gray-500 text-xs font-medium px-2.5 py-1 rounded-full;
 }
 
-.chip.polkadot,
+.btn.btn__primary.polkadot,
 .btn__claim.polkadot {
     @apply bg-polkadot;
 }
 
-.chip.kusama,
+.btn.btn__primary.kusama,
 .btn__claim.kusama {
     @apply bg-kusama;
 }

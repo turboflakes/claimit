@@ -54,14 +54,15 @@ pub fn main() -> Html {
         let is_onboarding = accounts.len() == 0
             || !LocalStorage::get(onboarded_key(current_runtime.clone())).unwrap_or(false);
 
-        let following = accounts
-            .iter()
-            .map(|a| AccountId32::from_str(&a.address).unwrap())
-            .collect::<Vec<AccountId32>>();
-
         let filter = match is_onboarding {
             true => Filter::All,
-            false => Filter::Following(following),
+            false => {
+                let following = accounts
+                    .iter()
+                    .map(|a| AccountId32::from_str(&a.address).unwrap())
+                    .collect::<Vec<AccountId32>>();
+                Filter::Following(following)
+            }
         };
 
         let signer: Option<ExtensionAccount> =
@@ -176,7 +177,7 @@ pub fn main() -> Html {
                             // }
 
                             <div class="hidden sm:flex">
-                                <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
+                                <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
                             </div>
                         </div>
 
@@ -211,7 +212,7 @@ pub fn main() -> Html {
                         </div>
 
                         <div class="sm:hidden">
-                            <Footer runtime={current_runtime.clone()} disabled={!state.network.is_active()} onchange={&onchange_network} />
+                            <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
                         </div>
 
                     </div>

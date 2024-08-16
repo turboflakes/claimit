@@ -205,7 +205,7 @@ pub fn sign_button() -> Html {
         };
 
         html! {
-            <button type="button" class="btn btn__primary" {onclick} disabled={!extension.is_ready() || claim.is_signing_or_submitting()} >{label}</button>
+            <button type="button" class={classes!("btn", "btn__primary", state.network.runtime.class())} {onclick} disabled={!extension.is_ready() || claim.is_signing_or_submitting()} >{label}</button>
         }
     } else {
         html! {}
@@ -260,9 +260,9 @@ pub fn balance_button_group() -> Html {
     html! {
         <div class="inline-flex">
             <TotalBalanceIconButton onclick={&onclick} disabled={state.layout.is_total_balance_mode()} />
-            <TotalAwardedIconButton onclick={&onclick} disabled={state.layout.is_total_awarded_mode()} />
-            <TotalPendingIconButton onclick={&onclick} disabled={state.layout.is_total_pending_mode()} />
-            <TotalClaimableIconButton onclick={&onclick} disabled={state.layout.is_total_claimable_mode()} />
+            <TotalAwardedIconButton onclick={&onclick} disabled={state.layout.is_total_awarded_mode() || state.network.is_busy()} />
+            <TotalPendingIconButton onclick={&onclick} disabled={state.layout.is_total_pending_mode() || state.network.is_busy()} />
+            <TotalClaimableIconButton onclick={&onclick} disabled={state.layout.is_total_claimable_mode() || state.network.is_busy()} />
         </div>
     }
 }

@@ -4,7 +4,6 @@ use crate::components::{
     inputs::AccountInput,
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use gloo::timers::callback::Timeout;
 use yew::{
     classes, function_component, html, use_context, use_effect_with, use_state, Callback, Html,

@@ -334,7 +334,7 @@ pub fn extension_account_dropdown(props: &ExtensionAccountDropdownProps) -> Html
                             <>
                                 <Identicon address={props.selected.as_ref().unwrap().address.clone()} size={24} class="me-2" />
                                 <div class="text-start">
-                                    <p>{props.selected.as_ref().unwrap().name.clone()}</p>
+                                    <p class="text-gray-900">{props.selected.as_ref().unwrap().name.clone()}</p>
                                     <p class="text-xs">{props.selected.as_ref().unwrap().to_compact_string()}</p>
                                 </div>
                             </>
