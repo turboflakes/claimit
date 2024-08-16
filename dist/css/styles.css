@@ -1357,6 +1357,10 @@ video {
   background-size: 220%;
 }
 
+.bg-520 {
+  background-size: 520%;
+}
+
 .bg-contain {
   background-size: contain;
 }
@@ -1741,16 +1745,28 @@ hr:where(.dark, .dark *) {
 
 .main.polkadot {
   background-image: url('/images/background_polkadot.svg');
-  background-size: 220%;
+  background-size: 520%;
   background-position: center;
   background-repeat: no-repeat;
 }
 
+@media (min-width: 640px) {
+  .main.polkadot {
+    background-size: 220%;
+  }
+}
+
 .main.kusama {
   background-image: url('/images/background_kusama.svg');
-  background-size: 220%;
+  background-size: 520%;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+@media (min-width: 640px) {
+  .main.kusama {
+    background-size: 220%;
+  }
 }
 
 .account__input {
@@ -2456,6 +2472,10 @@ hr:where(.dark, .dark *) {
 
   .sm\:overflow-auto {
     overflow: auto;
+  }
+
+  .sm\:bg-220 {
+    background-size: 220%;
   }
 
   .sm\:px-0 {

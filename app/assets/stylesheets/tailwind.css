@@ -17,11 +17,11 @@ hr {
 }
 
 .main.polkadot {
-    @apply bg-[url('/images/background_polkadot.svg')] bg-220 bg-center bg-no-repeat;
+    @apply bg-[url('/images/background_polkadot.svg')] bg-520 sm:bg-220 bg-center bg-no-repeat;
 }
 
 .main.kusama {
-    @apply bg-[url('/images/background_kusama.svg')] bg-220 bg-center bg-no-repeat;
+    @apply bg-[url('/images/background_kusama.svg')] bg-520 sm:bg-220 bg-center bg-no-repeat;
 }
 
 .account__input {
