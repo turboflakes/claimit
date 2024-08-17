@@ -1,5 +1,6 @@
 use crate::components::{
     buttons::ClaimButton,
+    inputs::FilterInput,
     items::{ChildBountyItem, FilterItem},
     spinners::Spinner,
 };
@@ -7,7 +8,7 @@ use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::utils::amount_human;
 use claimeer_common::types::child_bounties::Filter;
 use strum::IntoEnumIterator;
-use yew::{function_component, html, use_context, Callback, Html};
+use yew::{function_component, html, use_context, use_state, Callback, Html};
 
 #[function_component(ChildBountiesCard)]
 pub fn child_bounties_card() -> Html {
@@ -164,16 +165,32 @@ pub fn child_bounties_stats() -> Html {
 #[function_component(ChildBountiesBody)]
 pub fn child_bounties_body() -> Html {
     let state = use_context::<StateContext>().unwrap();
+    let input_value = use_state(|| "".to_string());
+
+    let oninput = {
+        let state = state.clone();
+        let input_value = input_value.clone();
+        Callback::from(move |value| {
+            input_value.set(value);
+        })
+    };
 
     if let Some(child_bounties_raw) = &state.child_bounties_raw {
         html! {
-            <ul class="flex-col w-full space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400">
-                { for child_bounties_raw.into_iter().filter(|(_, cb)| state.filter.check(cb)).map(|(_, cb)|
-                    html! {
-                        <ChildBountyItem id={cb.id} />
-                    })
-                }
-            </ul>
+            <>
+                <FilterInput oninput={&oninput} value={(*input_value).clone()} placeholder="Filter by Child Bounty description" />
+
+                <ul class="flex-col w-full space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {
+                        for child_bounties_raw.into_iter()
+                            .filter(|(_, cb)| state.filter.check(cb) && cb.description.to_lowercase().contains(&(*input_value).to_lowercase()))
+                            .map(|(_, cb)|
+                        html! {
+                            <ChildBountyItem id={cb.id} />
+                        })
+                    }
+                </ul>
+            </>
         }
     } else {
         html! {}
