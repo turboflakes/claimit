@@ -703,6 +703,11 @@ video {
   margin-right: auto;
 }
 
+.my-1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .my-2 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -1844,6 +1849,66 @@ hr:where(.dark, .dark *) {
 }
 
 .account__input:focus:where(.dark, .dark *) {
+  --tw-border-opacity: 1;
+  border-color: hsl(210 16% 93% / var(--tw-border-opacity));
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 16% 93% / var(--tw-ring-opacity));
+}
+
+.filter__input {
+  display: block;
+  width: 100%;
+  border-radius: 9999px;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: hsl(210 11% 71% / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 17% 98% / var(--tw-bg-opacity));
+  padding: 0.5rem;
+  padding-inline-start: 3rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: hsl(210 11% 15% / var(--tw-text-opacity));
+}
+
+.filter__input::-moz-placeholder {
+  --tw-placeholder-opacity: 1;
+  color: hsl(208 7% 46% / var(--tw-placeholder-opacity));
+}
+
+.filter__input::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: hsl(208 7% 46% / var(--tw-placeholder-opacity));
+}
+
+.filter__input:focus {
+  --tw-border-opacity: 1;
+  border-color: hsl(210 11% 71% / var(--tw-border-opacity));
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
+}
+
+.filter__input:where(.dark, .dark *) {
+  --tw-border-opacity: 1;
+  border-color: hsl(208 7% 46% / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 10% 23% / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.filter__input:where(.dark, .dark *)::-moz-placeholder {
+  --tw-placeholder-opacity: 1;
+  color: hsl(210 14% 83% / var(--tw-placeholder-opacity));
+}
+
+.filter__input:where(.dark, .dark *)::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: hsl(210 14% 83% / var(--tw-placeholder-opacity));
+}
+
+.filter__input:focus:where(.dark, .dark *) {
   --tw-border-opacity: 1;
   border-color: hsl(210 16% 93% / var(--tw-border-opacity));
   --tw-ring-opacity: 1;
