@@ -1825,6 +1825,8 @@ hr:where(.dark, .dark *) {
 .account__input:focus {
   --tw-border-opacity: 1;
   border-color: hsl(210 11% 71% / var(--tw-border-opacity));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   --tw-ring-opacity: 1;
   --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
 }
@@ -1885,6 +1887,8 @@ hr:where(.dark, .dark *) {
 .filter__input:focus {
   --tw-border-opacity: 1;
   border-color: hsl(210 11% 71% / var(--tw-border-opacity));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   --tw-ring-opacity: 1;
   --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
 }
