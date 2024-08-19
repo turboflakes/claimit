@@ -3,6 +3,10 @@ use yew::AttrValue;
 
 pub type ChainPrefix = u16;
 
+pub const POLKADOT_SPEC: &str = include_str!("../../artifacts/chain_specs/polkadot.json");
+pub const KUSAMA_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama.json");
+pub const ROCOCO_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo.json");
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
 pub enum SupportedRelayRuntime {
     Polkadot,
@@ -24,6 +28,14 @@ impl SupportedRelayRuntime {
             Self::Polkadot => "wss://rpc.ibp.network:443/polkadot",
             Self::Kusama => "wss://rpc.ibp.network:443/kusama",
             Self::Rococo => "wss://rococo-rpc.polkadot.io:443",
+        }
+    }
+
+    pub fn chain_specs(&self) -> &str {
+        match &self {
+            Self::Polkadot => POLKADOT_SPEC,
+            Self::Kusama => KUSAMA_SPEC,
+            Self::Rococo => ROCOCO_SPEC,
         }
     }
 

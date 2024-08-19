@@ -6,7 +6,10 @@ use futures::sink::SinkExt;
 use futures::{FutureExt, StreamExt};
 use log::error;
 use serde::{Deserialize, Serialize};
-use subxt::{OnlineClient, PolkadotConfig};
+use subxt::{
+    lightclient::{LightClient, LightClientError, LightClientRpc},
+    OnlineClient, PolkadotConfig,
+};
 use yew::platform::time::sleep;
 use yew_agent::{prelude::reactor, reactor::ReactorScope};
 
@@ -29,9 +32,12 @@ pub enum Output {
 pub async fn block_subscription(mut scope: ReactorScope<Input, Output>) {
     'outer: while let Some(input) = scope.next().await {
         if let Input::Start(sub_id, runtime) = input {
-            let api = OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
-                .await
-                .expect("expect valid RPC connection");
+            let (_, lc_rpc) = LightClient::relay_chain(runtime.chain_specs())
+                .expect("expect valid smoldot connection");
+
+            let api = OnlineClient::<PolkadotConfig>::from_rpc_client(lc_rpc)
+                    .await
+                    .expect("expect valid RPC connection");
 
             // Inform the reactor is active
             if scope.send(Output::Active(sub_id)).await.is_err() {
