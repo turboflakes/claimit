@@ -55,7 +55,7 @@ pub fn onboarding_steps() -> Html {
     };
 
     html! {
-        <div class="w-full max-w-[375px] md:max-w-[828px]">
+        <div class="w-full max-w-[375px] sm:max-w-[828px]">
             <div class="flex mb-8">
                 <ul>
                     <li class={classes!{"step__index", (*step != 0).then(|| Some("hidden"))}}>
@@ -73,30 +73,30 @@ pub fn onboarding_steps() -> Html {
                         match *step {
                             0 => html! {
                                 <div>
-                                    <h1 class="text-gray-900 mb-2 text-4xl font-medium tracking-wider leading-snug text-wrap">
+                                    <h1 class="step__title">
                                         {"Follow up on your Child Bounties."}
                                     </h1>
-                                    <p class="text-gray-900 text-lg tracking-wider leading-snug text-wrap">
+                                    <p class="step__subtitle">
                                         {"Choose from the open Child Bounties below and follow the ones that interest you the most."}
                                     </p>
                                 </div>
                             },
                             1 => html! {
                                 <div>
-                                    <h1 class="text-gray-900 mb-2 text-4xl font-medium tracking-wider leading-snug text-wrap">
+                                    <h1 class="step__title">
                                         {"Is your Child Bounty not live yet?"}
                                     </h1>
-                                    <p class="text-gray-900 text-lg tracking-wider leading-snug text-wrap">
+                                    <p class="step__subtitle">
                                         {"Expecting an award soon? Enter the beneficiary address below."}
                                     </p>
                                 </div>
                             },
                             _ => html! {
                                 <div>
-                                    <h1 class="text-gray-900 mb-2 text-4xl font-medium tracking-wider leading-snug text-wrap">
+                                    <h1 class="step__title">
                                         {"You're all set!"}
                                     </h1>
-                                    <p class="text-gray-900 text-lg tracking-wider leading-snug text-wrap">
+                                    <p class="step__subtitle">
                                         {format!("Following {} account{}. Enjoy and start claiming your bounties!", state.accounts.len(), (state.accounts.len() > 1).then_some("s").unwrap_or(""))}
                                     </p>
                                 </div>

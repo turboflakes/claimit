@@ -16,13 +16,13 @@ pub fn child_bounties_card() -> Html {
 
     if state.network.is_fetching() && state.child_bounties_raw.is_none() {
         html! {
-            <div class="flex justify-end h-96 p-4 md:p-6 bg-gray-50 max-w-[375px] md:max-w-[828px] rounded-lg w-full">
+            <div class="flex justify-end h-96 p-4 md:p-6 bg-gray-50 max-w-[375px] sm:max-w-[828px] rounded-lg w-full">
                 <Spinner is_visible={state.network.is_fetching()} />
             </div>
         }
     } else if state.child_bounties_raw.is_some() {
         html! {
-            <div class="p-4 md:p-6 bg-gray-50 max-w-[375px] md:max-w-[828px] text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+            <div class="p-4 md:p-6 bg-gray-50 max-w-[375px] sm:max-w-[828px] text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
 
                 <ChildBountiesTitle />
 
@@ -86,8 +86,8 @@ pub fn child_bounties_title() -> Html {
             .count();
 
         html! {
-            <div class="flex md:mb-4 justify-between items-center ">
-                <div class="inline-flex mb-2">
+            <div class="flex justify-between items-center mb-4">
+                <div class="inline-flex">
                     <h3 class="md:text-lg text-gray-900 dark:text-gray-100 me-1">{child_bountes_total}</h3>
                     <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Child Bounties"}</h3>
                 </div>

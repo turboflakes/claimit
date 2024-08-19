@@ -258,7 +258,7 @@ pub fn balance_button_group() -> Html {
     };
 
     html! {
-        <div class="inline-flex">
+        <div class="flex flex-wrap justify-end max-w-32 gap-2 sm:inline-flex sm:flex-nowrap sm:max-w-full">
             <TotalBalanceIconButton onclick={&onclick} disabled={state.layout.is_total_balance_mode()} />
             <TotalAwardedIconButton onclick={&onclick} disabled={state.layout.is_total_awarded_mode() || state.network.is_busy()} />
             <TotalPendingIconButton onclick={&onclick} disabled={state.layout.is_total_pending_mode() || state.network.is_busy()} />

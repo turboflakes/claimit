@@ -56,7 +56,7 @@ pub fn accounts_card(props: &AccountsCardProps) -> Html {
     };
 
     html! {
-        <div class="relative w-full max-w-[375px] md:max-w-[828px] overflow-auto">
+        <div class="relative w-full max-w-[375px] sm:max-w-[828px] overflow-auto">
             <ul class="flex flex-nowrap gap-4 items-center py-4 text-xs font-medium text-gray-500 dark:text-gray-400">
                 { for state.accounts.iter().rev().cloned().map(|account|
                     html! {
@@ -83,7 +83,7 @@ pub fn total_balances_card(props: &TotalBalancesCardProps) -> Html {
     let state = use_context::<StateContext>().unwrap();
 
     html! {
-        <div class="w-full max-w-[375px] md:max-w-[828px]">
+        <div class="w-full max-w-[375px] sm:max-w-[828px]">
             <div class="inline-flex gap-8 w-full items-end justify-between">
 
                 {

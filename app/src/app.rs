@@ -157,24 +157,12 @@ pub fn main() -> Html {
 
                     <div class="grid grid-cols-1 sm:grid-cols-3">
 
-                        <div class="px-4 flex flex-col justify-center items-center h-screen">
-                            // {
-                            //     if state.accounts.len() > 0 {
-                            //         html! {
-                                        <div class="flex flex-col flex-1 justify-center items-center">
-                                            <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
-                                            <p class="text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
-                                        </div>
-
-                            //         }
-                            //     } else {
-                            //         html! {
-                            //             <div class="flex flex-col flex-1 mt-28 items-center">
-                            //                 <OnboardingSteps runtime={current_runtime.clone()} />
-                            //             </div>
-                            //         }
-                            //     }
-                            // }
+                        <div class="px-2 sm:px-4 flex flex-col justify-center items-center h-screen">
+    
+                            <div class="flex flex-col flex-1 justify-center items-center">
+                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
+                                <p class="text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                            </div>
 
                             <div class="hidden sm:flex">
                                 <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
@@ -185,7 +173,7 @@ pub fn main() -> Html {
 
                             <div class="flex-auto sm:h-screen w-full overflow-hidden sm:overflow-auto">
 
-                                <div class="flex flex-col items-center my-4 mt-20 md:mt-32 px-4 sm:px-0">
+                                <div class="flex flex-col items-center my-4 mt-20 sm:mt-32 px-2 sm:px-4 sm:px-0">
 
                                     {
                                         if state.layout.is_onboarding {
