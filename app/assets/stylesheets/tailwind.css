@@ -17,11 +17,11 @@ hr {
 }
 
 .main.polkadot {
-    @apply bg-[url('/images/background_polkadot.svg')] bg-520 sm:bg-220 bg-center bg-no-repeat;
+    @apply bg-[url('/images/background_polkadot.svg')] bg-520 sm:bg-420 xl:bg-220 bg-center bg-no-repeat;
 }
 
 .main.kusama {
-    @apply bg-[url('/images/background_kusama.svg')] bg-520 sm:bg-220 bg-center bg-no-repeat;
+    @apply bg-[url('/images/background_kusama.svg')] bg-520 sm:bg-420 xl:bg-220 bg-center bg-no-repeat;
 }
 
 .account__input {
@@ -33,15 +33,15 @@ hr {
 }
 
 .btn {
-    @apply py-2 px-5 text-sm font-medium text-gray-600 focus:outline-none bg-transparent rounded-full hover:text-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700;
+    @apply py-2 text-sm font-medium text-gray-600 focus:outline-none bg-transparent rounded-full hover:text-gray-800 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700;
 }
 
 .btn.btn__primary {
-    @apply disabled:bg-gray-400 border-2 text-white border-white hover:bg-gray-300;
+    @apply px-4 disabled:bg-gray-400 border-2 text-white border-white hover:bg-gray-300;
 }
 
 .btn.btn__default {
-    @apply hover:bg-white;
+    @apply px-4 hover:bg-white;
 }
 
 .btn.btn__link {

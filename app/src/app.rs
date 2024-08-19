@@ -157,14 +157,14 @@ pub fn main() -> Html {
 
                     <div class="grid grid-cols-1 sm:grid-cols-3">
 
-                        <div class="px-2 sm:px-4 flex flex-col justify-center items-center h-screen">
+                        <div class="flex flex-col justify-center items-center px-2 sm:px-4 sm:h-screen">
     
-                            <div class="flex flex-col flex-1 justify-center items-center">
-                                <img class="mb-8 max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer logo" />
-                                <p class="text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                            <div class="flex flex-col flex-1 justify-center items-center mt-32 sm:mt-0">
+                                <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer" />
+                                <p class="text-sm sm:text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                             </div>
 
-                            <div class="hidden sm:flex">
+                            <div class="hidden sm:flex w-full">
                                 <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
                             </div>
                         </div>
@@ -199,7 +199,7 @@ pub fn main() -> Html {
 
                         </div>
 
-                        <div class="sm:hidden">
+                        <div class="sm:hidden w-full">
                             <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
                         </div>
 

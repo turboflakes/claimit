@@ -20,6 +20,7 @@ module.exports = {
         'cover': 'cover',
         'contain': 'contain',
         '220': '220%',
+        '420': '420%',
         '520': '520%',
       },
       colors: {
