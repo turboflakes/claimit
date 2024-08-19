@@ -8,29 +8,25 @@ description.workspace = true
 edition.workspace = true
 
 [dependencies]
-wasm-bindgen = "0.2.92"
-wasm-bindgen-futures = "0.4.39"
-wasm-logger = "0.2.0"
-yew = { version = "0.21", features = ["csr"] }
-yew-router = "0.18"
-yew-hooks = "0.3.2"
-yew-agent = "0.3.0"
-subxt = { workspace = true, default-features = false, features = ["unstable-light-client", "jsonrpsee", "web"], target_arch = "wasm32" }
-futures = "0.3.28"
-anyhow = "1.0.71"
-strum = "0.17.1"
-strum_macros = "0.17.1"
-serde = "1.0.204"
-serde_json = "1.0.96"
-thiserror = "^1.0.24"
-log = "0.4"
-js-sys = "0.3.66"
-gloo = "0.11.0"
-plot_icon = "0.3.0"
-num-format = "0.4"
-rand = "0.8.5"
-humantime = "2"
-hex = "0.4.3"
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+wasm-logger = { workspace = true }
+yew = { workspace = true }
+yew-router = { workspace = true }
+yew-hooks = { workspace = true }
+yew-agent = { workspace = true }
+subxt = { workspace = true }
+futures = { workspace = true }
+strum = { workspace = true }
+strum_macros = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+log = { workspace = true }
+js-sys = { workspace = true }
+gloo = { workspace = true }
+plot_icon = { workspace = true }
+num-format = { workspace = true }
+rand = { workspace = true }
 claimeer-common = { path = "../common" }
 claimeer-kusama = { path = "../kusama" }
 claimeer-polkadot = { path = "../polkadot" }
