@@ -368,17 +368,32 @@ impl Reducible for State {
             }
             Action::ChangeNetwork(runtime) => {
                 let network = NetworkState::new(runtime.clone());
-                let accounts =
+                let accounts: Vec<Account> =
                     LocalStorage::get(account_key(runtime.clone())).unwrap_or_else(|_| vec![]);
+
+                let is_onboarding = accounts.len() == 0
+                    || !LocalStorage::get(onboarded_key(runtime)).unwrap_or(false);
+
+                let filter = match is_onboarding {
+                    true => Filter::All,
+                    false => {
+                        let following = accounts
+                            .iter()
+                            .map(|a| AccountId32::from_str(&a.address).unwrap())
+                            .collect::<Vec<AccountId32>>();
+                        Filter::Following(following)
+                    }
+                };
 
                 let mut layout = self.layout.clone();
                 layout.balance_mode = BalanceMode::TotalBalance;
+                layout.is_onboarding = is_onboarding;
 
                 State {
                     accounts,
                     network,
                     child_bounties_raw: None,
-                    filter: self.filter.clone(),
+                    filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout,
