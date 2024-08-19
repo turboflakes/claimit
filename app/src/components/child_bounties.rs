@@ -168,7 +168,6 @@ pub fn child_bounties_body() -> Html {
     let input_value = use_state(|| "".to_string());
 
     let oninput = {
-        let state = state.clone();
         let input_value = input_value.clone();
         Callback::from(move |value| {
             input_value.set(value);

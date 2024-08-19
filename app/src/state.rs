@@ -39,7 +39,7 @@ pub enum Action {
     /// Account actions
     AddAccount(String),
     RemoveAccountId(u32),
-    DisableAccountId(u32),
+    // DisableAccountId(u32),
     UpdateAccountIdBalance(u32, Balance),
     /// Claim actions
     StartClaim(Vec<Id>),
@@ -144,23 +144,23 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::DisableAccountId(id) => {
-                let mut accounts = self.accounts.clone();
-                let account = accounts.iter_mut().find(|account| account.id == id);
-                if let Some(account) = account {
-                    account.disabled = !account.disabled;
-                }
-                State {
-                    accounts,
-                    network: self.network.clone(),
-                    child_bounties_raw: self.child_bounties_raw.clone(),
-                    filter: self.filter.clone(),
-                    extension: self.extension.clone(),
-                    claim: self.claim.clone(),
-                    layout: self.layout.clone(),
-                }
-                .into()
-            }
+            // Action::DisableAccountId(id) => {
+            //     let mut accounts = self.accounts.clone();
+            //     let account = accounts.iter_mut().find(|account| account.id == id);
+            //     if let Some(account) = account {
+            //         account.disabled = !account.disabled;
+            //     }
+            //     State {
+            //         accounts,
+            //         network: self.network.clone(),
+            //         child_bounties_raw: self.child_bounties_raw.clone(),
+            //         filter: self.filter.clone(),
+            //         extension: self.extension.clone(),
+            //         claim: self.claim.clone(),
+            //         layout: self.layout.clone(),
+            //     }
+            //     .into()
+            // }
             Action::UpdateAccountIdBalance(id, balance) => {
                 let mut accounts = self.accounts.clone();
                 let account = accounts.iter_mut().find(|account| account.id == id);

@@ -110,8 +110,7 @@ pub struct FilterInputProps {
 #[function_component(FilterInput)]
 pub fn filter_input(props: &FilterInputProps) -> Html {
     let input_node_ref = use_node_ref();
-    let value = use_state(|| "".to_string());
-
+    
     use_effect_with(input_node_ref.clone(), |input_ref| {
         if let Some(input) = input_ref.cast::<HtmlInputElement>() {
             let _ = input.focus();
@@ -126,7 +125,6 @@ pub fn filter_input(props: &FilterInputProps) -> Html {
 
     let oninput = {
         let oninput = props.oninput.clone();
-        let value = value.clone();
         Callback::from(move |e: InputEvent| {
             let input: HtmlInputElement = e.target_unchecked_into::<HtmlInputElement>();
             oninput.emit(input.value());
