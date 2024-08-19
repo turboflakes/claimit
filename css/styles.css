@@ -1060,8 +1060,8 @@ video {
   max-width: 8rem;
 }
 
-.max-w-\[256px\] {
-  max-width: 256px;
+.max-w-\[160px\] {
+  max-width: 160px;
 }
 
 .max-w-\[375px\] {
@@ -1070,14 +1070,6 @@ video {
 
 .max-w-full {
   max-width: 100%;
-}
-
-.max-w-\[128px\] {
-  max-width: 128px;
-}
-
-.max-w-\[160px\] {
-  max-width: 160px;
 }
 
 .flex-1 {
@@ -2639,16 +2631,16 @@ hr:where(.dark, .dark *) {
     margin-bottom: 0.5rem;
   }
 
+  .sm\:mb-8 {
+    margin-bottom: 2rem;
+  }
+
   .sm\:mt-0 {
     margin-top: 0px;
   }
 
   .sm\:mt-32 {
     margin-top: 8rem;
-  }
-
-  .sm\:mb-8 {
-    margin-bottom: 2rem;
   }
 
   .sm\:flex {
@@ -2671,16 +2663,16 @@ hr:where(.dark, .dark *) {
     width: 7rem;
   }
 
+  .sm\:max-w-\[256px\] {
+    max-width: 256px;
+  }
+
   .sm\:max-w-\[828px\] {
     max-width: 828px;
   }
 
   .sm\:max-w-full {
     max-width: 100%;
-  }
-
-  .sm\:max-w-\[256px\] {
-    max-width: 256px;
   }
 
   .sm\:grid-cols-3 {
@@ -2693,10 +2685,6 @@ hr:where(.dark, .dark *) {
 
   .sm\:justify-end {
     justify-content: flex-end;
-  }
-
-  .sm\:justify-center {
-    justify-content: center;
   }
 
   .sm\:overflow-auto {
