@@ -177,8 +177,14 @@ pub fn child_bounties_body() -> Html {
     if let Some(child_bounties_raw) = &state.child_bounties_raw {
         html! {
             <>
-                <FilterInput oninput={&oninput} value={(*input_value).clone()} placeholder="Filter by Child Bounty description" />
-
+                {
+                    if state.layout.is_onboarding {
+                        html! {
+                            <FilterInput oninput={&oninput} value={(*input_value).clone()} placeholder="Filter by Child Bounty description" />
+                        }
+                    } else { html! {} }
+                }
+                
                 <ul class="flex-col w-full space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400">
                     {
                         for child_bounties_raw.into_iter()

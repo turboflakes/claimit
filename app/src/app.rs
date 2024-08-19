@@ -141,13 +141,12 @@ pub fn main() -> Html {
         },
     );
 
-    let _hidden_class = if state.accounts.is_empty() {
-        "hidden"
+    let hidden_class = if state.layout.is_onboarding {
+        Some("flex")
     } else {
-        ""
+        Some("hidden sm:flex")
     };
 
-    // Html
     html! {
         <>
             <div class={classes!("main", current_runtime.class())}>
@@ -159,14 +158,15 @@ pub fn main() -> Html {
 
                         <div class="flex flex-col justify-center items-center px-2 sm:px-4 sm:h-screen">
 
-                            <div class="flex flex-col flex-1 justify-center items-center mt-32 sm:mt-0">
+                            <div class={classes!("header", hidden_class)}>
                                 <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer" />
-                                <p class="text-sm sm:text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                                <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
                             </div>
 
                             <div class="hidden sm:flex w-full">
                                 <Footer runtime={current_runtime.clone()} onchange={&onchange_network} />
                             </div>
+
                         </div>
 
                         <div class="sm:col-span-2">
@@ -190,8 +190,6 @@ pub fn main() -> Html {
                                             }
                                         }
                                     }
-
-
 
                                 </div>
 

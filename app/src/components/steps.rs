@@ -56,7 +56,7 @@ pub fn onboarding_steps() -> Html {
 
     html! {
         <div class="w-full max-w-[375px] sm:max-w-[828px]">
-            <div class="flex mb-8">
+            <div class="flex mb-4 sm:mb-8">
                 <ul>
                     <li class={classes!{"step__index", (*step != 0).then(|| Some("hidden"))}}>
                         <img src="/images/step_1.svg" alt="Step 1" />
@@ -68,7 +68,7 @@ pub fn onboarding_steps() -> Html {
                         <img src="/images/step_3.svg" alt="Step 3" />
                     </li>
                 </ul>
-                <div class="flex flex-col justify-between w-full ms-8 h-52">
+                <div class="flex flex-col justify-between w-full ms-4 sm:ms-8 h-60">
                     {
                         match *step {
                             0 => html! {
@@ -104,10 +104,12 @@ pub fn onboarding_steps() -> Html {
                         }
                     }
                     <div>
-                        <div class="mt-4 inline-flex flex-wrap gap-2 items-center justify-start w-full">
-                            { for state.accounts.iter().cloned().map(|account| html! {
-                                <AccountChip class="bg-white rounded-full px-2" account={AccountId32::from_str(&account.address).unwrap()} />
-                            })}
+                        <div class="relative w-full max-w-[254px] sm:max-w-[684px] overflow-auto">
+                            <div class="flex flex-nowrap gap-2 items-center py-4">
+                                { for state.accounts.iter().cloned().map(|account| html! {
+                                    <AccountChip class="bg-white rounded-full px-2" account={AccountId32::from_str(&account.address).unwrap()} />
+                                })}
+                            </div>
                         </div>
                         <div class="inline-flex items-center justify-end w-full">
                             <BackIconButton onclick={onclick_back} disabled={*step == 0} />
@@ -129,7 +131,7 @@ pub fn onboarding_steps() -> Html {
                     1 => html! {
                         <div class="h-48 p-4 md:p-6 bg-gray-50 text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
                             <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Add Account"}</h3>
-                            <AccountInput onenter={&onadd} />
+                            <AccountInput onenter={&onadd} placeholder={"Enter the child bounty beneficiary account you wish to keep track of"} />
                         </div>
                     },
                     _ => html! {
