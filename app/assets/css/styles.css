@@ -1460,6 +1460,14 @@ video {
   fill: hsl(208, 7%, 46%);
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
+.p-1\.5 {
+  padding: 0.375rem;
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -2188,6 +2196,49 @@ hr:where(.dark, .dark *) {
   --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
 }
 
+.btn.btn__icon_small {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.375rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.btn.btn__icon_small:hover {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 16% 93% / var(--tw-bg-opacity));
+}
+
+.btn.btn__icon_small:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 14% 89% / var(--tw-ring-opacity));
+}
+
+.btn.btn__icon_small:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 9% 31% / var(--tw-bg-opacity));
+}
+
+.btn.btn__icon_small:hover:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(208 7% 46% / var(--tw-bg-opacity));
+}
+
+.btn.btn__icon_small:focus:where(.dark, .dark *) {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: hsl(210 11% 71% / var(--tw-ring-opacity));
+}
+
 .btn.btn__icon.btn__white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -2203,11 +2254,13 @@ hr:where(.dark, .dark *) {
   background-color: hsl(210 14% 89% / var(--tw-bg-opacity));
 }
 
+.btn.btn__icon_small.btn__gray,
 .btn.btn__icon.btn__gray {
   --tw-bg-opacity: 1;
   background-color: hsl(210 17% 98% / var(--tw-bg-opacity));
 }
 
+.btn.btn__icon_small.btn__gray:hover,
 .btn.btn__icon.btn__gray:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(210 16% 93% / var(--tw-bg-opacity));

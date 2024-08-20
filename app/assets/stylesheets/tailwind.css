@@ -60,10 +60,15 @@ hr {
     @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
+.btn.btn__icon_small {
+    @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-1.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+}
+
 .btn.btn__icon.btn__white {
     @apply bg-white disabled:bg-gray-300 hover:bg-gray-100;
 }
 
+.btn.btn__icon_small.btn__gray,
 .btn.btn__icon.btn__gray {
     @apply bg-gray-50 hover:bg-gray-200;
 }
