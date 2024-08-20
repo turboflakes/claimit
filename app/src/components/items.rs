@@ -1,4 +1,9 @@
-use crate::components::{accounts::AccountBalance, chips::AccountChip, icons::Identicon};
+use crate::components::{
+    accounts::AccountBalance,
+    buttons::{PolkassemblyIconLink, SubsquareIconLink},
+    chips::AccountChip,
+    icons::Identicon,
+};
 use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
@@ -485,7 +490,11 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                                     <div class="ml-1 text-lg text-gray-600 dark:text-gray-400">{state.network.runtime.unit()}</div>
                                 </div>
                             </div>
-                            <p class="text-xs">{format!("# {} / {}", child_bounty.parent_id, child_bounty.id)}</p>
+                            <div class="inline-flex items-center gap-2">
+                                <p class="text-xs">{format!("# {} / {}", child_bounty.parent_id, child_bounty.id)}</p>
+                                <SubsquareIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
+                                <PolkassemblyIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
+                            </div>
                             <hr class="my-2" />
                             <div class="flex items-center justify-between">
 

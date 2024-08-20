@@ -110,7 +110,7 @@ pub struct FilterInputProps {
 #[function_component(FilterInput)]
 pub fn filter_input(props: &FilterInputProps) -> Html {
     let input_node_ref = use_node_ref();
-    
+
     use_effect_with(input_node_ref.clone(), |input_ref| {
         if let Some(input) = input_ref.cast::<HtmlInputElement>() {
             let _ = input.focus();

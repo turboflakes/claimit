@@ -390,3 +390,41 @@ pub fn back_icon_button(props: &BackIconButtonProps) -> Html {
         </button>
     }
 }
+
+#[derive(Properties, PartialEq)]
+pub struct SubsquareIconLinkProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    #[prop_or_default]
+    pub id: AttrValue,
+    pub runtime: SupportedRelayRuntime,
+}
+
+#[function_component(SubsquareIconLink)]
+pub fn subsquare_icon_link(props: &SubsquareIconLinkProps) -> Html {
+    html! {
+        <a href={format!("https://{}.subsquare.io/treasury/child-bounties/{}", props.runtime.class(), props.id.clone())} target="_blank" rel="noopener noreferrer"
+            class={classes!("btn", "btn__icon_small", "btn__gray")} disabled={props.disabled.clone()}>
+            <img class="w-3 h-3" src="/images/subsquare_icon.svg" alt="subsquare logo" />
+        </a>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct PolkassemblyIconLinkProps {
+    #[prop_or_default]
+    pub disabled: bool,
+    #[prop_or_default]
+    pub id: AttrValue,
+    pub runtime: SupportedRelayRuntime,
+}
+
+#[function_component(PolkassemblyIconLink)]
+pub fn polkassembly_icon_link(props: &PolkassemblyIconLinkProps) -> Html {
+    html! {
+        <a href={format!("https://{}.polkassembly.io/child_bounty/{}", props.runtime.class(), props.id.clone())} target="_blank" rel="noopener noreferrer"
+            class={classes!("btn", "btn__icon_small", "btn__gray")} disabled={props.disabled.clone()}>
+            <img class="w-3 h-3" src="/images/polkassembly_icon.png" alt="polkassembly logo" />
+        </a>
+    }
+}
