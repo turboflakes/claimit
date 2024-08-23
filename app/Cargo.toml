@@ -26,8 +26,8 @@ js-sys = { workspace = true }
 gloo = { workspace = true }
 plot_icon = { workspace = true }
 num-format = { workspace = true }
-rand = { workspace = true }
 claimeer-common = { path = "../common" }
+claimeer-workers = { path = "../workers" }
 claimeer-kusama = { path = "../kusama" }
 claimeer-polkadot = { path = "../polkadot" }
 claimeer-rococo = { path = "../rococo" }
@@ -37,7 +37,6 @@ version = "0.3"
 # We need to enable the `DomRect` feature to use the
 # `get_bounding_client_rect` method.
 features = [
-    "console",
     "HtmlElement",
     "HtmlInputElement",
     "MouseEvent",

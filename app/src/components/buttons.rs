@@ -3,7 +3,7 @@ use crate::router::{Query, Routes};
 use crate::state::Action;
 use crate::state::StateContext;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{child_bounties::Id, layout::BalanceMode};
+use claimeer_common::types::{child_bounties::ChildBountiesIds, layout::BalanceMode};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
@@ -130,7 +130,7 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
 pub fn claim_button() -> Html {
     let state = use_context::<StateContext>().unwrap();
 
-    let cbs: Vec<Id> = if let Some(block_number) = state.network.finalized_block_number {
+    let cbs: ChildBountiesIds = if let Some(block_number) = state.network.finalized_block_number {
         if let Some(child_bounties_raw) = &state.child_bounties_raw {
             let accounts = state
                 .accounts
@@ -142,8 +142,8 @@ pub fn claim_button() -> Html {
                 .filter(|(_, cb)| {
                     cb.is_claimable(block_number) && accounts.contains(&cb.beneficiary)
                 })
-                .map(|(_, cb)| cb.id.clone())
-                .collect::<Vec<Id>>();
+                .map(|(_, cb)| (cb.parent_id.clone(), cb.id.clone()))
+                .collect::<ChildBountiesIds>();
             cbs
         } else {
             Vec::new()
@@ -188,17 +188,14 @@ pub fn sign_button() -> Html {
     if let Some(claim) = claim {
         let onclick = {
             let state = state.clone();
-            let claim = state.claim.clone();
             Callback::from(move |_| {
-                if let Some(claim) = claim.clone() {
-                    state.dispatch(Action::SignClaim(claim));
-                }
+                state.dispatch(Action::PreparePayload);
             })
         };
 
         let label = if claim.is_signing_or_submitting() {
             html! {
-                <span class="inline-flex items-center"><Spinner is_visible={true} />{claim.status.to_string()}</span>
+                <span class="inline-flex items-center"><Spinner class="me-2" is_visible={true} />{claim.status.to_string()}</span>
             }
         } else {
             html! { "Sign and Submit" }

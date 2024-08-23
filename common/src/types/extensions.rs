@@ -87,6 +87,14 @@ extern "C" {
     pub fn js_sign_payload(payload: String, source: String, address: String) -> Promise;
 }
 
+fn to_hex(bytes: impl AsRef<[u8]>) -> String {
+    format!("0x{}", hex::encode(bytes.as_ref()))
+}
+
+fn encode_then_hex<E: Encode>(input: &E) -> String {
+    format!("0x{}", hex::encode(input.encode()))
+}
+
 pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
     let result = JsFuture::from(js_get_accounts())
         .await
@@ -103,24 +111,15 @@ pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
         .collect())
 }
 
-fn to_hex(bytes: impl AsRef<[u8]>) -> String {
-    format!("0x{}", hex::encode(bytes.as_ref()))
-}
-
-fn encode_then_hex<E: Encode>(input: &E) -> String {
-    format!("0x{}", hex::encode(input.encode()))
-}
-
-/// communicates with JavaScript to obtain a signature for the `partial_extrinsic` via a browser extension (e.g. polkadot-js or Talisman)
+/// Create payload as string to be signed via a browser extension (NOTE: currently only supports polkadot-js)
 ///
 /// Some parameters are hard-coded here and not taken from the partial_extrinsic itself (mortality_checkpoint, era, tip).
-pub async fn extension_signature_for_extrinsic(
-    call_data: &[u8],
+pub async fn create_payload_as_string(
     api: &OnlineClient<PolkadotConfig>,
+    call_data: &[u8],
     account_nonce: u64,
-    account_source: String,
     account_address: String,
-) -> Result<Vec<u8>, anyhow::Error> {
+) -> Result<String, anyhow::Error> {
     let genesis_hash = encode_then_hex(&api.genesis_hash());
     // These numbers aren't SCALE encoded; their bytes are just converted to hex:
     let spec_version = to_hex(&api.runtime_version().spec_version.to_be_bytes());
@@ -155,10 +154,19 @@ pub async fn extension_signature_for_extrinsic(
         "version": 4,
     });
 
-    let payload = payload.to_string();
+    Ok(payload.to_string())
+}
+
+/// Collect signature from a browser extension (NOTE: currently only supports polkadot-js)
+pub async fn collect_signature(
+    payload: String,
+    account_source: String,
+    account_address: String,
+) -> Result<Vec<u8>, anyhow::Error> {
     let result = JsFuture::from(js_sign_payload(payload, account_source, account_address))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
+
     let signature = result
         .as_string()
         .ok_or(anyhow!("Error converting JsValue into String"))?;

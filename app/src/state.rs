@@ -1,14 +1,13 @@
-use crate::providers::network::NetworkState;
-use crate::providers::network::NetworkStatus;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::{Account, Balance},
     child_bounties::ChildBountyId,
-    child_bounties::{ChildBounties, Filter, Id},
+    child_bounties::{ChildBounties, ChildBountiesIds, Filter},
     claims::{ClaimState, ClaimStatus},
     extensions::ExtensionAccount,
     extensions::{ExtensionState, ExtensionStatus},
     layout::{BalanceMode, LayoutState},
+    network::{NetworkState, NetworkStatus},
 };
 use gloo::storage::{LocalStorage, Storage};
 use serde::{Deserialize, Serialize};
@@ -40,14 +39,16 @@ pub enum Action {
     AddAccount(String),
     RemoveAccountId(u32),
     // DisableAccountId(u32),
-    UpdateAccountIdBalance(u32, Balance),
-    /// Claim actions
-    StartClaim(Vec<Id>),
-    SignClaim(ClaimState),
-    SubmitClaim(ClaimState, Vec<u8>),
-    CompleteClaim(ClaimState, Vec<ChildBountyId>),
+    // UpdateAccountIdBalance(u32, Balance),
+    UpdateAccountBalance(AccountId32, Balance),
+    /// Claim/Sign actions
+    StartClaim(ChildBountiesIds),
+    PreparePayload,
+    GetSignature(String),
+    SubmitWithSignature(Vec<u8>),
+    CompleteClaim(Vec<ChildBountyId>),
     ResetClaim,
-    ErrorClaim(ClaimState),
+    // ErrorClaim(String),
     /// Extension actions
     ConnectExtension,
     ChangeExtensionStatus(ExtensionStatus),
@@ -161,9 +162,29 @@ impl Reducible for State {
             //     }
             //     .into()
             // }
-            Action::UpdateAccountIdBalance(id, balance) => {
+            // Action::UpdateAccountIdBalance(id, balance) => {
+            //     let mut accounts = self.accounts.clone();
+            //     let account = accounts.iter_mut().find(|account| account.id == id);
+            //     if let Some(account) = account {
+            //         account.balance = balance;
+            //     }
+
+            //     State {
+            //         accounts,
+            //         network: self.network.clone(),
+            //         child_bounties_raw: self.child_bounties_raw.clone(),
+            //         filter: self.filter.clone(),
+            //         extension: self.extension.clone(),
+            //         claim: self.claim.clone(),
+            //         layout: self.layout.clone(),
+            //     }
+            //     .into()
+            // }
+            Action::UpdateAccountBalance(account, balance) => {
                 let mut accounts = self.accounts.clone();
-                let account = accounts.iter_mut().find(|account| account.id == id);
+                let account = accounts
+                    .iter_mut()
+                    .find(|acc| acc.address == account.to_string());
                 if let Some(account) = account {
                     account.balance = balance;
                 }
@@ -202,9 +223,9 @@ impl Reducible for State {
                 layout: self.layout.clone(),
             }
             .into(),
-            Action::SignClaim(claim) => {
-                let mut claim = claim.clone();
-                claim.status = ClaimStatus::Signing;
+            Action::PreparePayload => {
+                let mut claim = self.claim.as_ref().unwrap().clone();
+                claim.status = ClaimStatus::Preparing;
 
                 State {
                     accounts: self.accounts.clone(),
@@ -217,9 +238,23 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::SubmitClaim(claim, tx_bytes) => {
-                let mut claim = claim.clone();
-                claim.status = ClaimStatus::Submitting(tx_bytes);
+            Action::GetSignature(payload) => {
+                let mut claim = self.claim.as_ref().unwrap().clone();
+                claim.status = ClaimStatus::Signing(payload);
+                State {
+                    accounts: self.accounts.clone(),
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: Some(claim),
+                    layout: self.layout.clone(),
+                }
+                .into()
+            }
+            Action::SubmitWithSignature(signature) => {
+                let mut claim = self.claim.as_ref().unwrap().clone();
+                claim.status = ClaimStatus::Submitting(signature);
 
                 State {
                     accounts: self.accounts.clone(),
@@ -232,8 +267,8 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::CompleteClaim(claim, claimed) => {
-                let mut claim = claim.clone();
+            Action::CompleteClaim(claimed) => {
+                let mut claim = self.claim.as_ref().unwrap().clone();
                 claim.status = ClaimStatus::Completed;
 
                 let accounts = self
@@ -274,21 +309,21 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::ErrorClaim(claim) => {
-                let mut claim = claim.clone();
-                claim.status = ClaimStatus::Error;
+            // Action::ErrorClaim(err) => {
+            //     let mut claim = self.claim.as_ref().unwrap().clone();
+            //     claim.status = ClaimStatus::Error(err);
 
-                State {
-                    accounts: self.accounts.clone(),
-                    network: self.network.clone(),
-                    child_bounties_raw: self.child_bounties_raw.clone(),
-                    filter: self.filter.clone(),
-                    extension: self.extension.clone(),
-                    claim: Some(claim),
-                    layout: self.layout.clone(),
-                }
-                .into()
-            }
+            //     State {
+            //         accounts: self.accounts.clone(),
+            //         network: self.network.clone(),
+            //         child_bounties_raw: self.child_bounties_raw.clone(),
+            //         filter: self.filter.clone(),
+            //         extension: self.extension.clone(),
+            //         claim: Some(claim),
+            //         layout: self.layout.clone(),
+            //     }
+            //     .into()
+            // }
             Action::ConnectExtension => {
                 let mut extension = self.extension.clone();
                 extension.status = ExtensionStatus::Connecting;

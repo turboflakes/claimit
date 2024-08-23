@@ -14,6 +14,7 @@ pub struct AccountChipProps {
 #[function_component(AccountChip)]
 pub fn account(props: &AccountChipProps) -> Html {
     let state = use_context::<StateContext>().unwrap();
+
     let is_already_following = state
         .accounts
         .iter()

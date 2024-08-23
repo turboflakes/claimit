@@ -48,7 +48,7 @@ impl ChildBounty {
 }
 
 pub type ChildBounties = BTreeMap<Id, ChildBounty>;
-pub type ChildBountiesKeys = Vec<(ParentBountyId, ChildBountyId)>;
+pub type ChildBountiesIds = Vec<(ParentBountyId, ChildBountyId)>;
 
 #[derive(Clone, Debug, Display, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Status {

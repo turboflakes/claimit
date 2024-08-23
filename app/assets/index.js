@@ -82,7 +82,6 @@ async function signPayload(payloadAsStr, source, address) {
     const signPayload = injector?.signer?.signPayload;
     if (!!signPayload) {
         const {signature} = await signPayload(payload);
-        console.log("signature js:", signature)
         return signature;
     } else {
         throw "The extension's injector does not have a `signPayload` function on its `signer`";

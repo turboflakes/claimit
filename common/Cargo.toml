@@ -23,3 +23,4 @@ strum_macros = { workspace = true }
 hex = { workspace = true }
 wasm-bindgen = { workspace = true }
 wasm-bindgen-futures = { workspace = true }
+rand = { workspace = true }
