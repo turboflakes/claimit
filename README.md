@@ -4,7 +4,23 @@
   <img src="https://github.com/turboflakes/claimeer/blob/main/claimeer_github_header.png?raw=true">
 </p>
 
-Claimeer ― It's a simple UI (dApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
+Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
+
+## 🚧 Work In Progress
+
+- [&check;] Support Polkadot and Kusama network;
+- [&check;] Light client first with optional switch to an RPC connection (default to IBP provider);
+- [&check;] Mobile first support;
+- [&check;] Onboard view in three steps for first time users;
+- [&check;] Synchronize all on chain child bounties and filter by description;
+- [&check;] Add any beneficiary account;
+- [&check;] Switch view betweeen Total balance, Total awarded, Total Pending, Total claimable;
+- [&check;] External links to Subsquare or Polkassembly child bounty;
+- [&check;] Signing via PJS extension;
+- [] Abstract the switch between networks. Have all accounts in the same view;
+- [] Load accounts identity via people chain;
+- [] Disable accounts from being included in the claiming batch;
+- [] Support additional wallets (TBD);
 
 ## Development / Build from Source
 
