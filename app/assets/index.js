@@ -30,7 +30,7 @@ let getPolkadotJsExtensionMod = (() => {
  */
 async function getAccounts() {
     const extensionMod = await getPolkadotJsExtensionMod();
-    const extensions = await extensionMod.web3Enable("localhost:8080");
+    const extensions = await extensionMod.web3Enable("claimeer.app");
     const allAccounts = await extensionMod.web3Accounts();
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
