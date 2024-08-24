@@ -55,7 +55,7 @@ pub enum Action {
     ChangeSigner(ExtensionAccount),
     /// Network actions
     ChangeNetworkStatus(NetworkStatus),
-    ChangeNetwork(SupportedRelayRuntime),
+    ResetNetwork(SupportedRelayRuntime, bool),
     UpdateBlockNumber(u32),
     UpdateChildBountiesRaw(ChildBounties),
     IncreaseFetch,
@@ -401,8 +401,8 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::ChangeNetwork(runtime) => {
-                let network = NetworkState::new(runtime.clone());
+            Action::ResetNetwork(runtime, use_light_client) => {
+                let network = NetworkState::new(runtime.clone(), use_light_client);
                 let accounts: Vec<Account> =
                     LocalStorage::get(account_key(runtime.clone())).unwrap_or_else(|_| vec![]);
 

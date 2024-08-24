@@ -21,10 +21,12 @@ use yew_agent::{prelude::reactor, reactor::ReactorScope};
 pub type BlockNumber = u32;
 ///  SignerAddress must be ss58 formatted address as string
 pub type SignerAddress = String;
+/// UseLightClient instructs worker to start a light client connection to the network
+pub type UseLightClient = bool;
 
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Input {
-    Start(SubscriptionId, SupportedRelayRuntime),
+    Start(SubscriptionId, SupportedRelayRuntime, UseLightClient),
     FetchChildBounties,
     FetchAccountBalance(AccountId32),
     CreatePayloadTx(ChildBountiesIds, SignerAddress),
@@ -46,19 +48,21 @@ pub enum Output {
 #[reactor(Worker)]
 pub async fn worker(mut scope: ReactorScope<Input, Output>) {
     'outer: while let Some(input) = scope.next().await {
-        if let Input::Start(sub_id, runtime) = input {
-            // Initiate light client (smoldot)
-            let (_, lc_rpc) = LightClient::relay_chain(runtime.chain_specs())
-                .expect("expect valid smoldot connection");
+        if let Input::Start(sub_id, runtime, use_light_client) = input {
+            let api = if use_light_client {
+                // Initiate light client (smoldot)
+                let (_, lc_rpc) = LightClient::relay_chain(runtime.chain_specs())
+                    .expect("expect valid smoldot connection");
 
-            // Initiate RPC client
-            // let api = OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
-            //     .await
-            //     .expect("expect valid RPC connection");
-
-            let api = OnlineClient::<PolkadotConfig>::from_rpc_client(lc_rpc.clone())
-                .await
-                .expect("expect valid RPC connection");
+                OnlineClient::<PolkadotConfig>::from_rpc_client(lc_rpc.clone())
+                    .await
+                    .expect("expect valid RPC connection")
+            } else {
+                // Initiate RPC client
+                OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
+                    .await
+                    .expect("expect valid RPC connection")
+            };
 
             //
             let mut rc_subscription = subscribe_finalized_block(&api.clone());
@@ -82,7 +86,7 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
                     a = scope.next() => {
                         match a {
                             Some(Input::Finish) =>  {
-                                break 'outer
+                                break 'outer;
                             },
                             Some(Input::FetchChildBounties) => {
                                 fetch_child_bounties(&api.clone(), runtime.clone(), sc_child_bounties.clone());

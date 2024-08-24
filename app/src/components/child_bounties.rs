@@ -16,8 +16,9 @@ pub fn child_bounties_card() -> Html {
 
     if state.network.is_fetching() && state.child_bounties_raw.is_none() {
         html! {
-            <div class="flex justify-center items-center h-96 p-4 md:p-6 bg-gray-50 max-w-[375px] sm:max-w-[828px] rounded-lg w-full">
+            <div class="flex flex-col justify-center items-center h-96 p-4 md:p-6 bg-gray-50 max-w-[375px] sm:max-w-[828px] rounded-lg w-full">
                 <Spinner is_visible={state.network.is_fetching()} />
+                <p class="mt-4 text-xs">{"Retrieving just for you, the most recent child bounties state. Hang tight..."}</p>
             </div>
         }
     } else if state.child_bounties_raw.is_some() {

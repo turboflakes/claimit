@@ -54,6 +54,10 @@ module.exports = {
         'yellow': {
           light: 'hsl(58, 100%, 80%)',
           DEFAULT: 'hsl(58, 100%, 68%)',
+        },
+        'orange': {
+          light: 'hsl(20, 95%, 80%)',
+          DEFAULT: 'hsl(20, 95%, 67%)',
         }
       },
     },

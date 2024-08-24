@@ -11,6 +11,16 @@ pub enum NetworkStatus {
     Inactive,
 }
 
+impl NetworkStatus {
+    pub fn text_class(&self) -> &'static str {
+        match self {
+            Self::Initializing => "text-orange",
+            Self::Active => "text-green",
+            Self::Inactive => "text-red",
+        }
+    }
+}
+
 impl std::fmt::Display for NetworkStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -34,10 +44,12 @@ pub struct NetworkState {
     pub finalized_block_number: Option<u32>,
     /// A counter to keep track of fetching queries.
     pub fetches_counter: u32,
+    /// Use light client connection to the network or switch to RPC via an IBP provider.
+    pub use_light_client_as_network_provider: bool,
 }
 
 impl NetworkState {
-    pub fn new(runtime: SupportedRelayRuntime) -> Self {
+    pub fn new(runtime: SupportedRelayRuntime, use_light_client: bool) -> Self {
         // Generate a unique subscription_id
         let mut rng = rand::thread_rng();
         let subscription_id = rng.gen::<SubscriptionId>();
@@ -48,10 +60,11 @@ impl NetworkState {
             runtime,
             finalized_block_number: None,
             fetches_counter: 0,
+            use_light_client_as_network_provider: use_light_client,
         }
     }
 
-    pub fn _is_initializing(&self) -> bool {
+    pub fn is_initializing(&self) -> bool {
         self.status == NetworkStatus::Initializing
     }
 
@@ -67,7 +80,19 @@ impl NetworkState {
         !self.is_active() || self.is_fetching()
     }
 
+    pub fn is_ligh_client(&self) -> bool {
+        self.use_light_client_as_network_provider
+    }
+
     pub fn _class(&self) -> String {
         self.runtime.to_string().to_lowercase()
+    }
+
+    pub fn provider_description(&self) -> &'static str {
+        if self.use_light_client_as_network_provider {
+            "Connected via light client"
+        } else {
+            "Connected via RPC (IBP provider)"
+        }
     }
 }
