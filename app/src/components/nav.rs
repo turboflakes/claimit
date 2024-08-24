@@ -1,4 +1,7 @@
-use crate::components::{buttons::NetworkSubscriber, spinners::Spinner};
+use crate::components::{
+    buttons::{NetworkProviderIconButton, NetworkSubscriber},
+    spinners::Spinner,
+};
 use crate::state::StateContext;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use num_format::{Locale, ToFormattedString};
@@ -7,6 +10,7 @@ use yew::{function_component, html, use_context, Callback, Html, Properties};
 #[derive(PartialEq, Properties, Clone)]
 pub struct NavbarProps {
     pub runtime: SupportedRelayRuntime,
+    pub ontoggle_provider: Callback<()>,
 }
 
 #[function_component(Navbar)]
@@ -24,6 +28,17 @@ pub fn navbar(props: &NavbarProps) -> Html {
                 </a>
 
                 <div class="inline-flex items-center">
+
+                    { 
+                        if state.network.is_ligh_client() && state.network.is_initializing() {
+                            html! {
+                                <p class="hidden sm:flex text-xs me-2">{"synchronizing light client..."}</p>
+                            }
+                        } else {
+                            html! {}
+                        }
+                        
+                    }
 
                     <Spinner is_visible={state.network.is_fetching()} />
 
@@ -60,7 +75,8 @@ pub fn navbar(props: &NavbarProps) -> Html {
                         }
                     </div>
 
-                    // <ClaimButton />
+                    <NetworkProviderIconButton class="ms-4" onclick={props.ontoggle_provider.clone()} />
+
                 </div>
             </div>
         </nav>

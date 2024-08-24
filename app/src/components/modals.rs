@@ -4,17 +4,11 @@ use crate::components::{
     items::{ChildBountyItemSmall, ExtensionAccountDropdown},
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
-    child_bounties::ChildBountiesKeys,
     claims::ClaimStatus,
-    extensions::{get_accounts, ExtensionAccount, ExtensionStatus},
+    extensions::{collect_signature, get_accounts, ExtensionAccount, ExtensionStatus},
 };
-use claimeer_kusama::kusama;
-use claimeer_polkadot::polkadot;
-use claimeer_rococo::rococo;
-use log::{error, info};
-use subxt::{OnlineClient, PolkadotConfig};
+use log::error;
 use yew::{
     classes, function_component, html, platform::spawn_local, use_context, use_effect_with,
     use_state, Callback, Html,
@@ -35,115 +29,36 @@ pub fn claim_modal() -> Html {
         let extension = state.extension.clone();
 
         move |claim| {
-            if let Some(claim) = claim {
-                match &claim.status {
+            if let Some(claim) = claim.clone() {
+                match claim.status {
                     ClaimStatus::Initializing => {
                         is_visible.set(true);
                         if extension.signer.is_some() {
                             state.dispatch(Action::ConnectExtension);
                         }
                     }
-                    ClaimStatus::Signing => {
+                    ClaimStatus::Signing(payload) => {
                         if extension.is_ready() {
-                            err.set("".to_string());
-                            let runtime = state.network.runtime.clone();
                             let signer = extension.signer.as_ref().unwrap().clone();
-                            let child_bounties_keys = state
-                                .claim
-                                .as_ref()
-                                .unwrap()
-                                .child_bounty_ids
-                                .iter()
-                                .map(|id| {
-                                    state
-                                        .child_bounties_raw
-                                        .as_ref()
-                                        .unwrap()
-                                        .get(id)
-                                        .unwrap()
-                                        .key()
-                                })
-                                .collect::<ChildBountiesKeys>();
-
-                            let claim = claim.clone();
+                            err.set("".to_string());
                             spawn_local(async move {
-                                let api = OnlineClient::<PolkadotConfig>::from_url(
-                                    runtime.default_rpc_url(),
+                                match collect_signature(
+                                    payload.clone(),
+                                    signer.source.clone(),
+                                    signer.address.clone(),
                                 )
                                 .await
-                                .expect("expect valid RPC connection");
-
-                                let response = match runtime {
-                                    SupportedRelayRuntime::Polkadot => {
-                                        polkadot::create_and_sign_tx(
-                                            &api.clone(),
-                                            signer.clone(),
-                                            child_bounties_keys.clone(),
-                                        )
-                                        .await
-                                    }
-                                    SupportedRelayRuntime::Kusama => {
-                                        kusama::create_and_sign_tx(
-                                            &api.clone(),
-                                            signer.clone(),
-                                            child_bounties_keys.clone(),
-                                        )
-                                        .await
-                                    }
-                                    SupportedRelayRuntime::Rococo => {
-                                        rococo::create_and_sign_tx(
-                                            &api.clone(),
-                                            signer.clone(),
-                                            child_bounties_keys.clone(),
-                                        )
-                                        .await
-                                    }
-                                };
-                                match response {
-                                    Ok(tx_bytes) => {
-                                        state.dispatch(Action::SubmitClaim(claim, tx_bytes));
+                                {
+                                    Ok(signature) => {
+                                        state.dispatch(Action::SubmitWithSignature(signature));
                                     }
                                     Err(e) => {
                                         error!("error: {:?}", e);
                                         err.set(e.to_string());
-                                        state.dispatch(Action::ErrorClaim(claim));
                                     }
                                 }
                             });
                         }
-                    }
-                    ClaimStatus::Submitting(tx_bytes) => {
-                        let tx_bytes = tx_bytes.clone();
-                        let runtime = state.network.runtime.clone();
-                        let claim = claim.clone();
-                        spawn_local(async move {
-                            let api =
-                                OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
-                                    .await
-                                    .expect("expect valid RPC connection");
-
-                            let response = match runtime {
-                                SupportedRelayRuntime::Polkadot => {
-                                    polkadot::submit_and_watch_tx(&api.clone(), tx_bytes).await
-                                }
-                                SupportedRelayRuntime::Kusama => {
-                                    kusama::submit_and_watch_tx(&api.clone(), tx_bytes).await
-                                }
-                                SupportedRelayRuntime::Rococo => {
-                                    rococo::submit_and_watch_tx(&api.clone(), tx_bytes).await
-                                }
-                            };
-                            match response {
-                                Ok(claimed) => {
-                                    state.dispatch(Action::CompleteClaim(claim, claimed));
-                                }
-                                Err(e) => {
-                                    error!("error: {:?}", e);
-                                    err.set(e.to_string());
-                                    state.dispatch(Action::ErrorClaim(claim));
-                                }
-                            }
-                        });
                     }
                     ClaimStatus::Completed => {
                         // TODO: wait 1 or 2 seconds close and dispatch action
@@ -164,7 +79,6 @@ pub fn claim_modal() -> Html {
 
         move |extension| match extension.status {
             ExtensionStatus::Connecting => {
-                info!("checking pjs extension and fetch enabled accounts");
                 spawn_local(async move {
                     match get_accounts().await {
                         Ok(accounts) => {
@@ -263,7 +177,7 @@ pub fn claim_modal() -> Html {
                                     <div>
                                         <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Supported wallets"}</h4>
                                         <div class="">
-                                            <Button label={"Polkadot JS"} class="btn__logo" onclick={&onclick_polkadotjs} >
+                                            <Button label={"Polkadot JS"} class={classes!("btn__logo", "px-4")} onclick={&onclick_polkadotjs} >
                                                 <img class="h-6" src="/images/polkadot_js_logo.svg" alt="polkadot js extension" />
                                             </Button>
                                         </div>
@@ -280,9 +194,9 @@ pub fn claim_modal() -> Html {
                                         <div>
                                             <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Claimable child bounties"}</h4>
                                             <ul class="flex-column space-y space-y-4 text-sm font-medium text-gray-600 dark:text-gray-400 overflow-y-scroll h-96">
-                                                { for state.claim.clone().unwrap().child_bounty_ids.into_iter().map(|id|
+                                                { for state.claim.clone().unwrap().child_bounty_ids.into_iter().map(|(_, cb_id)|
                                                     html! {
-                                                        <ChildBountyItemSmall id={id} />
+                                                        <ChildBountyItemSmall id={cb_id} />
                                                     })
                                                 }
                                             </ul>

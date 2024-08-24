@@ -5,23 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
         <title>Claimeer by Turboflakes</title>
-        <meta name="description" content="A dApp to easy lookup and claim child bounties for Polkadot and Kusama network." />
+        <meta name="description" content="A DApp to easy lookup and claim child bounties for Polkadot and Kusama network." />
         <!-- plausible analytics -->
         <script defer data-domain="claimeer.app" src="https://plausible.io/js/script.js"></script>
         
         <!--  -->
         <link data-trunk rel="copy-dir" href="assets/images"/>
         <link data-trunk rel="copy-dir" href="assets/css"/>
-        <!-- <link data-trunk rel="copy-dir" href="assets/fonts"/> -->
         <link data-trunk rel="copy-file" href="assets/favicon.ico" />
         <link data-trunk rel="copy-file" href="assets/CNAME" />
         <!--  -->
-        <!-- <link data-trunk rel="css" href="assets/stylesheets/root.css" /> -->
-        <!-- <link data-trunk rel="css" href="assets/stylesheets/fonts.css" /> -->
         <link data-trunk rel="css" href="assets/css/styles.css" />
         <link data-trunk rel="rust" href="Cargo.toml" data-bin="app" data-type="main" data-weak-refs />
-        <link data-trunk rel="rust" href="Cargo.toml" data-bin="network_subscription_worker" data-type="worker" data-weak-refs />
-        <link data-trunk rel="rust" href="Cargo.toml" data-bin="network_storage_worker" data-type="worker" data-weak-refs />
+        <link data-trunk rel="rust" href="Cargo.toml" data-bin="network_api_worker" data-type="worker" data-weak-refs />
         <script defer data-trunk src="assets/index.js"></script>
     </head>
     <body>

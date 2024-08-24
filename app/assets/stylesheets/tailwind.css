@@ -57,7 +57,7 @@ hr {
 }
 
 .btn.btn__icon {
-    @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+    @apply text-white hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
 .btn.btn__icon_small {
@@ -65,12 +65,12 @@ hr {
 }
 
 .btn.btn__icon.btn__white {
-    @apply bg-white disabled:bg-gray-300 hover:bg-gray-100;
+    @apply bg-white disabled:bg-gray-300 hover:bg-gray-200;
 }
 
 .btn.btn__icon_small.btn__gray,
 .btn.btn__icon.btn__gray {
-    @apply bg-gray-50 hover:bg-gray-200;
+    @apply bg-gray-100 disabled:bg-gray-300 hover:bg-gray-200;
 }
 
 .btn.btn__icon.btn__transparent {
@@ -155,4 +155,16 @@ hr {
 
 .account__chip {
     @apply inline-flex items-center justify-between me-2 text-xs min-h-9 text-gray-600 dark:text-gray-300;
+}
+
+.api_init {
+    @apply w-2 h-2 mx-2 rounded-full bg-white text-orange;
+}
+
+.api_active {
+    @apply w-2 h-2 mx-2 rounded-full bg-white text-green;
+}
+
+.api_inactive {
+    @apply w-2 h-2 mx-2 rounded-full bg-white text-red;
 }

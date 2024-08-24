@@ -4,22 +4,18 @@ use crate::components::{
     chips::AccountChip,
     icons::Identicon,
 };
-use crate::state::{Action, StateContext};
+use crate::state::StateContext;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
     child_bounties::{Filter, Id},
     extensions::ExtensionAccount,
 };
-use claimeer_kusama::kusama;
-use claimeer_polkadot::polkadot;
-use claimeer_rococo::rococo;
-use log::error;
 use std::str::FromStr;
-use subxt::{config::substrate::AccountId32, OnlineClient, PolkadotConfig};
+use subxt::config::substrate::AccountId32;
 use yew::{
-    classes, function_component, html, platform::spawn_local, use_context, use_effect_with,
-    use_state, Callback, Classes, Html, MouseEvent, Properties,
+    classes, function_component, html, use_context, use_state, Callback, Classes, Html, MouseEvent,
+    Properties,
 };
 
 #[derive(PartialEq, Properties, Clone)]
@@ -119,46 +115,7 @@ pub struct AccountItemProps {
 
 #[function_component(AccountItem)]
 pub fn account_item(props: &AccountItemProps) -> Html {
-    let state = use_context::<StateContext>().unwrap();
     let is_dropdown_hidden = use_state(|| true);
-
-    // fetch account balances
-    use_effect_with((), {
-        let state = state.clone();
-        let runtime = state.network.runtime.clone();
-        let account_id = AccountId32::from_str(&props.account.address).unwrap();
-        let id = props.account.id.clone();
-
-        move |_| {
-            spawn_local(async move {
-                let api = OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
-                    .await
-                    .expect("expect valid RPC connection");
-
-                let response = match runtime {
-                    SupportedRelayRuntime::Polkadot => {
-                        polkadot::fetch_account_balance(&api.clone(), account_id.clone()).await
-                    }
-                    SupportedRelayRuntime::Kusama => {
-                        kusama::fetch_account_balance(&api.clone(), account_id.clone()).await
-                    }
-                    SupportedRelayRuntime::Rococo => {
-                        rococo::fetch_account_balance(&api.clone(), account_id.clone()).await
-                    }
-                };
-
-                match response {
-                    Ok(balance) => {
-                        state.dispatch(Action::UpdateAccountIdBalance(id, balance));
-                    }
-                    Err(e) => {
-                        error!("error: {:?}", e);
-                        // TODO: dispatch general action error
-                    }
-                }
-            });
-        }
-    });
 
     let btn_dropdown_onclick = {
         let is_dropdown_hidden = is_dropdown_hidden.clone();

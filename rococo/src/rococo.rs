@@ -3,8 +3,8 @@ use claimeer_common::runtimes::utils::get_child_bounty_id_from_storage_key;
 use claimeer_common::runtimes::utils::str;
 use claimeer_common::types::{
     accounts::Balance,
-    child_bounties::{ChildBounties, ChildBountiesKeys, ChildBounty, ChildBountyId, Status},
-    extensions::{extension_signature_for_extrinsic, ExtensionAccount},
+    child_bounties::{ChildBounties, ChildBountiesIds, ChildBounty, ChildBountyId, Status},
+    extensions::create_payload_as_string,
 };
 use log::{error, info};
 use node_runtime::{
@@ -22,8 +22,7 @@ use std::str::FromStr;
 use subxt::{
     config::DefaultExtrinsicParamsBuilder as TxParams,
     ext::codec::Decode,
-    tx::SubmittableExtrinsic,
-    tx::TxStatus,
+    tx::{SubmittableExtrinsic, TxStatus},
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
@@ -36,10 +35,11 @@ use subxt::{
 mod node_runtime {}
 type Call = node_runtime::runtime_types::rococo_runtime::RuntimeCall;
 type ChildBountyCall = node_runtime::runtime_types::pallet_child_bounties::pallet::Call;
+type SystemCall = node_runtime::runtime_types::frame_system::pallet::Call;
 
 pub async fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
-) -> Result<ChildBounties, subxt::Error> {
+) -> Result<ChildBounties, ClaimeerError> {
     let mut out = ChildBounties::new();
 
     let address = node_runtime::storage()
@@ -103,23 +103,23 @@ pub async fn fetch_account_balance(
     ));
 }
 
-pub async fn create_and_sign_tx(
+pub async fn create_payload_tx(
     api: &OnlineClient<PolkadotConfig>,
-    signer: ExtensionAccount,
-    child_bounties_keys: ChildBountiesKeys,
-) -> Result<Vec<u8>, ClaimeerError> {
-    let account_address = signer.address.clone();
-    let account_id = AccountId32::from_str(&account_address).unwrap();
-
-    // Fetch account nounce
+    child_bounties_ids: ChildBountiesIds,
+    signer_address: String,
+) -> Result<String, ClaimeerError> {
+    let account_id = AccountId32::from_str(&signer_address).unwrap();
     let account_nonce = api.tx().account_nonce(&account_id).await?;
 
     // Create a batch call with the child bounty claims extrinsics
     let mut calls_for_batch: Vec<Call> = vec![];
-    for (parent_bounty_id, child_bounty_id) in child_bounties_keys.into_iter() {
-        let call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
+    for (parent_bounty_id, child_bounty_id) in child_bounties_ids.into_iter() {
+        let _call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
             parent_bounty_id,
             child_bounty_id,
+        });
+        let call = Call::System(SystemCall::remark_with_event {
+            remark: b"test".to_vec(),
         });
         calls_for_batch.push(call);
     }
@@ -130,24 +130,52 @@ pub async fn create_and_sign_tx(
         .force_batch(calls_for_batch.clone());
 
     // Get SCALE encoded data from TX payload
-    let call_data = api.tx().call_data(&batch_call)?;
-
-    let Ok(signature) = extension_signature_for_extrinsic(
-        &call_data,
-        &api,
-        account_nonce,
-        signer.source.clone(),
-        signer.address.clone(),
-    )
-    .await
-    else {
-        return Err(ClaimeerError::Other(
-            "Signing via extension failed".to_string(),
-        ));
+    let Ok(call_data) = api.tx().call_data(&batch_call) else {
+        return Err(ClaimeerError::Other("SCALE encoding failed".to_string()));
     };
 
+    let Ok(payload) =
+        create_payload_as_string(&api, &call_data, account_nonce, signer_address).await
+    else {
+        return Err(ClaimeerError::Other("Payload creation failed".to_string()));
+    };
+
+    Ok(payload)
+}
+
+pub async fn sign_and_submit_tx(
+    api: &OnlineClient<PolkadotConfig>,
+    child_bounties_ids: ChildBountiesIds,
+    signer_address: String,
+    signature: Vec<u8>,
+) -> Result<Vec<ChildBountyId>, ClaimeerError> {
+    let account_id = AccountId32::from_str(&signer_address).unwrap();
+    let account_nonce = api.tx().account_nonce(&account_id).await?;
+
+    // Create a batch call with the child bounty claims extrinsics
+    let mut calls_for_batch: Vec<Call> = vec![];
+    for (parent_bounty_id, child_bounty_id) in child_bounties_ids.into_iter() {
+        let _call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
+            parent_bounty_id,
+            child_bounty_id,
+        });
+        // NOTE: To test on Rococo we create a remark rather than clearing the child_bounty!
+        let call = Call::System(SystemCall::remark_with_event {
+            remark: b"test".to_vec(),
+        });
+
+        calls_for_batch.push(call);
+    }
+
+    // Create a batch call TX payload
+    let batch_call = node_runtime::tx()
+        .utility()
+        .force_batch(calls_for_batch.clone());
+
     let Ok(multi_signature) = MultiSignature::decode(&mut &signature[..]) else {
-        return Err(ClaimeerError::Other("MultiSignature Decoding".to_string()));
+        return Err(ClaimeerError::Other(
+            "MultiSignature decoding failed".to_string(),
+        ));
     };
 
     let params = TxParams::new().nonce(account_nonce).build();
@@ -164,9 +192,10 @@ pub async fn create_and_sign_tx(
 
     // check the TX validity (to debug in the js console if the extrinsic would work)
     let dry_res = signed_extrinsic.validate().await;
-    info!("dry_res: {:?}", dry_res);
+    info!("__dry_res: {:?}", dry_res);
 
-    Ok(signed_extrinsic.into_encoded())
+    // Submit and watch transaction
+    submit_and_watch_tx(&api.clone(), signed_extrinsic.into_encoded()).await
 }
 
 pub async fn submit_and_watch_tx(

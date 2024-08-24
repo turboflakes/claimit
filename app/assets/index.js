@@ -30,7 +30,7 @@ let getPolkadotJsExtensionMod = (() => {
  */
 async function getAccounts() {
     const extensionMod = await getPolkadotJsExtensionMod();
-    const extensions = await extensionMod.web3Enable("localhost:8080");
+    const extensions = await extensionMod.web3Enable("claimeer.app");
     const allAccounts = await extensionMod.web3Accounts();
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
@@ -82,7 +82,6 @@ async function signPayload(payloadAsStr, source, address) {
     const signPayload = injector?.signer?.signPayload;
     if (!!signPayload) {
         const {signature} = await signPayload(payload);
-        console.log("signature js:", signature)
         return signature;
     } else {
         throw "The extension's injector does not have a `signPayload` function on its `signer`";

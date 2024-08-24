@@ -1,37 +1,44 @@
-use crate::types::child_bounties::Id;
+use crate::types::child_bounties::ChildBountiesIds;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ClaimStatus {
+    /// Initialize claiming process
     Initializing,
-    Signing,
+    /// Prepare payload to be ready for signing
+    Preparing,
+    /// Sign payload via browser extension
+    Signing(String),
+    /// Submit signed payload
     Submitting(Vec<u8>),
+    /// Complete claiming process
     Completed,
-    Error,
+    Error(String),
 }
 
 impl std::fmt::Display for ClaimStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Initializing => write!(f, "Initializing"),
-            Self::Signing => write!(f, "Signing"),
+            Self::Preparing => write!(f, "Preparing"),
+            Self::Signing(_) => write!(f, "Signing"),
             Self::Submitting(_) => write!(f, "Submitting"),
             Self::Completed => write!(f, "Completed"),
-            Self::Error => write!(f, "Error"),
+            Self::Error(_) => write!(f, "Error"),
         }
     }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ClaimState {
-    /// An aray of child bounty ids to claim
-    pub child_bounty_ids: Vec<Id>,
+    /// An aray of child bounty ids
+    pub child_bounty_ids: ChildBountiesIds,
     /// The status of the claim.
     pub status: ClaimStatus,
 }
 
 impl ClaimState {
-    pub fn new(child_bounty_ids: Vec<Id>) -> Self {
+    pub fn new(child_bounty_ids: ChildBountiesIds) -> Self {
         Self {
             child_bounty_ids,
             status: ClaimStatus::Initializing,
@@ -44,12 +51,15 @@ impl ClaimState {
 
     pub fn is_signing_or_submitting(&self) -> bool {
         match self.status {
-            ClaimStatus::Signing | ClaimStatus::Submitting(_) => true,
+            ClaimStatus::Signing(_) | ClaimStatus::Submitting(_) => true,
             _ => false,
         }
     }
 
     pub fn is_error(&self) -> bool {
-        self.status == ClaimStatus::Error
+        match self.status {
+            ClaimStatus::Error(_) => true,
+            _ => false,
+        }
     }
 }
