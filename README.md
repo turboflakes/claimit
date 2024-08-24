@@ -6,7 +6,7 @@
 
 Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
 
-## 🚧 Work In Progress
+## ✨ Included Features
 
 - [&check;] Support Polkadot and Kusama network;
 - [&check;] Light client first with optional switch to an RPC connection (default to IBP provider);
@@ -17,6 +17,9 @@ Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim ch
 - [&check;] Switch view betweeen Total balance, Total awarded, Total Pending, Total claimable;
 - [&check;] External links to Subsquare or Polkassembly child bounty;
 - [&check;] Signing via PJS extension;
+
+## 🚧 Work In Progress
+
 - [] Abstract the switch between networks. Have all accounts in the same view;
 - [] Load accounts identity via people chain;
 - [] Disable accounts from being included in the claiming batch;
