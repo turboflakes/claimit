@@ -4,7 +4,7 @@
   <img src="https://github.com/turboflakes/claimeer/blob/main/claimeer_github_header.png?raw=true">
 </p>
 
-Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser (Subxt + Yew + TailwindCSS).
+Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimeer works for anyone looking to easily track and claim child bounties. Claimeer is written in Rust and compiled to WASM to run entirely in the browser ([Subxt](https://github.com/paritytech/subxt) + [Yew](https://yew.rs/) + [TailwindCSS](https://tailwindcss.com/)).
 
 ## ✨ Included Features
 
