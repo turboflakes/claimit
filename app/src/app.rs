@@ -60,7 +60,7 @@ pub fn main() -> Html {
 
         State {
             accounts,
-            network: NetworkState::new(current_runtime.clone(), true),
+            network: NetworkState::new(current_runtime.clone(), false),
             child_bounties_raw: None,
             filter,
             extension: ExtensionState::new(signer.clone()),
@@ -219,7 +219,7 @@ pub fn main() -> Html {
 
                         <div class={classes!("header", hidden_class)}>
                             <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer" />
-                            <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Secure Your Child Bounty—Never Let One Slip Away!"}</p>
+                            <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Claim Child Bounties with Ease!"}</p>
                         </div>
 
                         <div class="hidden sm:flex w-full">
