@@ -471,7 +471,7 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                             <hr class="my-2" />
                             <div class="flex items-center justify-between">
 
-                                <AccountChip account={child_bounty.beneficiary.clone()} class="min-w-48" />
+                                <AccountChip account={child_bounty.beneficiary.clone()} />
 
                                 { if child_bounty.is_claimable(block_number) {
                                     html! {

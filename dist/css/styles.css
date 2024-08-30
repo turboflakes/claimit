@@ -1598,6 +1598,10 @@ video {
   padding-bottom: 1.5rem;
 }
 
+.pe-2 {
+  padding-inline-end: 0.5rem;
+}
+
 .pe-3 {
   padding-inline-end: 0.75rem;
 }
@@ -1620,10 +1624,6 @@ video {
 
 .pt-5 {
   padding-top: 1.25rem;
-}
-
-.pe-2 {
-  padding-inline-end: 0.5rem;
 }
 
 .text-left {
