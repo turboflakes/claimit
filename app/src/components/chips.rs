@@ -9,11 +9,13 @@ pub struct AccountChipProps {
     #[prop_or_default]
     pub class: AttrValue,
     pub account: AccountId32,
+    #[prop_or_default]
+    pub removable: bool
 }
 
 #[function_component(AccountChip)]
 pub fn account(props: &AccountChipProps) -> Html {
-    // let state = use_context::<StateContext>().unwrap();
+    let state = use_context::<StateContext>().unwrap();
 
     // let is_already_following = state
     //     .accounts
@@ -28,12 +30,39 @@ pub fn account(props: &AccountChipProps) -> Html {
     //     })
     // };
 
+    let onremove = {
+        let state = state.clone();
+        let account = props.account.to_string();
+        Callback::from(move |_| {
+            state.dispatch(Action::RemoveAccount(account.clone()));
+        })
+    };
+
     html! {
         <span class={classes!("account__chip", props.class.clone())}>
             <div class="inline-flex items-center">
                 <Identicon address={props.account.to_string()} size={24} class="me-2" />
                 <span class="me-2">{compact(&props.account.clone())}</span>
             </div>
+            {
+                if props.removable {
+                    html! {
+                        <button type="button" class={classes!("btn", "btn__icon_small")} aria-label="Remove Account"
+                                onclick={onremove} >
+                            // <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            //     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            // </svg>
+                            <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                            </svg>
+
+                            <span class="sr-only">{"Remove Account"}</span>
+                        </button>
+                    }
+                } else {
+                    html! {}
+                }
+            }
             // {
             //     if !is_already_following {
             //         html! {

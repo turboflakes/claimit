@@ -37,6 +37,7 @@ pub struct State {
 pub enum Action {
     /// Account actions
     AddAccount(String),
+    RemoveAccount(String),
     RemoveAccountId(u32),
     // DisableAccountId(u32),
     // UpdateAccountIdBalance(u32, Balance),
@@ -139,6 +140,23 @@ impl Reducible for State {
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
                     filter,
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout: self.layout.clone(),
+                }
+                .into()
+            }
+            Action::RemoveAccount(address) => {
+                let mut accounts = self.accounts.clone();
+                accounts.retain(|account| account.address != address);
+
+                LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
+
+                State {
+                    accounts,
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout: self.layout.clone(),

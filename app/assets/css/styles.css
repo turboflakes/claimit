@@ -1622,6 +1622,10 @@ video {
   padding-top: 1.25rem;
 }
 
+.pe-2 {
+  padding-inline-end: 0.5rem;
+}
+
 .text-left {
   text-align: left;
 }

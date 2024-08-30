@@ -451,7 +451,7 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
 
                 return html! {
                     <li class="flex rounded-lg bg-white dark:bg-gray-700 hover:highlight">
-                        <div class="flex-auto px-6 py-3">
+                        <div class={classes!("flex-auto", "py-3", props.is_action_hidden.then(|| Some("px-6")), (!props.is_action_hidden).then(|| Some("ps-6 pe-2")))}>
                             <div class="flex items-center justify-between">
                                 <h4 class="flex-auto text-base text-gray-800 dark:text-gray-200 block truncate w-1">
                                     {child_bounty.description.clone()}

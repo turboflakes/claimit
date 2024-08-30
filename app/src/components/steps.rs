@@ -107,7 +107,7 @@ pub fn onboarding_steps() -> Html {
                         <div class="relative w-full max-w-[254px] sm:max-w-[684px] overflow-auto">
                             <div class="flex flex-nowrap gap-2 items-center py-4">
                                 { for state.accounts.iter().cloned().map(|account| html! {
-                                    <AccountChip class="bg-white rounded-full px-2" account={AccountId32::from_str(&account.address).unwrap()} />
+                                    <AccountChip class="bg-white rounded-full px-2" account={AccountId32::from_str(&account.address).unwrap()} removable={true} />
                                 })}
                             </div>
                         </div>
