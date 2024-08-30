@@ -988,6 +988,14 @@ video {
   width: 3rem;
 }
 
+.w-14 {
+  width: 3.5rem;
+}
+
+.w-16 {
+  width: 4rem;
+}
+
 .w-2 {
   width: 0.5rem;
 }
@@ -1269,6 +1277,16 @@ video {
 .rounded-b-lg {
   border-bottom-right-radius: 1.5rem;
   border-bottom-left-radius: 1.5rem;
+}
+
+.rounded-e-full {
+  border-start-end-radius: 9999px;
+  border-end-end-radius: 9999px;
+}
+
+.rounded-e-lg {
+  border-start-end-radius: 1.5rem;
+  border-end-end-radius: 1.5rem;
 }
 
 .rounded-t-lg {
@@ -1834,6 +1852,12 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.highlight {
+  box-shadow:
+            /* hsl(210, 11%, 71%) 0px 1px 2px, */
+            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+}
+
 /* Add your custom styles here */
 
 html, body {
@@ -2389,11 +2413,23 @@ hr:where(.dark, .dark *) {
   background-color: rgb(230 0 122 / var(--tw-bg-opacity));
 }
 
+.btn.btn__icon.polkadot:hover,
+.btn.btn__primary.polkadot:hover,
+.btn__claim.polkadot:hover {
+  opacity: 0.8;
+}
+
 .btn.btn__icon.kusama,
 .btn.btn__primary.kusama,
 .btn__claim.kusama {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.btn.btn__icon.kusama:hover,
+.btn.btn__primary.kusama:hover,
+.btn__claim.kusama:hover {
+  opacity: 0.8;
 }
 
 .btn__add_account {
@@ -2735,6 +2771,12 @@ hr:where(.dark, .dark *) {
 
 .hover\:underline-offset-4:hover {
   text-underline-offset: 4px;
+}
+
+.hover\:highlight:hover {
+  box-shadow:
+            /* hsl(210, 11%, 71%) 0px 1px 2px, */
+            hsl(210, 11%, 71%) 0px 0px 0px 2px;
 }
 
 .focus\:border-gray-500:focus {

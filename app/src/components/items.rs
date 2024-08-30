@@ -4,7 +4,7 @@ use crate::components::{
     chips::AccountChip,
     icons::Identicon,
 };
-use crate::state::StateContext;
+use crate::state::{StateContext, Action};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
@@ -424,6 +424,8 @@ pub fn filter_item(props: &FilterItemProps) -> Html {
 #[derive(PartialEq, Properties, Clone)]
 pub struct ChildBountyItemProps {
     pub id: Id,
+    #[prop_or_default]
+    pub is_action_hidden: bool
 }
 
 #[function_component(ChildBountyItem)]
@@ -433,8 +435,22 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
     if let Some(child_bounties) = &state.child_bounties_raw {
         if let Some(child_bounty) = child_bounties.get(&props.id) {
             if let Some(block_number) = state.network.finalized_block_number {
+                
+                let is_already_following = state
+                    .accounts
+                    .iter()
+                    .any(|account| *account.address == child_bounty.beneficiary.to_string());
+        
+                let onclick = {
+                    let state = state.clone();
+                    let account = child_bounty.beneficiary.to_string();
+                    Callback::from(move |_| {
+                        state.dispatch(Action::AddAccount(account.clone()));
+                    })
+                };
+
                 return html! {
-                    <li class="flex rounded-lg bg-white dark:bg-gray-700">
+                    <li class="flex rounded-lg bg-white dark:bg-gray-700 hover:highlight">
                         <div class="flex-auto px-6 py-3">
                             <div class="flex items-center justify-between">
                                 <h4 class="flex-auto text-base text-gray-800 dark:text-gray-200 block truncate w-1">
@@ -471,6 +487,29 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                                     }
                                 }}
 
+                            </div>
+                        </div>
+                        <div class={classes!(props.is_action_hidden.then(|| Some("hidden")))}>
+                            <div class="w-14 rounded-e-lg h-full flex items-center justify-center">
+                                {
+                                    if !is_already_following {
+                                        html! {
+                                            <button type="button" class={classes!("btn", "btn__icon", "btn__transparent")} aria-label="Follow Account"
+                                                {onclick} >
+                                                <svg class="w-4 h-4 text-inherent dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12h14m-7 7V5"/>
+                                                </svg>
+                                                <span class="sr-only">{"Follow"}</span>
+                                            </button>
+                                        }
+                                    } else {
+                                        html! {
+                                            <svg class="w-4 h-4 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 11.917 9.724 16.5 19 7.5"/>
+                                            </svg>
+                                        }
+                                    }
+                                }
                             </div>
                         </div>
                     </li>

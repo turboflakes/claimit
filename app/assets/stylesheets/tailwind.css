@@ -88,13 +88,13 @@ hr {
 .btn.btn__icon.polkadot,
 .btn.btn__primary.polkadot,
 .btn__claim.polkadot {
-    @apply bg-polkadot;
+    @apply bg-polkadot hover:opacity-80;
 }
 
 .btn.btn__icon.kusama,
 .btn.btn__primary.kusama,
 .btn__claim.kusama {
-    @apply bg-kusama;
+    @apply bg-kusama hover:opacity-80;
 }
 
 .btn__add_account {
@@ -168,3 +168,11 @@ hr {
 .api_inactive {
     @apply w-2 h-2 mx-2 rounded-full bg-white text-red;
 }
+
+@layer utilities {
+    .highlight {
+        box-shadow:
+            /* hsl(210, 11%, 71%) 0px 1px 2px, */
+            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+    }
+  }

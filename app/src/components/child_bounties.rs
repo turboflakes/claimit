@@ -192,7 +192,7 @@ pub fn child_bounties_body() -> Html {
                             .filter(|(_, cb)| state.filter.check(cb) && cb.description.to_lowercase().contains(&(*input_value).to_lowercase()))
                             .map(|(_, cb)|
                         html! {
-                            <ChildBountyItem id={cb.id} />
+                            <ChildBountyItem id={cb.id} is_action_hidden={!state.layout.is_onboarding} />
                         })
                     }
                 </ul>
