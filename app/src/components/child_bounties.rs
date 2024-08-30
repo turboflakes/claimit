@@ -175,13 +175,21 @@ pub fn child_bounties_body() -> Html {
         })
     };
 
+    let onclear = {
+        let input_value = input_value.clone();
+        Callback::from(move |_| {
+            input_value.set("".to_string());
+        })
+    };
+
     if let Some(child_bounties_raw) = &state.child_bounties_raw {
         html! {
             <>
                 {
                     if state.layout.is_onboarding {
                         html! {
-                            <FilterInput oninput={&oninput} value={(*input_value).clone()} placeholder="Filter by Child Bounty description" />
+                            <FilterInput value={(*input_value).clone()} placeholder="Filter by Child Bounty description" 
+                                oninput={&oninput} onclear={&onclear}/>
                         }
                     } else { html! {} }
                 }

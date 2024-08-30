@@ -102,6 +102,7 @@ pub fn account_input(props: &InputProps) -> Html {
 #[derive(PartialEq, Properties, Clone)]
 pub struct FilterInputProps {
     pub oninput: Callback<String>,
+    pub onclear: Callback<()>,
     pub value: AttrValue,
     #[prop_or_default]
     pub placeholder: AttrValue,
@@ -131,6 +132,8 @@ pub fn filter_input(props: &FilterInputProps) -> Html {
         })
     };
 
+    let onclear = props.onclear.reform(move |_| ());
+
     html! {
         <div class="mb-4 w-full">
             <div class="relative">
@@ -141,6 +144,21 @@ pub fn filter_input(props: &FilterInputProps) -> Html {
                 </div>
                 <input ref={input_node_ref} value={props.value.to_string()} type="text" class="filter__input" placeholder={props.placeholder.to_string()}
                     {oninput} {onmouseover} />
+                {
+                    if props.value.len() > 0 {
+                        html!{
+                            <div class="absolute inset-y-0 end-0 flex items-center pe-2">
+                                <button type="button" class="btn btn__icon_sm white" onclick={onclear} >
+                                    <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        }
+                    } else {
+                        html! {}
+                    }
+                }
             </div>
         </div>
     }

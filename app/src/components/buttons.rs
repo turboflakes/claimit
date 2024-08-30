@@ -401,7 +401,7 @@ pub struct SubsquareIconLinkProps {
 pub fn subsquare_icon_link(props: &SubsquareIconLinkProps) -> Html {
     html! {
         <a href={format!("https://{}.subsquare.io/treasury/child-bounties/{}", props.runtime.class(), props.id.clone())} target="_blank" rel="noopener noreferrer"
-            class={classes!("btn", "btn__icon_small", "btn__gray")} disabled={props.disabled.clone()}>
+            class={classes!("btn", "btn__icon_sm", "btn__gray")} disabled={props.disabled.clone()}>
             <img class="w-3 h-3" src="/images/subsquare_icon.svg" alt="subsquare logo" />
         </a>
     }
@@ -420,7 +420,7 @@ pub struct PolkassemblyIconLinkProps {
 pub fn polkassembly_icon_link(props: &PolkassemblyIconLinkProps) -> Html {
     html! {
         <a href={format!("https://{}.polkassembly.io/child_bounty/{}", props.runtime.class(), props.id.clone())} target="_blank" rel="noopener noreferrer"
-            class={classes!("btn", "btn__icon_small", "btn__gray")} disabled={props.disabled.clone()}>
+            class={classes!("btn", "btn__icon_sm", "btn__gray")} disabled={props.disabled.clone()}>
             <img class="w-3 h-3" src="/images/polkassembly_icon.png" alt="polkassembly logo" />
         </a>
     }

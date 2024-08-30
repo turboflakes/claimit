@@ -29,11 +29,11 @@ hr {
 }
 
 .account__input {
-    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 border-2 border-gray-500 placeholder-gray-600 focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
 }
 
 .filter__input {
-    @apply block w-full p-2 ps-12 text-sm text-gray-900 rounded-full bg-gray-50 border-2 border-gray-500 placeholder-gray-600 focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+    @apply block w-full p-2 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
 }
 
 .btn {
@@ -60,7 +60,7 @@ hr {
     @apply text-white hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
-.btn.btn__icon_small {
+.btn.btn__icon_sm {
     @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-1.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
@@ -68,7 +68,7 @@ hr {
     @apply bg-white disabled:bg-gray-300 hover:bg-gray-200;
 }
 
-.btn.btn__icon_small.btn__gray,
+.btn.btn__icon_sm.btn__gray,
 .btn.btn__icon.btn__gray {
     @apply bg-gray-100 disabled:bg-gray-300 hover:bg-gray-200;
 }
