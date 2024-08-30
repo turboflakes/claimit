@@ -219,7 +219,7 @@ pub fn main() -> Html {
 
                         <div class={classes!("header", hidden_class)}>
                             <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer" />
-                            <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Claim Child Bounties with Ease!"}</p>
+                            <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Child Bounty Claim Made Easy!"}</p>
                         </div>
 
                         <div class="hidden sm:flex w-full">
