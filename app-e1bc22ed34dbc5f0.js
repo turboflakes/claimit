@@ -1025,24 +1025,24 @@ function __wbg_get_imports() {
         const ret = wasm.memory;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper859 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 421, __wbg_adapter_40);
+    imports.wbg.__wbindgen_closure_wrapper862 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 423, __wbg_adapter_40);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper861 = function(arg0, arg1, arg2) {
-        const ret = makeClosure(arg0, arg1, 421, __wbg_adapter_43);
+    imports.wbg.__wbindgen_closure_wrapper864 = function(arg0, arg1, arg2) {
+        const ret = makeClosure(arg0, arg1, 423, __wbg_adapter_43);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper3147 = function(arg0, arg1, arg2) {
-        const ret = makeClosure(arg0, arg1, 1820, __wbg_adapter_46);
+    imports.wbg.__wbindgen_closure_wrapper3151 = function(arg0, arg1, arg2) {
+        const ret = makeClosure(arg0, arg1, 1822, __wbg_adapter_46);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper3264 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1849, __wbg_adapter_49);
+    imports.wbg.__wbindgen_closure_wrapper3268 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 1851, __wbg_adapter_49);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper3500 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1926, __wbg_adapter_52);
+    imports.wbg.__wbindgen_closure_wrapper3504 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 1928, __wbg_adapter_52);
         return addHeapObject(ret);
     };
 
@@ -1096,7 +1096,7 @@ async function __wbg_init(module_or_path) {
     console.warn('using deprecated parameters for the initialization function; pass a single object instead')
 
     if (typeof module_or_path === 'undefined') {
-        module_or_path = new URL('app-a3fbbfac3894a7ec_bg.wasm', import.meta.url);
+        module_or_path = new URL('app-e1bc22ed34dbc5f0_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
