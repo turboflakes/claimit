@@ -60,7 +60,7 @@ pub fn main() -> Html {
 
         State {
             accounts,
-            network: NetworkState::new(current_runtime.clone(), false),
+            network: NetworkState::new(current_runtime.clone(), true),
             child_bounties_raw: None,
             filter,
             extension: ExtensionState::new(signer.clone()),
