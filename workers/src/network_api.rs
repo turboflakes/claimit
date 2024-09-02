@@ -11,7 +11,10 @@ use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::error;
 use serde::{Deserialize, Serialize};
-use subxt::{lightclient::LightClient, utils::AccountId32, OnlineClient, PolkadotConfig};
+use subxt::{
+    backend::unstable::UnstableBackend, lightclient::LightClient, utils::AccountId32, OnlineClient,
+    PolkadotConfig,
+};
 use yew::platform::{
     pinned::mpsc::{unbounded, UnboundedReceiver, UnboundedSender},
     spawn_local,
@@ -51,14 +54,35 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
         if let Input::Start(sub_id, runtime, use_light_client) = input {
             let api = if use_light_client {
                 // Initiate light client (smoldot)
-                let (_, lc_rpc) = LightClient::relay_chain(runtime.chain_specs())
+                let (_, rpc) = LightClient::relay_chain(runtime.chain_specs())
                     .expect("expect valid smoldot connection");
 
-                OnlineClient::<PolkadotConfig>::from_rpc_client(lc_rpc.clone())
+                // NOTE: The latest RPC specs are implemented via UnstableBackend in Subxt which is the preferred way to connect to smoldot v0.18
+                let (unstable_backend, mut driver) = UnstableBackend::builder().build(rpc);
+
+                // Unstable backend needs manually driving at the moment see here:
+                // https://github.com/paritytech/subxt/issues/1453#issuecomment-2011922808
+                spawn_local(async move {
+                    while let Some(val) = driver.next().await {
+                        if let Err(e) = val {
+                            // Something went wrong driving unstable backend.
+                            error!("error driving unstable backend: {:?}", e);
+                            break;
+                        }
+                    }
+                });
+
+                // Create client from unstable backend (ie using new RPCs).
+                OnlineClient::<PolkadotConfig>::from_backend(unstable_backend.into())
                     .await
                     .expect("expect valid RPC connection")
+
+                // OnlineClient::<PolkadotConfig>::from_rpc_client(rpc.clone())
+                //     .await
+                //     .expect("expect valid RPC connection")
+
             } else {
-                // Initiate RPC client
+                // Initiate RPC client from default RPCs provider
                 OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())
                     .await
                     .expect("expect valid RPC connection")
