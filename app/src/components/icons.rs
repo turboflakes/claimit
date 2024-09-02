@@ -1,7 +1,8 @@
 use plot_icon::generate_svg;
 use std::str::FromStr;
 use subxt::utils::AccountId32;
-use yew::{function_component, html, AttrValue, Html, Properties};
+use yew::{classes, function_component, html, AttrValue, Callback, Html, Properties};
+use yew_hooks::use_clipboard;
 
 #[derive(PartialEq, Properties, Clone)]
 pub struct IdenticonProps {
@@ -17,13 +18,24 @@ pub struct IdenticonProps {
 
 #[function_component(Identicon)]
 pub fn identicon(props: &IdenticonProps) -> Html {
+    let clipboard = use_clipboard();
     // Generate Identicon svg
     let account = AccountId32::from_str(&props.address).unwrap();
     let identicon = generate_svg(&account.0);
     let identicon_parsed = Html::from_html_unchecked(identicon.to_string().into());
-    // <div class={props.class.clone()} style={format!("max-width: {}px; max-height: {}px;", props.size, props.size)}>
+
+    let onclick = {
+        let clipboard = clipboard.clone();
+        let address = props.address.clone();
+
+        Callback::from(move |_| {
+            clipboard.write_text(address.to_string());
+        })
+    };
+
     html! {
-        <div class={props.class.clone()} style={format!("width: {}px; height: {}px;", props.size, props.size)}>
+        <div class={classes!(props.class.clone(), "hover:cursor-copy")} 
+            style={format!("width: {}px; height: {}px;", props.size, props.size)} {onclick}>
             {identicon_parsed}
         </div>
     }

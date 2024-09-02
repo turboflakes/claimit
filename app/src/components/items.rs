@@ -4,7 +4,7 @@ use crate::components::{
     chips::AccountChip,
     icons::Identicon,
 };
-use crate::state::{StateContext, Action};
+use crate::state::{Action, StateContext};
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
     accounts::Account,
@@ -425,7 +425,7 @@ pub fn filter_item(props: &FilterItemProps) -> Html {
 pub struct ChildBountyItemProps {
     pub id: Id,
     #[prop_or_default]
-    pub is_action_hidden: bool
+    pub is_action_hidden: bool,
 }
 
 #[function_component(ChildBountyItem)]
@@ -435,12 +435,11 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
     if let Some(child_bounties) = &state.child_bounties_raw {
         if let Some(child_bounty) = child_bounties.get(&props.id) {
             if let Some(block_number) = state.network.finalized_block_number {
-                
                 let is_already_following = state
                     .accounts
                     .iter()
                     .any(|account| *account.address == child_bounty.beneficiary.to_string());
-        
+
                 let onclick = {
                     let state = state.clone();
                     let account = child_bounty.beneficiary.to_string();

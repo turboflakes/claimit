@@ -188,7 +188,7 @@ pub fn child_bounties_body() -> Html {
                 {
                     if state.layout.is_onboarding {
                         html! {
-                            <FilterInput value={(*input_value).clone()} placeholder="Filter by Child Bounty description" 
+                            <FilterInput value={(*input_value).clone()} placeholder="Filter by Child Bounty description"
                                 oninput={&oninput} onclear={&onclear}/>
                         }
                     } else { html! {} }

@@ -29,15 +29,15 @@ pub fn navbar(props: &NavbarProps) -> Html {
 
                 <div class="inline-flex items-center">
 
-                    { 
+                    {
                         if state.network.is_ligh_client() && state.network.is_initializing() {
                             html! {
-                                <p class="hidden sm:flex text-xs me-2">{"synchronizing light client..."}</p>
+                                <p class="hidden sm:flex text-xs">{"synchronizing light client..."}</p>
                             }
                         } else {
                             html! {}
                         }
-                        
+
                     }
 
                     <Spinner is_visible={state.network.is_fetching()} />

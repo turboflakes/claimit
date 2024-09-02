@@ -15,7 +15,7 @@ impl NetworkStatus {
     pub fn text_class(&self) -> &'static str {
         match self {
             Self::Initializing => "text-orange",
-            Self::Active => "text-green",
+            Self::Active => "text-gray-900",
             Self::Inactive => "text-red",
         }
     }

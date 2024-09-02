@@ -80,7 +80,6 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
                 // OnlineClient::<PolkadotConfig>::from_rpc_client(rpc.clone())
                 //     .await
                 //     .expect("expect valid RPC connection")
-
             } else {
                 // Initiate RPC client from default RPCs provider
                 OnlineClient::<PolkadotConfig>::from_url(runtime.default_rpc_url())

@@ -2732,6 +2732,10 @@ hr:where(.dark, .dark *) {
   color: hsl(346 84% 61% / var(--tw-text-opacity));
 }
 
+.hover\:cursor-copy:hover {
+  cursor: copy;
+}
+
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: hsl(210 17% 98% / var(--tw-bg-opacity));
@@ -2773,6 +2777,10 @@ hr:where(.dark, .dark *) {
   box-shadow:
             /* hsl(210, 11%, 71%) 0px 1px 2px, */
             hsl(210, 11%, 71%) 0px 0px 0px 2px;
+}
+
+.focus\:opacity-75:focus {
+  opacity: 0.75;
 }
 
 .focus\:outline-none:focus {
