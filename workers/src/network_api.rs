@@ -9,6 +9,7 @@ use claimeer_kusama_people::kusama_people;
 use claimeer_polkadot::polkadot;
 use claimeer_polkadot_people::polkadot_people;
 use claimeer_rococo::rococo;
+use claimeer_rococo_people::rococo_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::error;
@@ -329,10 +330,9 @@ pub fn fetch_account_identity(
             SupportedRelayRuntime::Kusama => {
                 kusama_people::fetch_display_name(&api.clone(), &account_id, None).await
             }
-            // SupportedRelayRuntime::Rococo => {
-            //     rococo_people::fetch_display_name(&api.clone(), &account_id, None).await
-            // }
-            _ => todo!(),
+            SupportedRelayRuntime::Rococo => {
+                rococo_people::fetch_display_name(&api.clone(), &account_id, None).await
+            }
         };
         match response {
             Ok(identity) => {

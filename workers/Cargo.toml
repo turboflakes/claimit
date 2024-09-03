@@ -33,3 +33,4 @@ claimeer-kusama-people = { path = "../kusama_people" }
 claimeer-polkadot = { path = "../polkadot" }
 claimeer-polkadot-people = { path = "../polkadot_people" }
 claimeer-rococo = { path = "../rococo" }
+claimeer-rococo-people = { path = "../rococo_people" }
