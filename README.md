@@ -17,11 +17,11 @@ Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim ch
 - [&check;] Switch view betweeen Total balance, Total awarded, Total Pending, Total claimable;
 - [&check;] External links to Subsquare or Polkassembly child bounty;
 - [&check;] Signing via PJS extension;
+- [&check;] Load accounts identity via people chain;
 
 ## 🚧 Work In Progress
 
 - [] Abstract the switch between networks. Have all accounts in the same view;
-- [] Load accounts identity via people chain;
 - [] Disable accounts from being included in the claiming batch;
 - [] Support additional wallets (TBD);
 
