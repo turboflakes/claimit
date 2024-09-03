@@ -451,30 +451,32 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                 return html! {
                     <li class="flex rounded-lg bg-white dark:bg-gray-700 hover:highlight">
                         <div class={classes!("flex-auto", "py-3", props.is_action_hidden.then(|| Some("px-6")), (!props.is_action_hidden).then(|| Some("ps-6 pe-2")))}>
-                            <div class="flex items-center justify-between">
-                                <h4 class="flex-auto text-base text-gray-800 dark:text-gray-200 block truncate w-1">
-                                    {child_bounty.description.clone()}
-                                </h4>
+                            <div class="flex items-center">
+                                <div class="flex flex-col flex-1 w-1">
+                                    <h4 class="flex-auto text-base text-gray-800 dark:text-gray-200 block truncate">
+                                        {child_bounty.description.clone()}
+                                    </h4>
+                                    <div class="inline-flex items-center gap-2">
+                                        <p class="text-xs">{format!("# {} / {}", child_bounty.parent_id, child_bounty.id)}</p>
+                                        <SubsquareIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
+                                        <PolkassemblyIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
+                                    </div>
+                                </div>
                                 <div class="inline-flex items-center ms-2">
-                                    <div class="text-lg text-gray-800 dark:text-gray-200">
+                                    <div class="text-xl text-gray-800 dark:text-gray-200">
                                         {child_bounty.value_human(state.network.runtime)}
                                     </div>
-                                    <div class="ml-1 text-lg text-gray-600 dark:text-gray-400">{state.network.runtime.unit()}</div>
+                                    <div class="ml-1 text-xl text-gray-600 dark:text-gray-400">{state.network.runtime.unit()}</div>
                                 </div>
-                            </div>
-                            <div class="inline-flex items-center gap-2">
-                                <p class="text-xs">{format!("# {} / {}", child_bounty.parent_id, child_bounty.id)}</p>
-                                <SubsquareIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
-                                <PolkassemblyIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
                             </div>
                             <hr class="my-2" />
                             <div class="flex items-center justify-between">
 
-                                <AccountChip account={child_bounty.beneficiary.clone()} />
+                                <AccountChip account={child_bounty.beneficiary.clone()} identity={child_bounty.beneficiary_identity.clone()} />
 
                                 { if child_bounty.is_claimable(block_number) {
                                     html! {
-                                        <span class={classes!("chip", state.network.runtime.class())}>
+                                        <span class={classes!("chip", (!state.layout.is_onboarding).then(|| Some("chip__gray")))}>
                                             {"Claimable"}
                                         </span>
                                     }

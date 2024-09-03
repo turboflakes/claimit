@@ -5,7 +5,9 @@ use claimeer_common::types::{
     accounts::Balance,
     child_bounties::{ChildBounties, ChildBountiesIds, ChildBounty, ChildBountyId, Status},
     extensions::create_payload_as_string,
+    worker::Output,
 };
+use claimeer_rococo_people::rococo_people::fetch_display_name;
 use log::{error, info};
 use node_runtime::{
     child_bounties::events::Claimed,
@@ -26,6 +28,7 @@ use subxt::{
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
+use yew::platform::pinned::mpsc::UnboundedSender;
 
 #[subxt::subxt(
     runtime_metadata_path = "artifacts/metadata/rococo_metadata.scale",
@@ -39,12 +42,15 @@ type SystemCall = node_runtime::runtime_types::frame_system::pallet::Call;
 
 pub async fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
-) -> Result<ChildBounties, ClaimeerError> {
+    people_api: &OnlineClient<PolkadotConfig>,
+    tx: UnboundedSender<Output>,
+) -> Result<(), ClaimeerError> {
     let mut out = ChildBounties::new();
 
     let address = node_runtime::storage()
         .child_bounties()
         .child_bounties_iter();
+
     let mut iter = api.storage().at_latest().await?.iter(address).await?;
 
     while let Some(Ok(storage)) = iter.next().await {
@@ -68,21 +74,34 @@ pub async fn fetch_child_bounties(
                     String::new()
                 };
 
+                // Fetch child bounty beneficiary identity
+                let beneficiary_identity =
+                    fetch_display_name(&people_api.clone(), &beneficiary.clone(), None).await?;
+
                 let cb = ChildBounty {
                     id,
                     parent_id: storage.value.parent_bounty,
                     description,
                     value: storage.value.value,
                     status: Status::Pending,
-                    beneficiary: beneficiary.clone(),
+                    beneficiary: beneficiary,
+                    beneficiary_identity,
                     unlock_at,
                 };
                 out.insert(id, cb);
+
+                if out.len() % 2 == 0 {
+                    let _ = tx.send_now(Output::ChildBounties(out));
+                    out = ChildBounties::new();
+                }
             }
             _ => continue,
         }
     }
-    return Ok(out);
+    // Send whatever is left or empty
+    let _ = tx.send_now(Output::ChildBounties(out));
+    //
+    return Ok(());
 }
 
 pub async fn fetch_account_balance(

@@ -488,9 +488,13 @@ impl Reducible for State {
                 }
                 .into()
             }
-            Action::UpdateChildBountiesRaw(data) => {
+            Action::UpdateChildBountiesRaw(mut data) => {
                 let mut network = self.network.clone();
-                network.fetches_counter -= 1;
+
+                if data.len() < 2 {
+                    network.fetches_counter -= 1;
+                }
+
                 // Filter and Map the child bounties against the accounts being tracked
                 let mut accounts = self.accounts.clone();
                 for account in accounts.iter_mut() {
@@ -526,10 +530,13 @@ impl Reducible for State {
                     }
                 };
 
+                let mut child_bounties_raw = self.child_bounties_raw.clone().unwrap_or_default();
+                child_bounties_raw.append(&mut data);
+
                 State {
                     accounts,
                     network,
-                    child_bounties_raw: Some(data.clone()),
+                    child_bounties_raw: Some(child_bounties_raw),
                     filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),

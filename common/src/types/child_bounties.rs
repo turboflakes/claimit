@@ -1,4 +1,7 @@
-use crate::runtimes::{support::SupportedRelayRuntime, utils::amount_human};
+use crate::runtimes::{
+    support::SupportedRelayRuntime,
+    utils::{amount_human, compact},
+};
 use humantime::format_duration;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -20,6 +23,7 @@ pub struct ChildBounty {
     pub value: u128,
     pub status: Status,
     pub beneficiary: AccountId32,
+    pub beneficiary_identity: Option<String>,
     pub unlock_at: u32,
 }
 
@@ -43,6 +47,15 @@ impl ChildBounty {
             format_duration(d).to_string()
         } else {
             "".into()
+        }
+    }
+
+    pub fn beneficiary_to_compact_string(&self) -> String {
+        if let Some(identity) = &self.beneficiary_identity {
+            let max = identity.chars().map(|c| c.len_utf8()).take(20).sum();
+            (&identity[..max]).to_string()
+        } else {
+            compact(&self.beneficiary)
         }
     }
 }

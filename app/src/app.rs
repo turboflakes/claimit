@@ -15,8 +15,9 @@ use claimeer_common::types::{
     extensions::{ExtensionAccount, ExtensionState},
     layout::LayoutState,
     network::{NetworkState, NetworkStatus},
+    worker::{Input as WorkerInput, Output as WorkerOutput},
 };
-use claimeer_workers::network_api::{Input as WorkerInput, Output as WorkerOutput, Worker};
+use claimeer_workers::network_api::Worker;
 use gloo::storage::{LocalStorage, Storage};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;

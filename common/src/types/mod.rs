@@ -4,3 +4,4 @@ pub mod claims;
 pub mod extensions;
 pub mod layout;
 pub mod network;
+pub mod worker;

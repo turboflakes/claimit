@@ -82,7 +82,10 @@ hr {
 }
 
 .chip {
-    @apply text-white bg-gray-500 text-xs font-medium px-2.5 py-1 rounded-full;
+    @apply text-gray-600 text-sm font-medium px-2.5 py-1 rounded-full;
+}
+.chip.chip__gray {
+    @apply text-white bg-gray-500;
 }
 
 .btn.btn__icon.polkadot,
@@ -172,7 +175,6 @@ hr {
 @layer utilities {
     .highlight {
         box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
     }
   }

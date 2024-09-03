@@ -10,6 +10,8 @@ pub struct AccountChipProps {
     pub class: AttrValue,
     pub account: AccountId32,
     #[prop_or_default]
+    pub identity: Option<AttrValue>,
+    #[prop_or_default]
     pub removable: bool,
 }
 
@@ -42,7 +44,17 @@ pub fn account(props: &AccountChipProps) -> Html {
         <span class={classes!("account__chip", props.class.clone())}>
             <div class="inline-flex items-center">
                 <Identicon address={props.account.to_string()} size={24} class="me-2" />
-                <span class="me-2">{compact(&props.account.clone())}</span>
+                {
+                    if props.identity.is_some() {
+                        html! {
+                            <span class="me-2">{props.identity.clone().unwrap()}</span>
+                        }
+                    } else {
+                        html! {
+                            <span class="me-2">{compact(&props.account.clone())}</span>
+                        }
+                    }
+                }
             </div>
             {
                 if props.removable {

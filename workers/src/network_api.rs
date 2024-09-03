@@ -1,9 +1,9 @@
 use claimeer_common::errors::ClaimeerError;
 use claimeer_common::runtimes::support::SupportedRelayRuntime;
 use claimeer_common::types::{
-    accounts::Balance,
-    child_bounties::{ChildBounties, ChildBountiesIds},
+    child_bounties::ChildBountiesIds,
     network::SubscriptionId,
+    worker::{Input, Output, SignerAddress},
 };
 use claimeer_kusama::kusama;
 use claimeer_kusama_people::kusama_people;
@@ -13,8 +13,7 @@ use claimeer_rococo::rococo;
 use claimeer_rococo_people::rococo_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
-use log::error;
-use serde::{Deserialize, Serialize};
+use log::{error, warn};
 use subxt::{
     backend::unstable::UnstableBackend, lightclient::LightClient, utils::AccountId32, OnlineClient,
     PolkadotConfig,
@@ -25,49 +24,19 @@ use yew::platform::{
 };
 use yew_agent::{prelude::reactor, reactor::ReactorScope};
 
-pub type BlockNumber = u32;
-///  SignerAddress must be ss58 formatted address as string
-pub type SignerAddress = String;
-/// UseLightClient instructs worker to start a light client connection to the network
-pub type UseLightClient = bool;
-
 type Client = OnlineClient<PolkadotConfig>;
 use Client as RelayClient;
 use Client as PeopleClient;
-
-#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Input {
-    Start(SubscriptionId, SupportedRelayRuntime, UseLightClient),
-    FetchChildBounties,
-    FetchAccountBalance(AccountId32),
-    FetchAccountIdentity(AccountId32),
-    CreatePayloadTx(ChildBountiesIds, SignerAddress),
-    SignAndSubmitTx(ChildBountiesIds, SignerAddress, Vec<u8>),
-    Finish,
-}
-
-#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
-pub enum Output {
-    Active(SubscriptionId),
-    BlockNumber(SubscriptionId, BlockNumber),
-    ChildBounties(ChildBounties),
-    AccountBalance(AccountId32, Balance),
-    AccountIdentity(AccountId32, Option<String>),
-    TxPayload(String),
-    TxCompleted(Vec<u32>),
-    Err(SubscriptionId),
-}
 
 #[reactor(Worker)]
 pub async fn worker(mut scope: ReactorScope<Input, Output>) {
     'outer: while let Some(input) = scope.next().await {
         if let Input::Start(sub_id, runtime, use_light_client) = input {
-            
             // Create API clients
             let (relay_api, people_api) = create_api_clients(runtime, use_light_client)
                 .await
                 .expect("expect valid API clients");
-            
+
             // Create unbounded channel to facilitate communication between the reactor and all background tasks
             let (tx_inner_output, mut rx_inner_output) = unbounded::<Output>();
 
@@ -86,10 +55,11 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
                     a = scope.next() => {
                         match a {
                             Some(Input::Finish) =>  {
+                                warn!("Finish API worker");
                                 break 'outer;
                             },
                             Some(Input::FetchChildBounties) => {
-                                fetch_child_bounties(&relay_api.clone(), runtime.clone(), tx_inner_output.clone());
+                                fetch_child_bounties(&relay_api.clone(), &people_api.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::FetchAccountBalance(account_id)) => {
                                 fetch_account_balance(&relay_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone());
@@ -189,7 +159,6 @@ pub fn subscribe_finalized_block(
     sub_id: SubscriptionId,
     tx: UnboundedSender<Output>,
 ) {
-    // let (tx, rx) = unbounded::<u32>();
     let api = api.clone();
 
     spawn_local(async move {
@@ -216,24 +185,30 @@ pub fn subscribe_finalized_block(
 /// Background task that fetches child bounties and sends response over channel.
 pub fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
+    people_api: &OnlineClient<PolkadotConfig>,
     runtime: SupportedRelayRuntime,
     tx: UnboundedSender<Output>,
 ) {
     let api = api.clone();
+    let people_api = people_api.clone();
     let tx = tx.clone();
     spawn_local(async move {
         let response = match runtime {
-            SupportedRelayRuntime::Polkadot => polkadot::fetch_child_bounties(&api.clone()).await,
-            SupportedRelayRuntime::Kusama => kusama::fetch_child_bounties(&api.clone()).await,
-            SupportedRelayRuntime::Rococo => rococo::fetch_child_bounties(&api.clone()).await,
+            SupportedRelayRuntime::Polkadot => {
+                polkadot::fetch_child_bounties(&api, &people_api, tx).await
+            }
+            SupportedRelayRuntime::Kusama => {
+                kusama::fetch_child_bounties(&api, &people_api, tx).await
+            }
+            SupportedRelayRuntime::Rococo => {
+                rococo::fetch_child_bounties(&api, &people_api, tx).await
+            }
         };
         match response {
-            Ok(child_bounties) => {
-                let _ = tx.send_now(Output::ChildBounties(child_bounties));
-            }
             Err(e) => {
                 error!("error: {:?}", e);
             }
+            _ => (),
         }
     });
 }
@@ -250,13 +225,13 @@ pub fn fetch_account_balance(
     spawn_local(async move {
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
-                polkadot::fetch_account_balance(&api.clone(), account_id.clone()).await
+                polkadot::fetch_account_balance(&api, account_id.clone()).await
             }
             SupportedRelayRuntime::Kusama => {
-                kusama::fetch_account_balance(&api.clone(), account_id.clone()).await
+                kusama::fetch_account_balance(&api, account_id.clone()).await
             }
             SupportedRelayRuntime::Rococo => {
-                rococo::fetch_account_balance(&api.clone(), account_id.clone()).await
+                rococo::fetch_account_balance(&api, account_id.clone()).await
             }
         };
         match response {
@@ -282,13 +257,13 @@ pub fn fetch_account_identity(
     spawn_local(async move {
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
-                polkadot_people::fetch_display_name(&api.clone(), &account_id, None).await
+                polkadot_people::fetch_display_name(&api, &account_id, None).await
             }
             SupportedRelayRuntime::Kusama => {
-                kusama_people::fetch_display_name(&api.clone(), &account_id, None).await
+                kusama_people::fetch_display_name(&api, &account_id, None).await
             }
             SupportedRelayRuntime::Rococo => {
-                rococo_people::fetch_display_name(&api.clone(), &account_id, None).await
+                rococo_people::fetch_display_name(&api, &account_id, None).await
             }
         };
         match response {
@@ -317,27 +292,19 @@ pub fn create_payload_tx(
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
                 polkadot::create_payload_tx(
-                    &api.clone(),
+                    &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
                 )
                 .await
             }
             SupportedRelayRuntime::Kusama => {
-                kusama::create_payload_tx(
-                    &api.clone(),
-                    child_bounties_ids.clone(),
-                    signer_address.clone(),
-                )
-                .await
+                kusama::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
+                    .await
             }
             SupportedRelayRuntime::Rococo => {
-                rococo::create_payload_tx(
-                    &api.clone(),
-                    child_bounties_ids.clone(),
-                    signer_address.clone(),
-                )
-                .await
+                rococo::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
+                    .await
             }
         };
         match response {
@@ -367,7 +334,7 @@ pub fn sign_and_submit_tx(
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
                 polkadot::sign_and_submit_tx(
-                    &api.clone(),
+                    &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
                     signature.clone(),
@@ -376,7 +343,7 @@ pub fn sign_and_submit_tx(
             }
             SupportedRelayRuntime::Kusama => {
                 kusama::sign_and_submit_tx(
-                    &api.clone(),
+                    &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
                     signature.clone(),
@@ -385,7 +352,7 @@ pub fn sign_and_submit_tx(
             }
             SupportedRelayRuntime::Rococo => {
                 rococo::sign_and_submit_tx(
-                    &api.clone(),
+                    &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
                     signature.clone(),

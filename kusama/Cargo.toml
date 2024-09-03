@@ -10,4 +10,6 @@ edition.workspace = true
 [dependencies]
 subxt = { workspace = true }
 log = { workspace = true }
+yew = { workspace = true }
 claimeer-common = { path = "../common" }
+claimeer-kusama-people = { path = "../kusama_people" }
