@@ -29,5 +29,7 @@ num-format = { workspace = true }
 rand = { workspace = true }
 claimeer-common = { path = "../common" }
 claimeer-kusama = { path = "../kusama" }
+claimeer-kusama-people = { path = "../kusama_people" }
 claimeer-polkadot = { path = "../polkadot" }
+claimeer-polkadot-people = { path = "../polkadot_people" }
 claimeer-rococo = { path = "../rococo" }

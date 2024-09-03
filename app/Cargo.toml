@@ -29,7 +29,9 @@ num-format = { workspace = true }
 claimeer-common = { path = "../common" }
 claimeer-workers = { path = "../workers" }
 claimeer-kusama = { path = "../kusama" }
+claimeer-kusama-people = { path = "../kusama_people" }
 claimeer-polkadot = { path = "../polkadot" }
+claimeer-polkadot-people = { path = "../polkadot_people" }
 claimeer-rococo = { path = "../rococo" }
 
 [dependencies.web-sys]

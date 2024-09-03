@@ -13,7 +13,7 @@ pub fn str(bytes: Vec<u8>) -> String {
 
 pub fn compact(account: &AccountId32) -> String {
     let a = account.to_string();
-    [&a[0..4], &a[a.len() - 4..a.len()]].join("...")
+    [&a[..4], &a[a.len() - 4..a.len()]].join("...")
 }
 
 pub fn amount_human(value: u128, decimals: u32) -> String {

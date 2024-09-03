@@ -23,9 +23,14 @@ pub struct Account {
 
 impl Account {
     pub fn to_compact_string(&self) -> String {
-        match AccountId32::from_str(&self.address) {
-            Ok(account) => compact(&account),
-            _ => String::new(),
+        if let Some(identity) = &self.identity {
+            let max = identity.chars().map(|c| c.len_utf8()).take(20).sum();
+            (&identity[..max]).to_string()
+        } else {
+            match AccountId32::from_str(&self.address) {
+                Ok(account) => compact(&account),
+                _ => String::new(),
+            }
         }
     }
 }

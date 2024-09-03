@@ -4,8 +4,12 @@ use yew::AttrValue;
 pub type ChainPrefix = u16;
 
 pub const POLKADOT_SPEC: &str = include_str!("../../artifacts/chain_specs/polkadot.json");
+pub const POLKADOT_PEOPLE_SPEC: &str =
+    include_str!("../../artifacts/chain_specs/polkadot_people.json");
 pub const KUSAMA_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama.json");
+pub const KUSAMA_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama_people.json");
 pub const ROCOCO_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo.json");
+pub const ROCOCO_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo_people.json");
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
 pub enum SupportedRelayRuntime {
@@ -31,11 +35,27 @@ impl SupportedRelayRuntime {
         }
     }
 
+    pub fn default_people_rpc_url(&self) -> &'static str {
+        match &self {
+            Self::Polkadot => "wss://sys.ibp.network:443/people-polkadot",
+            Self::Kusama => "wss://sys.ibp.network:443/people-kusama",
+            Self::Rococo => "wss://rococo-people-rpc.polkadot.io:443",
+        }
+    }
+
     pub fn chain_specs(&self) -> &str {
         match &self {
             Self::Polkadot => POLKADOT_SPEC,
             Self::Kusama => KUSAMA_SPEC,
             Self::Rococo => ROCOCO_SPEC,
+        }
+    }
+
+    pub fn chain_specs_people(&self) -> &str {
+        match &self {
+            Self::Polkadot => POLKADOT_PEOPLE_SPEC,
+            Self::Kusama => KUSAMA_PEOPLE_SPEC,
+            Self::Rococo => ROCOCO_PEOPLE_SPEC,
         }
     }
 

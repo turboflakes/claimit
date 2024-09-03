@@ -42,6 +42,7 @@ pub enum Action {
     // DisableAccountId(u32),
     // UpdateAccountIdBalance(u32, Balance),
     UpdateAccountBalance(AccountId32, Balance),
+    UpdateAccountIdentity(AccountId32, Option<String>),
     /// Claim/Sign actions
     StartClaim(ChildBountiesIds),
     PreparePayload,
@@ -205,6 +206,26 @@ impl Reducible for State {
                     .find(|acc| acc.address == account.to_string());
                 if let Some(account) = account {
                     account.balance = balance;
+                }
+
+                State {
+                    accounts,
+                    network: self.network.clone(),
+                    child_bounties_raw: self.child_bounties_raw.clone(),
+                    filter: self.filter.clone(),
+                    extension: self.extension.clone(),
+                    claim: self.claim.clone(),
+                    layout: self.layout.clone(),
+                }
+                .into()
+            }
+            Action::UpdateAccountIdentity(account, identity) => {
+                let mut accounts = self.accounts.clone();
+                let account = accounts
+                    .iter_mut()
+                    .find(|acc| acc.address == account.to_string());
+                if let Some(account) = account {
+                    account.identity = identity;
                 }
 
                 State {

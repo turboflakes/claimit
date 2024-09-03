@@ -4,7 +4,9 @@ members = [
     "common",
     "workers",
     "kusama",
+    "kusama_people",
     "polkadot",
+    "polkadot_people",
     "rococo"
 ]
 
@@ -43,6 +45,7 @@ num-format = "0.4"
 rand = "0.8.5"
 humantime = "2"
 hex = "0.4.3"
+async-recursion = "1.0.5"
 
 [workspace.dependencies.web-sys]
 version = "0.3"

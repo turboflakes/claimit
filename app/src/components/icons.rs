@@ -34,7 +34,7 @@ pub fn identicon(props: &IdenticonProps) -> Html {
     };
 
     html! {
-        <div class={classes!(props.class.clone(), "hover:cursor-copy")} 
+        <div class={classes!(props.class.clone(), "hover:cursor-copy")}
             style={format!("width: {}px; height: {}px;", props.size, props.size)} {onclick}>
             {identicon_parsed}
         </div>

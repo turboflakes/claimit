@@ -88,6 +88,9 @@ pub fn main() -> Html {
                 WorkerOutput::AccountBalance(account, balance) => {
                     state.dispatch(Action::UpdateAccountBalance(account, balance));
                 }
+                WorkerOutput::AccountIdentity(account, identity) => {
+                    state.dispatch(Action::UpdateAccountIdentity(account, identity));
+                }
                 WorkerOutput::TxPayload(payload) => {
                     state.dispatch(Action::GetSignature(payload));
                 }
@@ -119,7 +122,8 @@ pub fn main() -> Html {
                 worker_api_bridge.send(WorkerInput::FetchChildBounties);
                 for account in &state.accounts {
                     let acc = AccountId32::from_str(&account.address).unwrap();
-                    worker_api_bridge.send(WorkerInput::FetchAccountBalance(acc));
+                    worker_api_bridge.send(WorkerInput::FetchAccountBalance(acc.clone()));
+                    worker_api_bridge.send(WorkerInput::FetchAccountIdentity(acc));
                 }
             }
             _ => (),
@@ -136,7 +140,8 @@ pub fn main() -> Html {
             }
             for account in &state.accounts {
                 let acc = AccountId32::from_str(&account.address).unwrap();
-                worker_api_bridge.send(WorkerInput::FetchAccountBalance(acc));
+                worker_api_bridge.send(WorkerInput::FetchAccountBalance(acc.clone()));
+                worker_api_bridge.send(WorkerInput::FetchAccountIdentity(acc));
             }
         }
     });
