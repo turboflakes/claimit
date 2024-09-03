@@ -1858,8 +1858,7 @@ video {
 
 .highlight {
   box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
 }
 
 /* Add your custom styles here */
@@ -1977,8 +1976,7 @@ hr:where(.dark, .dark *) {
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
 }
 
 .account__input:where(.dark, .dark *) {
@@ -2035,8 +2033,7 @@ hr:where(.dark, .dark *) {
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
 }
 
 .filter__input:where(.dark, .dark *) {
@@ -2389,15 +2386,20 @@ hr:where(.dark, .dark *) {
 
 .chip {
   border-radius: 9999px;
-  --tw-bg-opacity: 1;
-  background-color: hsl(210 11% 71% / var(--tw-bg-opacity));
   padding-left: 0.625rem;
   padding-right: 0.625rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
   font-weight: 500;
+  --tw-text-opacity: 1;
+  color: hsl(208 7% 46% / var(--tw-text-opacity));
+}
+
+.chip.chip__gray {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 11% 71% / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
@@ -2775,8 +2777,7 @@ hr:where(.dark, .dark *) {
 
 .hover\:highlight:hover {
   box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
 }
 
 .focus\:outline-none:focus {
@@ -2803,8 +2804,7 @@ hr:where(.dark, .dark *) {
 
 .focus\:highlight:focus {
   box-shadow:
-            /* hsl(210, 11%, 71%) 0px 1px 2px, */
-            hsl(210, 11%, 71%) 0px 0px 0px 2px;
+            hsl(210, 16%, 93%) 0px 0px 0px 2px;
 }
 
 .enabled\:text-gray-900:enabled {
