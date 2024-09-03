@@ -2779,10 +2779,6 @@ hr:where(.dark, .dark *) {
             hsl(210, 11%, 71%) 0px 0px 0px 2px;
 }
 
-.focus\:opacity-75:focus {
-  opacity: 0.75;
-}
-
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
