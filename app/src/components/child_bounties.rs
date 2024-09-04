@@ -227,13 +227,13 @@ pub fn child_bounties_body() -> Html {
                         html! {
                             <div class="flex flex-col flex-1 justify-center items-center">
                                 <Spinner is_visible={true} />
-                                <p class="mt-4 text-xs text-center">{"Searching for any child bounties associated with the accounts you follow. Hang tight..."}</p>
+                                <p class="mt-4 text-xs text-center">{"Searching for any open child bounties awarded to the accounts you follow. Hang tight..."}</p>
                             </div>
                         }
                     } else {
                         html! {
                             <div class="flex flex-col flex-1 justify-center items-center">
-                                <p class="mt-4 text-xs text-center">{"No child bounties have been awarded to the accounts you follow."}</p>
+                                <p class="mt-4 text-xs text-center">{"There are no open child bounties awarded to the accounts you follow."}</p>
                             </div>
                         }
                     }
