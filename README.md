@@ -21,8 +21,8 @@ Claimeer ― It's a Decentralised Application (DApp) to easy lookup and claim ch
 
 ## 🚧 Work In Progress
 
-- [] Abstract the switch between networks. Have all accounts in the same view;
 - [] Disable accounts from being included in the claiming batch;
+- [] Abstract the switch between networks. Have all accounts in the same view (TBD);
 - [] Support additional wallets (TBD);
 
 ## Development / Build from Source

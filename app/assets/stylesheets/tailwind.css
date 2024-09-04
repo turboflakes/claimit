@@ -78,7 +78,7 @@ hr {
 }
 
 .btn__claim {
-    @apply px-4 py-2 border-2 border-white text-base font-semibold text-center items-center text-white rounded-full shadow-2xl hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
+    @apply px-4 py-2 border-2 border-white text-base font-semibold text-center items-center text-white rounded-full hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700;
 }
 
 .chip {
@@ -91,13 +91,25 @@ hr {
 .btn.btn__icon.polkadot,
 .btn.btn__primary.polkadot,
 .btn__claim.polkadot {
-    @apply bg-polkadot hover:opacity-80;
+    @apply bg-polkadot hover:bg-white hover:text-polkadot hover:border-polkadot;
 }
 
 .btn.btn__icon.kusama,
 .btn.btn__primary.kusama,
 .btn__claim.kusama {
-    @apply bg-kusama hover:opacity-80;
+    @apply bg-kusama hover:bg-white hover:text-kusama hover:border-kusama;
+}
+
+.counter {
+    @apply inline-flex items-center justify-center w-5 h-5 ms-3 text-xs font-semibold bg-white rounded-full;
+}
+
+.counter.polkadot {
+    @apply text-polkadot group-hover:text-white group-hover:bg-polkadot
+}
+
+.counter.kusama {
+    @apply text-kusama group-hover:text-white group-hover:bg-kusama
 }
 
 .btn__add_account {
@@ -157,7 +169,7 @@ hr {
 }
 
 .account__chip {
-    @apply inline-flex items-center justify-between me-2 text-xs min-h-9 text-gray-600 dark:text-gray-300;
+    @apply inline-flex items-center justify-between me-2 text-sm min-h-9 text-gray-600 dark:text-gray-300;
 }
 
 .api_init {

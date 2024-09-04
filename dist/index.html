@@ -13,14 +13,41 @@
         
         
         <!--  -->
-        <link rel="stylesheet" href="/styles-6a3f0928203bc5a3.css">
-        <script type="module">import init from '/app-368b7db520835220.js';init('/app-368b7db520835220_bg.wasm');</script>
+        <link rel="stylesheet" href="/styles-a0ab5f7017b77e99.css">
+        <script type="module">import init from '/app-ba7f44ddc9e4b873.js';init('/app-ba7f44ddc9e4b873_bg.wasm');</script>
         
         <script defer="" src="/index-844f193135aaf883.js"></script>
     
-<link rel="preload" href="/app-368b7db520835220_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/app-368b7db520835220.js"></head>
+<link rel="preload" href="/app-ba7f44ddc9e4b873_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/app-ba7f44ddc9e4b873.js"></head>
     <body>
         
     
-</body></html>
+<script>(function () {
+    var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    var url = protocol + '//' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>

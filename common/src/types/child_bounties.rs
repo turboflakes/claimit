@@ -52,7 +52,7 @@ impl ChildBounty {
 
     pub fn beneficiary_to_compact_string(&self) -> String {
         if let Some(identity) = &self.beneficiary_identity {
-            let max = identity.chars().map(|c| c.len_utf8()).take(20).sum();
+            let max = identity.chars().map(|c| c.len_utf8()).take(24).sum();
             (&identity[..max]).to_string()
         } else {
             compact(&self.beneficiary)

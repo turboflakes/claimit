@@ -32,7 +32,7 @@ pub fn navbar(props: &NavbarProps) -> Html {
                     {
                         if state.network.is_ligh_client() && state.network.is_initializing() {
                             html! {
-                                <p class="hidden sm:flex text-xs">{"synchronizing light client..."}</p>
+                                <p class="hidden sm:flex text-xs">{"Synchronizing light client..."}</p>
                             }
                         } else {
                             html! {}

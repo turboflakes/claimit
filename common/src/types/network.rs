@@ -76,6 +76,14 @@ impl NetworkState {
         self.fetches_counter > 0
     }
 
+    pub fn is_initializing_description(&self) -> &'static str {
+        "Initializing network. Hang tight..."
+    }
+
+    pub fn is_fetching_description(&self) -> &'static str {
+        "Retrieving just for you, the most recent child bounties state. Hang tight..."
+    }
+
     pub fn is_busy(&self) -> bool {
         !self.is_active() || self.is_fetching()
     }

@@ -108,11 +108,23 @@ impl Reducible for State {
                     });
                     LocalStorage::set(self.account_key(), accounts.clone()).expect("failed to set");
                 }
+
+                let filter = if self.layout.is_onboarding {
+                    Filter::All
+                } else {
+                    let following = accounts
+                        .iter()
+                        .map(|a| AccountId32::from_str(&a.address).unwrap())
+                        .collect::<Vec<AccountId32>>();
+
+                    Filter::Following(following)
+                };
+
                 State {
                     accounts,
                     network: self.network.clone(),
                     child_bounties_raw: self.child_bounties_raw.clone(),
-                    filter: self.filter.clone(),
+                    filter,
                     extension: self.extension.clone(),
                     claim: self.claim.clone(),
                     layout: self.layout.clone(),
