@@ -126,9 +126,9 @@ pub async fn create_api_clients(
             .await
             .expect("expect valid RPC connection");
 
-        // OnlineClient::<PolkadotConfig>::from_rpc_client(rpc.clone())
-        //     .awaite
-        //     .expect("expect valid RPC connection")
+        // let relay_api = OnlineClient::<PolkadotConfig>::from_rpc_client(rpc.clone())
+        //     .await
+        //     .expect("expect valid RPC connection");
 
         let people_rpc = lc
             .parachain(runtime.chain_specs_people())

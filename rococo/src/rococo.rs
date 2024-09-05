@@ -248,7 +248,7 @@ pub async fn submit_and_watch_tx(
                     if let Some(ev) = event.as_event::<Claimed>()? {
                         out.push(ev.child_index);
                     } else if let Some(ev) = event.as_event::<Remarked>()? {
-                        info!("__Remarked: {}", ev.sender);
+                        info!("Remarked: {}", ev.sender);
                         out.push(4);
                     } else if let Some(_ev) = event.as_event::<BatchCompleted>()? {
                         info!(
