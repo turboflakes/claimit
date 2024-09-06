@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.4.6 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.10 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -1116,6 +1116,10 @@ video {
   flex: none;
 }
 
+.border-collapse {
+  border-collapse: collapse;
+}
+
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -1429,14 +1433,6 @@ video {
   background-color: hsl(58 100% 68% / var(--tw-bg-opacity));
 }
 
-.bg-\[url\(\'\/images\/background_kusama\.svg\'\)\] {
-  background-image: url('/images/background_kusama.svg');
-}
-
-.bg-\[url\(\'\/images\/background_polkadot\.svg\'\)\] {
-  background-image: url('/images/background_polkadot.svg');
-}
-
 .bg-gradient-to-l {
   background-image: linear-gradient(to left, var(--tw-gradient-stops));
 }
@@ -1646,6 +1642,18 @@ video {
   text-align: start;
 }
 
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.font-sans {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.font-serif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1676,6 +1684,11 @@ video {
   line-height: 1;
 }
 
+.text-9xl {
+  font-size: 8rem;
+  line-height: 1;
+}
+
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1699,6 +1712,10 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.font-black {
+  font-weight: 900;
 }
 
 .font-bold {
@@ -1911,44 +1928,6 @@ hr:where(.dark, .dark *) {
 @media (min-width: 640px) {
   .main {
     overflow: hidden;
-  }
-}
-
-.main.polkadot {
-  background-image: url('/images/background_polkadot.svg');
-  background-size: 520%;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-@media (min-width: 640px) {
-  .main.polkadot {
-    background-size: 420%;
-  }
-}
-
-@media (min-width: 1280px) {
-  .main.polkadot {
-    background-size: 220%;
-  }
-}
-
-.main.kusama {
-  background-image: url('/images/background_kusama.svg');
-  background-size: 520%;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-@media (min-width: 640px) {
-  .main.kusama {
-    background-size: 420%;
-  }
-}
-
-@media (min-width: 1280px) {
-  .main.kusama {
-    background-size: 220%;
   }
 }
 
@@ -2703,6 +2682,7 @@ hr:where(.dark, .dark *) {
 }
 
 .step__title {
+  margin-top: 1rem;
   margin-bottom: 0.5rem;
   text-wrap: wrap;
   font-size: 1.25rem;
@@ -3007,10 +2987,6 @@ hr:where(.dark, .dark *) {
     overflow: auto;
   }
 
-  .sm\:bg-420 {
-    background-size: 420%;
-  }
-
   .sm\:p-4 {
     padding: 1rem;
   }
@@ -3074,12 +3050,6 @@ hr:where(.dark, .dark *) {
   .md\:text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .xl\:bg-220 {
-    background-size: 220%;
   }
 }
 

@@ -5,8 +5,8 @@ use crate::components::{
     spinners::Spinner,
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::utils::amount_human;
-use claimeer_common::types::child_bounties::Filter;
+use claimit_common::runtimes::utils::amount_human;
+use claimit_common::types::child_bounties::Filter;
 use strum::IntoEnumIterator;
 use yew::{function_component, html, use_context, use_state, Callback, Html};
 

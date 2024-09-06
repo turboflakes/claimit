@@ -1,6 +1,6 @@
 use crate::components::icons::Identicon;
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::utils::compact;
+use claimit_common::runtimes::utils::compact;
 use subxt::config::substrate::AccountId32;
 use yew::{classes, function_component, html, use_context, AttrValue, Callback, Html, Properties};
 

@@ -1,6 +1,6 @@
 use crate::app::App;
 use crate::pages::page_not_found::PageNotFound;
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::runtimes::support::SupportedRelayRuntime;
 use serde::{Deserialize, Serialize};
 use yew::{function_component, html, Html};
 use yew_router::{BrowserRouter, Routable, Switch};

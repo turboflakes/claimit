@@ -2,8 +2,8 @@ use crate::components::spinners::Spinner;
 use crate::router::{Query, Routes};
 use crate::state::Action;
 use crate::state::StateContext;
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{child_bounties::ChildBountiesIds, layout::BalanceMode};
+use claimit_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::types::{child_bounties::ChildBountiesIds, layout::BalanceMode};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{

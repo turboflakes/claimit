@@ -3,7 +3,7 @@ use crate::components::{
     items::{AccountItem, AccountItemSmall},
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::{
+use claimit_common::{
     runtimes::{support::SupportedRelayRuntime, utils::amount_human},
     types::accounts::Account,
     types::{child_bounties::Filter, layout::BalanceMode},

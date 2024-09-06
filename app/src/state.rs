@@ -1,5 +1,5 @@
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
+use claimit_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::types::{
     accounts::{Account, Balance},
     child_bounties::ChildBountyId,
     child_bounties::{ChildBounties, ChildBountiesIds, Filter},

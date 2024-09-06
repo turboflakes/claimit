@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-rococo"
+name = "claimit-rococo"
 version.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -11,5 +11,5 @@ edition.workspace = true
 subxt = { workspace = true }
 log = { workspace = true }
 yew = { workspace = true }
-claimeer-common = { path = "../common" }
-claimeer-rococo-people = { path = "../rococo_people" }
+claimit-common = { path = "../common" }
+claimit-rococo-people = { path = "../rococo_people" }

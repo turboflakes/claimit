@@ -7,8 +7,8 @@ use crate::components::{
 };
 use crate::router::Query;
 use crate::state::{account_key, onboarded_key, signer_key, Action, State, StateContext};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
+use claimit_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::types::{
     accounts::Account,
     child_bounties::Filter,
     claims::ClaimStatus,
@@ -17,7 +17,7 @@ use claimeer_common::types::{
     network::{NetworkState, NetworkStatus},
     worker::{Input as WorkerInput, Output as WorkerOutput},
 };
-use claimeer_workers::network_api::Worker;
+use claimit_workers::network_api::Worker;
 use gloo::storage::{LocalStorage, Storage};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
@@ -224,7 +224,7 @@ pub fn main() -> Html {
                     <div class="flex flex-col justify-center items-center px-2 sm:px-4 sm:h-screen">
 
                         <div class={classes!("header", hidden_class)}>
-                            <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimeer_logo.svg" alt="Claimeer" />
+                            // <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimit_logo.svg" alt="Claimit" />
                             <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Child Bounty Claim Made Easy!"}</p>
                         </div>
 

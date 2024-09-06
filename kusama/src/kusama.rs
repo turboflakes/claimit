@@ -1,13 +1,13 @@
-use claimeer_common::errors::ClaimeerError;
-use claimeer_common::runtimes::utils::get_child_bounty_id_from_storage_key;
-use claimeer_common::runtimes::utils::str;
-use claimeer_common::types::{
+use claimit_common::errors::ClaimitError;
+use claimit_common::runtimes::utils::get_child_bounty_id_from_storage_key;
+use claimit_common::runtimes::utils::str;
+use claimit_common::types::{
     accounts::Balance,
     child_bounties::{ChildBounties, ChildBountiesIds, ChildBounty, ChildBountyId, Status},
     extensions::create_payload_as_string,
     worker::Output,
 };
-use claimeer_kusama_people::kusama_people::fetch_display_name;
+use claimit_kusama_people::kusama_people::fetch_display_name;
 use log::{error, info};
 use node_runtime::{
     child_bounties::events::Claimed,
@@ -42,7 +42,7 @@ pub async fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
     people_api: &OnlineClient<PolkadotConfig>,
     tx: UnboundedSender<Output>,
-) -> Result<(), ClaimeerError> {
+) -> Result<(), ClaimitError> {
     let mut out = ChildBounties::new();
 
     let address = node_runtime::storage()
@@ -105,7 +105,7 @@ pub async fn fetch_child_bounties(
 pub async fn fetch_account_balance(
     api: &OnlineClient<PolkadotConfig>,
     account: AccountId32,
-) -> Result<Balance, ClaimeerError> {
+) -> Result<Balance, ClaimitError> {
     let address = node_runtime::storage().system().account(&account);
 
     if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
@@ -115,7 +115,7 @@ pub async fn fetch_account_balance(
         });
     }
 
-    return Err(ClaimeerError::Other(
+    return Err(ClaimitError::Other(
         "An unexpected error occurred, balance couldn't be retrieved.".into(),
     ));
 }
@@ -124,7 +124,7 @@ pub async fn create_payload_tx(
     api: &OnlineClient<PolkadotConfig>,
     child_bounties_ids: ChildBountiesIds,
     signer_address: String,
-) -> Result<String, ClaimeerError> {
+) -> Result<String, ClaimitError> {
     let account_id = AccountId32::from_str(&signer_address).unwrap();
     let account_nonce = api.tx().account_nonce(&account_id).await?;
 
@@ -145,13 +145,13 @@ pub async fn create_payload_tx(
 
     // Get SCALE encoded data from TX payload
     let Ok(call_data) = api.tx().call_data(&batch_call) else {
-        return Err(ClaimeerError::Other("SCALE encoding failed".to_string()));
+        return Err(ClaimitError::Other("SCALE encoding failed".to_string()));
     };
 
     let Ok(payload) =
         create_payload_as_string(&api, &call_data, account_nonce, signer_address).await
     else {
-        return Err(ClaimeerError::Other("Payload creation failed".to_string()));
+        return Err(ClaimitError::Other("Payload creation failed".to_string()));
     };
 
     Ok(payload)
@@ -162,7 +162,7 @@ pub async fn sign_and_submit_tx(
     child_bounties_ids: ChildBountiesIds,
     signer_address: String,
     signature: Vec<u8>,
-) -> Result<Vec<ChildBountyId>, ClaimeerError> {
+) -> Result<Vec<ChildBountyId>, ClaimitError> {
     let account_id = AccountId32::from_str(&signer_address).unwrap();
     let account_nonce = api.tx().account_nonce(&account_id).await?;
 
@@ -182,7 +182,7 @@ pub async fn sign_and_submit_tx(
         .force_batch(calls_for_batch.clone());
 
     let Ok(multi_signature) = MultiSignature::decode(&mut &signature[..]) else {
-        return Err(ClaimeerError::Other(
+        return Err(ClaimitError::Other(
             "MultiSignature decoding failed".to_string(),
         ));
     };
@@ -190,7 +190,7 @@ pub async fn sign_and_submit_tx(
     let params = TxParams::new().nonce(account_nonce).build();
 
     let Ok(partial_signed) = api.tx().create_partial_signed_offline(&batch_call, params) else {
-        return Err(ClaimeerError::Other(
+        return Err(ClaimitError::Other(
             "PartialExtrinsic creation failed".to_string(),
         ));
     };
@@ -210,7 +210,7 @@ pub async fn sign_and_submit_tx(
 pub async fn submit_and_watch_tx(
     api: &OnlineClient<PolkadotConfig>,
     tx_bytes: Vec<u8>,
-) -> Result<Vec<ChildBountyId>, ClaimeerError> {
+) -> Result<Vec<ChildBountyId>, ClaimitError> {
     let mut out = Vec::new();
 
     let extrinsic = SubmittableExtrinsic::from_bytes(api.clone(), tx_bytes);
@@ -258,25 +258,25 @@ pub async fn submit_and_watch_tx(
                             tx_events.extrinsic_hash()
                         );
                         error!("{message}");
-                        return Err(ClaimeerError::Other(message.into()));
+                        return Err(ClaimitError::Other(message.into()));
                     }
                 }
 
-                return Err(ClaimeerError::Other(
+                return Err(ClaimitError::Other(
                     "An unexpected error occurred =/".into(),
                 ));
             }
             TxStatus::Error { message } => {
-                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+                return Err(ClaimitError::Other(format!("TxStatus: {message:?}")))
             }
             TxStatus::Invalid { message } => {
-                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+                return Err(ClaimitError::Other(format!("TxStatus: {message:?}")))
             }
             TxStatus::Dropped { message } => {
-                return Err(ClaimeerError::Other(format!("TxStatus: {message:?}")))
+                return Err(ClaimitError::Other(format!("TxStatus: {message:?}")))
             }
             _ => {}
         }
     }
-    Err(ClaimeerError::Other("TxStatus not available".into()))
+    Err(ClaimitError::Other("TxStatus not available".into()))
 }

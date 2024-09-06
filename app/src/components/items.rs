@@ -5,8 +5,8 @@ use crate::components::{
     icons::Identicon,
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
+use claimit_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::types::{
     accounts::Account,
     child_bounties::{Filter, Id},
     extensions::ExtensionAccount,

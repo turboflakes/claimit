@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-rococo-people"
+name = "claimit-rococo-people"
 version.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -11,4 +11,4 @@ edition.workspace = true
 subxt = { workspace = true }
 log = { workspace = true }
 async-recursion = { workspace = true }
-claimeer-common = { path = "../common" }
+claimit-common = { path = "../common" }

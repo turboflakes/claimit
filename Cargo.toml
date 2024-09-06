@@ -14,12 +14,12 @@ members = [
 resolver = "2"
 
 [workspace.package]
-name = "claimeer"
+name = "claimit"
 version = "0.5.2"
 license = "Apache-2.0"
-repository = "https://github.com/turboflakes/claimeer"
+repository = "https://github.com/turboflakes/claimit"
 authors = ["Paulo <paulo@turboflakes.io>"]
-description = "Claimeer ― A dApp to easy lookup and claim child bounties for Polkadot and Kusama network."
+description = "Claimit ― A dApp to easy lookup and claim child bounties for Polkadot and Kusama network."
 edition = "2021"
 
 [workspace.dependencies]

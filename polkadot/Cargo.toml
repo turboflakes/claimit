@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-polkadot"
+name = "claimit-polkadot"
 version.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -11,5 +11,5 @@ edition.workspace = true
 subxt = { workspace = true }
 log = { workspace = true }
 yew = { workspace = true }
-claimeer-common = { path = "../common" }
-claimeer-polkadot-people = { path = "../polkadot_people" }
+claimit-common = { path = "../common" }
+claimit-polkadot-people = { path = "../polkadot_people" }

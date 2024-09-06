@@ -6,9 +6,9 @@ use subxt::{
 
 use thiserror::Error;
 
-/// Claimeer specific error messages
+/// Claimit specific error messages
 #[derive(Error, Debug)]
-pub enum ClaimeerError {
+pub enum ClaimitError {
     #[error("Subxt error: {0}")]
     SubxtError(#[from] subxt::Error),
     #[error("SubxtCore error: {0}")]
@@ -25,9 +25,9 @@ pub enum ClaimeerError {
     Other(String),
 }
 
-/// Convert &str to ClaimeerError
-impl From<&str> for ClaimeerError {
+/// Convert &str to ClaimitError
+impl From<&str> for ClaimitError {
     fn from(error: &str) -> Self {
-        ClaimeerError::Other(error.into())
+        ClaimitError::Other(error.into())
     }
 }

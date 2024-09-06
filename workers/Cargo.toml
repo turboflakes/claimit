@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-workers"
+name = "claimit-workers"
 version.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -27,10 +27,10 @@ gloo = { workspace = true }
 plot_icon = { workspace = true }
 num-format = { workspace = true }
 rand = { workspace = true }
-claimeer-common = { path = "../common" }
-claimeer-kusama = { path = "../kusama" }
-claimeer-kusama-people = { path = "../kusama_people" }
-claimeer-polkadot = { path = "../polkadot" }
-claimeer-polkadot-people = { path = "../polkadot_people" }
-claimeer-rococo = { path = "../rococo" }
-claimeer-rococo-people = { path = "../rococo_people" }
+claimit-common = { path = "../common" }
+claimit-kusama = { path = "../kusama" }
+claimit-kusama-people = { path = "../kusama_people" }
+claimit-polkadot = { path = "../polkadot" }
+claimit-polkadot-people = { path = "../polkadot_people" }
+claimit-rococo = { path = "../rococo" }
+claimit-rococo-people = { path = "../rococo_people" }

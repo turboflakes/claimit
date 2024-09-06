@@ -59,13 +59,13 @@ pub fn onboarding_steps() -> Html {
             <div class="flex mb-4 sm:mb-8">
                 <ul>
                     <li class={classes!{"step__index", (*step != 0).then(|| Some("hidden"))}}>
-                        <img src="/images/step_1.svg" alt="Step 1" />
+                        <p class="font-black text-9xl">{"1"}</p>
                     </li>
                     <li class={classes!{"step__index", (*step != 1).then(|| Some("hidden"))}}>
-                        <img src="/images/step_2.svg" alt="Step 2" />
+                        <p class="font-black text-9xl">{"2"}</p>
                     </li>
                     <li class={classes!{"step__index", (*step != 2).then(|| Some("hidden"))}}>
-                        <img src="/images/step_3.svg" alt="Step 3" />
+                        <p class="font-black text-9xl">{"3"}</p>
                     </li>
                 </ul>
                 <div class="flex flex-col justify-between w-full ms-4 sm:ms-8 h-60">

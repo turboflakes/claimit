@@ -1,4 +1,4 @@
-use claimeer_app::Index;
+use claimit_app::Index;
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());

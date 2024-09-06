@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-common"
+name = "claimit-common"
 version.workspace = true
 license.workspace = true
 repository.workspace = true

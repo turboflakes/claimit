@@ -16,14 +16,6 @@ hr {
     @apply mx-auto h-screen overflow-auto sm:overflow-hidden;
 }
 
-.main.polkadot {
-    @apply bg-[url('/images/background_polkadot.svg')] bg-520 sm:bg-420 xl:bg-220 bg-center bg-no-repeat;
-}
-
-.main.kusama {
-    @apply bg-[url('/images/background_kusama.svg')] bg-520 sm:bg-420 xl:bg-220 bg-center bg-no-repeat;
-}
-
 .header {
     @apply flex-col flex-1 justify-center items-center mt-28 sm:mt-0;
 }
@@ -157,7 +149,7 @@ hr {
 }
 
 .step__title {
-    @apply text-gray-900 mb-2 text-xl sm:text-4xl font-medium tracking-wider leading-snug text-wrap;
+    @apply text-gray-900 mt-4 mb-2 text-xl sm:text-4xl font-medium tracking-wider leading-snug text-wrap;
 }
 
 .step__subtitle {

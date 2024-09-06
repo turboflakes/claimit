@@ -1,4 +1,4 @@
-use claimeer_workers::Worker;
+use claimit_workers::Worker;
 use yew_agent::Registrable;
 
 fn main() {

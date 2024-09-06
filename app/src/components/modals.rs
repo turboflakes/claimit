@@ -4,7 +4,7 @@ use crate::components::{
     items::{ChildBountyItemSmall, ExtensionAccountDropdown},
 };
 use crate::state::{Action, StateContext};
-use claimeer_common::types::{
+use claimit_common::types::{
     claims::ClaimStatus,
     extensions::{collect_signature, get_accounts, ExtensionAccount, ExtensionStatus},
 };
@@ -88,7 +88,7 @@ pub fn claim_modal() -> Html {
                                     ExtensionStatus::Connected,
                                 ));
                             } else {
-                                let message = "Please make sure polkadot-js extension is installed and at least one account is enabled to work with this site claimeer.app";
+                                let message = "Please make sure polkadot-js extension is installed and at least one account is enabled to work with this site goclaimit.app";
                                 err.set(message.to_string());
                             }
                         }

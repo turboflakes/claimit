@@ -1,16 +1,16 @@
-use claimeer_common::errors::ClaimeerError;
-use claimeer_common::runtimes::support::SupportedRelayRuntime;
-use claimeer_common::types::{
+use claimit_common::errors::ClaimitError;
+use claimit_common::runtimes::support::SupportedRelayRuntime;
+use claimit_common::types::{
     child_bounties::ChildBountiesIds,
     network::SubscriptionId,
     worker::{Input, Output, SignerAddress},
 };
-use claimeer_kusama::kusama;
-use claimeer_kusama_people::kusama_people;
-use claimeer_polkadot::polkadot;
-use claimeer_polkadot_people::polkadot_people;
-use claimeer_rococo::rococo;
-use claimeer_rococo_people::rococo_people;
+use claimit_kusama::kusama;
+use claimit_kusama_people::kusama_people;
+use claimit_polkadot::polkadot;
+use claimit_polkadot_people::polkadot_people;
+use claimit_rococo::rococo;
+use claimit_rococo_people::rococo_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::{error, warn};
@@ -100,7 +100,7 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
 pub async fn create_api_clients(
     runtime: SupportedRelayRuntime,
     use_light_client: bool,
-) -> Result<(RelayClient, PeopleClient), ClaimeerError> {
+) -> Result<(RelayClient, PeopleClient), ClaimitError> {
     if use_light_client {
         // Initiate light client (smoldot)
         let (lc, rpc) = LightClient::relay_chain(runtime.chain_specs())

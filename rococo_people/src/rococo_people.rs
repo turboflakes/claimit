@@ -1,6 +1,6 @@
 use async_recursion::async_recursion;
-use claimeer_common::errors::ClaimeerError;
-use claimeer_common::runtimes::utils::str;
+use claimit_common::errors::ClaimitError;
+use claimit_common::runtimes::utils::str;
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
 #[subxt::subxt(
@@ -20,7 +20,7 @@ pub async fn fetch_display_name(
     api: &OnlineClient<PolkadotConfig>,
     address: &AccountId32,
     sub_account_name: Option<String>,
-) -> Result<Option<String>, ClaimeerError> {
+) -> Result<Option<String>, ClaimitError> {
     let identity_of_addr = node_runtime::storage().identity().identity_of(address);
     match api
         .storage()

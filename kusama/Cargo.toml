@@ -1,5 +1,5 @@
 [package]
-name = "claimeer-kusama"
+name = "claimit-kusama"
 version.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -11,5 +11,5 @@ edition.workspace = true
 subxt = { workspace = true }
 log = { workspace = true }
 yew = { workspace = true }
-claimeer-common = { path = "../common" }
-claimeer-kusama-people = { path = "../kusama_people" }
+claimit-common = { path = "../common" }
+claimit-kusama-people = { path = "../kusama_people" }
