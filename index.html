@@ -2,10 +2,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
-        <title>Claimeer by Turboflakes</title>
+        <title>Claimit by Turboflakes</title>
         <meta name="description" content="A DApp to easy lookup and claim child bounties for Polkadot and Kusama network.">
         <!-- plausible analytics -->
-        <script defer="" data-domain="claimeer.app" src="https://plausible.io/js/script.js"></script>
+        <script defer="" data-domain="goclaimit.app" src="https://plausible.io/js/script.js"></script>
         
         <!--  -->
         
@@ -13,14 +13,41 @@
         
         
         <!--  -->
-        <link rel="stylesheet" href="/styles-a0ab5f7017b77e99.css">
-        <script type="module">import init from '/app-31f183d37518717e.js';init('/app-31f183d37518717e_bg.wasm');</script>
+        <link rel="stylesheet" href="/styles-5d854f7e92c6afa2.css">
+        <script type="module">import init from '/app-88018e8f7bdffb8.js';init('/app-88018e8f7bdffb8_bg.wasm');</script>
         
-        <script defer="" src="/index-844f193135aaf883.js"></script>
+        <script defer="" src="/index-1f179ee9f13d67a7.js"></script>
     
-<link rel="preload" href="/app-31f183d37518717e_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/app-31f183d37518717e.js"></head>
+<link rel="preload" href="/app-88018e8f7bdffb8_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/app-88018e8f7bdffb8.js"></head>
     <body>
         
     
-</body></html>
+<script>(function () {
+    var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    var url = protocol + '//' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
