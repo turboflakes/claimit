@@ -125,7 +125,7 @@ pub fn total_balance_title(props: &TotalBalanceTitleProps) -> Html {
                 <div class="inline-flex">
                     <h3 class="font-medium text-2xl text-gray-900">
                         {amount_human(total_balance, props.runtime.decimals().into())}
-                        <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
+                        <span class="font-light ms-2">{props.runtime.unit()}</span>
                     </h3>
                 </div>
             </div>
@@ -164,7 +164,7 @@ pub fn total_awarded_title(props: &TotalAwardedTitleProps) -> Html {
                 <p>{"Total awarded"}</p>
                 <h3 class="font-medium text-2xl text-gray-900">
                     {amount_human(total_awarded, props.runtime.decimals().into())}
-                    <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
+                    <span class="font-light ms-2">{props.runtime.unit()}</span>
                 </h3>
             </div>
         };
@@ -202,7 +202,7 @@ pub fn total_pending_title(props: &TotalPendingTitleProps) -> Html {
                     <p>{"Total pending"}</p>
                     <h3 class="font-medium text-2xl text-gray-900">
                         {amount_human(total_pending, props.runtime.decimals().into())}
-                        <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
+                        <span class="font-light ms-2">{props.runtime.unit()}</span>
                     </h3>
                 </div>
             };
@@ -241,7 +241,7 @@ pub fn total_claimable_title(props: &TotalClaimableTitleProps) -> Html {
                     <p>{"Total claimable"}</p>
                     <h3 class="font-medium text-2xl text-gray-900">
                         {amount_human(total_claimable, props.runtime.decimals().into())}
-                        <span class="text-gray-600 ms-2">{props.runtime.unit()}</span>
+                        <span class="font-light ms-2">{props.runtime.unit()}</span>
                     </h3>
                 </div>
             };
@@ -266,7 +266,7 @@ pub fn account_balance(props: &AccountBalanceProps) -> Html {
                 match state.layout.balance_mode.clone() {
                     BalanceMode::TotalBalance => html! {
                         <div class="inline-flex items-center">
-                            <svg class="w-5 h-5 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                 <path fill-rule="evenodd" d="M12 14a3 3 0 0 1 3-3h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4a3 3 0 0 1-3-3Zm3-1a1 1 0 1 0 0 2h4v-2h-4Z" clip-rule="evenodd"/>
                                 <path fill-rule="evenodd" d="M12.293 3.293a1 1 0 0 1 1.414 0L16.414 6h-2.828l-1.293-1.293a1 1 0 0 1 0-1.414ZM12.414 6 9.707 3.293a1 1 0 0 0-1.414 0L5.586 6h6.828ZM4.586 7l-.056.055A2 2 0 0 0 3 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2h-4a5 5 0 0 1 0-10h4a2 2 0 0 0-1.53-1.945L17.414 7H4.586Z" clip-rule="evenodd"/>
                             </svg>
@@ -284,7 +284,7 @@ pub fn account_balance(props: &AccountBalanceProps) -> Html {
 
                             return html! {
                                 <div class="inline-flex items-center">
-                                    <svg class="w-5 h-5 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M11 9a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z"/>
                                         <path fill-rule="evenodd" d="M9.896 3.051a2.681 2.681 0 0 1 4.208 0c.147.186.38.282.615.255a2.681 2.681 0 0 1 2.976 2.975.681.681 0 0 0 .254.615 2.681 2.681 0 0 1 0 4.208.682.682 0 0 0-.254.615 2.681 2.681 0 0 1-2.976 2.976.681.681 0 0 0-.615.254 2.682 2.682 0 0 1-4.208 0 .681.681 0 0 0-.614-.255 2.681 2.681 0 0 1-2.976-2.975.681.681 0 0 0-.255-.615 2.681 2.681 0 0 1 0-4.208.681.681 0 0 0 .255-.615 2.681 2.681 0 0 1 2.976-2.975.681.681 0 0 0 .614-.255ZM12 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" clip-rule="evenodd"/>
                                         <path d="M5.395 15.055 4.07 19a1 1 0 0 0 1.264 1.267l1.95-.65 1.144 1.707A1 1 0 0 0 10.2 21.1l1.12-3.18a4.641 4.641 0 0 1-2.515-1.208 4.667 4.667 0 0 1-3.411-1.656Zm7.269 2.867 1.12 3.177a1 1 0 0 0 1.773.224l1.144-1.707 1.95.65A1 1 0 0 0 19.915 19l-1.32-3.93a4.667 4.667 0 0 1-3.4 1.642 4.643 4.643 0 0 1-2.53 1.21Z"/>
@@ -307,7 +307,7 @@ pub fn account_balance(props: &AccountBalanceProps) -> Html {
 
                                 return html! {
                                     <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2Z" clip-rule="evenodd"/>
                                             <path fill-rule="evenodd" d="M10 15.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Zm6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707V14Z" clip-rule="evenodd"/>
                                         </svg>
@@ -330,7 +330,7 @@ pub fn account_balance(props: &AccountBalanceProps) -> Html {
 
                                 return html! {
                                     <div class="inline-flex items-center">
-                                        <svg class="w-5 h-5 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M20.337 3.664c.213.212.354.486.404.782.294 1.711.657 5.195-.906 6.76-1.77 1.768-8.485 5.517-10.611 6.683a.987.987 0 0 1-1.176-.173l-.882-.88-.877-.884a.988.988 0 0 1-.173-1.177c1.165-2.126 4.913-8.841 6.682-10.611 1.562-1.563 5.046-1.198 6.757-.904.296.05.57.191.782.404ZM5.407 7.576l4-.341-2.69 4.48-2.857-.334a.996.996 0 0 1-.565-1.694l2.112-2.111Zm11.357 7.02-.34 4-2.111 2.113a.996.996 0 0 1-1.69-.565l-.422-2.807 4.563-2.74Zm.84-6.21a1.99 1.99 0 1 1-3.98 0 1.99 1.99 0 0 1 3.98 0Z" clip-rule="evenodd"/>
                                         </svg>
                                         <p class="text-xl text-gray-800 ms-3">{amount_human(total_claimable, props.runtime.decimals().into())}</p>

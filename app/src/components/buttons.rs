@@ -106,19 +106,19 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
                 SupportedRelayRuntime::Polkadot => html! {
                     <NetworkButton chain={SupportedRelayRuntime::Kusama} disabled={props.disabled.clone()} onclick={onclick.clone()} >
                         <img class="h-8" src="/images/kusama_icon.svg" alt="kusama logo" />
-                        <span>{"Switch to Kusama"}</span>
+                        <span class="font-bold">{"Switch to Kusama"}</span>
                     </NetworkButton>
                 },
                 SupportedRelayRuntime::Kusama => html! {
                     <NetworkButton chain={SupportedRelayRuntime::Polkadot} disabled={props.disabled.clone()} onclick={onclick.clone()} >
                         <img class="h-8" src="/images/polkadot_icon.svg" alt="polkadot logo" />
-                        <span>{"Switch to Polkadot"}</span>
+                        <span class="font-bold">{"Switch to polkadot"}</span>
                     </NetworkButton>
                 },
                 SupportedRelayRuntime::Rococo => html! {
                     <NetworkButton chain={SupportedRelayRuntime::Polkadot} disabled={props.disabled.clone()} onclick={onclick.clone()} >
                         <img class="h-8" src="/images/polkadot_icon.svg" alt="polkadot logo" />
-                        <span>{"Switch to Polkadot"}</span>
+                        <span class="font-bold">{"Switch to Polkadot"}</span>
                     </NetworkButton>
                 },
             }}
@@ -232,13 +232,13 @@ pub fn add_account_button(props: &AddAccountButtonProps) -> Html {
     html! {
         <button class={classes!("btn__add_account", props.class.clone())} {onclick}>
             <div class="inline-flex items-center">
-                <svg class="w-12 h-12 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                 </svg>
-                <p class="ms-2 text-gray-800 text-3xl">{"Add"}</p>
+                <p class="ms-2 text-gray-900 text-3xl">{"Add"}</p>
             </div>
 
-            <p class="font-light text-xs text-left text-gray-800">{"Add a child bounty beneficiary account you want to follow and claim!"}</p>
+            <p class="text-xs text-left text-gray-500">{"Add a child bounty beneficiary account you want to follow and claim!"}</p>
         </button>
     }
 }
@@ -277,7 +277,7 @@ pub fn total_balance_icon_button(props: &TotalBalanceIconButtonProps) -> Html {
 
     html! {
         <button class={classes!("btn", "btn__icon", "btn__white")} {onclick} disabled={props.disabled.clone()}>
-            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 text-inherent dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                 <path fill-rule="evenodd" d="M12 14a3 3 0 0 1 3-3h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4a3 3 0 0 1-3-3Zm3-1a1 1 0 1 0 0 2h4v-2h-4Z" clip-rule="evenodd"/>
                 <path fill-rule="evenodd" d="M12.293 3.293a1 1 0 0 1 1.414 0L16.414 6h-2.828l-1.293-1.293a1 1 0 0 1 0-1.414ZM12.414 6 9.707 3.293a1 1 0 0 0-1.414 0L5.586 6h6.828ZM4.586 7l-.056.055A2 2 0 0 0 3 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2h-4a5 5 0 0 1 0-10h4a2 2 0 0 0-1.53-1.945L17.414 7H4.586Z" clip-rule="evenodd"/>
             </svg>

@@ -145,7 +145,7 @@ pub fn account_item(props: &AccountItemProps) -> Html {
 
     html! {
         <li class="account__item">
-            <div class="w-64 h-48 flex flex-col justify-between p-4 rounded-lg text-gray-600 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
+            <div class="w-64 h-48 flex flex-col justify-between p-4 rounded-lg text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-800">
                 <div class="inline-flex justify-between">
                     {
                         match props.runtime.clone() {
@@ -205,7 +205,7 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                 <div class="flex flex-col">
                     <div class="inline-flex items-center mb-2">
                         <Identicon address={props.account.address.clone()} size={24} class="me-2" />
-                        {props.account.to_compact_string()}
+                        <span class="text-sm">{props.account.to_compact_string()}</span>
                     </div>
 
                     <AccountBalance runtime={props.runtime.clone()} account={props.account.clone()} />
@@ -449,7 +449,7 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                 };
 
                 return html! {
-                    <li class="flex rounded-lg bg-white dark:bg-gray-700 hover:highlight">
+                    <li class="flex rounded-lg bg-white dark:bg-gray-700 hover:highlight-200">
                         <div class={classes!("flex-auto", "py-3", props.is_action_hidden.then(|| Some("px-6")), (!props.is_action_hidden).then(|| Some("ps-6 pe-2")))}>
                             <div class="flex items-center">
                                 <div class="flex flex-col flex-1 w-1">
@@ -462,11 +462,11 @@ pub fn child_bounty_item(props: &ChildBountyItemProps) -> Html {
                                         <PolkassemblyIconLink id={child_bounty.id.to_string()} runtime={state.network.runtime} />
                                     </div>
                                 </div>
-                                <div class="inline-flex items-center ms-2">
-                                    <div class="text-xl text-gray-800 dark:text-gray-200">
+                                <div class="inline-flex items-center ms-2 text-xl text-gray-800">
+                                    <div>
                                         {child_bounty.value_human(state.network.runtime)}
                                     </div>
-                                    <div class="ml-1 text-xl text-gray-600 dark:text-gray-400">{state.network.runtime.unit()}</div>
+                                    <div class="ml-1 font-light dark:text-gray-400">{state.network.runtime.unit()}</div>
                                 </div>
                             </div>
                             <hr class="my-2" />

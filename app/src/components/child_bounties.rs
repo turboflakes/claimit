@@ -22,9 +22,9 @@ pub fn child_bounties_card() -> Html {
                 <Spinner is_visible={state.network.is_initializing() || state.network.is_fetching()} />
                 {
                     if state.network.is_initializing() {
-                        html! {<p class="mt-4 text-xs text-center">{state.network.is_initializing_description()}</p>}
+                        html! {<p class="mt-4 text-sm text-center">{state.network.is_initializing_description()}</p>}
                     } else {
-                        html! {<p class="mt-4 text-xs text-center">{state.network.is_fetching_description()}</p>}
+                        html! {<p class="mt-4 text-sm text-center">{state.network.is_fetching_description()}</p>}
                     }
                 }
 
@@ -98,9 +98,10 @@ pub fn child_bounties_title() -> Html {
         if child_bountes_total > 0 {
             return html! {
                 <div class="flex flex-none justify-between items-center mb-4">
-                    <div class="inline-flex">
+                    <div class="inline-flex items-center">
                         <h3 class="md:text-lg text-gray-900 dark:text-gray-100 me-1">{child_bountes_total}</h3>
-                        <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100">{"Child Bounties"}</h3>
+                        <h3 class="md:text-lg font-bold text-gray-900 dark:text-gray-100 me-4">{"Child Bounties"}</h3>
+                        <Spinner is_visible={state.network.is_fetching()} />
                     </div>
 
                     {

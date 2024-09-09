@@ -10,6 +10,11 @@ module.exports = {
       ],
     },
     theme: {
+      extend: {
+        fontFamily: {
+          outfit: ['"Outfit"', "sans-serif"],
+        },
+      },
       borderRadius: {
         'md': '1rem',
         'lg': '1.5rem',
@@ -26,6 +31,7 @@ module.exports = {
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
+        'primary': '#B5D8CD',
         'white': '#ffffff',
         'polkadot': '#E6007A',
         'kusama': '#000000',

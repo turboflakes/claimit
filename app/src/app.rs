@@ -84,7 +84,7 @@ pub fn main() -> Html {
                     }
                 }
                 WorkerOutput::ChildBounties(data) => {
-                    state.dispatch(Action::UpdateChildBountiesRaw(data))
+                    state.dispatch(Action::UpdateChildBountiesRaw(data));
                 }
                 WorkerOutput::AccountBalance(account, balance) => {
                     state.dispatch(Action::UpdateAccountBalance(account, balance));
@@ -221,11 +221,11 @@ pub fn main() -> Html {
 
                 <div class="grid grid-cols-1 sm:grid-cols-3">
 
-                    <div class="flex flex-col justify-center items-center px-2 sm:px-4 sm:h-screen">
+                    <div class="flex flex-col justify-center items-center px-2 sm:px-4 sm:h-screen bg-primary">
 
                         <div class={classes!("header", hidden_class)}>
-                            // <img class="mb-4 sm:mb-8 max-w-[160px] sm:max-w-[256px]" src="/images/claimit_logo.svg" alt="Claimit" />
-                            <p class="text-md sm:text-xl text-light text-center tracking-wide text-gray-900">{"Child Bounty Claim Made Easy!"}</p>
+                            <img class="mb-4 w-[200px] sm:max-w-[256px]" src="/images/claimit_logo.svg" alt="claim.it" />
+                            <p class="text-xl sm:text-xl text-light text-center tracking-wide text-gray-900">{"Child Bounty Claim Made Easy!"}</p>
                         </div>
 
                         <div class="hidden sm:flex w-full">
@@ -278,7 +278,7 @@ pub fn main() -> Html {
 #[function_component]
 pub fn App() -> Html {
     html! {
-        <ReactorProvider<Worker> path="/network_api_worker.js">
+        <ReactorProvider<Worker> path="/api_worker.js">
             <Main />
         </ReactorProvider<Worker>>
     }

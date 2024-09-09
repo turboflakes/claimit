@@ -4,6 +4,15 @@
 
 /* Add your custom styles here */
 
+@font-face {
+    font-family: "Outfit";
+    src: url("../fonts/Outfit/Outfit-VariableFont_wght.ttf");
+}
+
+html, body, p, h1, h2, h3, h4, h5, h6, span {
+    @apply font-outfit;
+}
+
 html, body {
     @apply bg-gray-200 dark:bg-gray-900 text-gray-600 dark:text-gray-300 overflow-y-hidden;
 }
@@ -17,15 +26,15 @@ hr {
 }
 
 .header {
-    @apply flex-col flex-1 justify-center items-center mt-28 sm:mt-0;
+    @apply flex-col flex-1 justify-center items-center mt-28 mb-20 sm:my-0;
 }
 
 .account__input {
-    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+    @apply block w-full p-4 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight-200 focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:highlight-200;
 }
 
 .filter__input {
-    @apply block w-full p-2 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:border-gray-200;
+    @apply block w-full p-2 ps-12 text-sm text-gray-900 rounded-full bg-white placeholder-gray-600 focus:highlight-200 focus:outline-none dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-200 dark:focus:highlight-200;
 }
 
 .btn {
@@ -41,7 +50,7 @@ hr {
 }
 
 .btn.btn__link {
-    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-500 enabled:text-gray-900 dark:text-gray-400 hover:enabled:underline hover:enabled:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
+    @apply py-0 text-xs inline-flex items-center space-x-2 text-gray-800 enabled:text-gray-900 dark:text-gray-400 hover:enabled:underline hover:enabled:underline-offset-2 hover:enabled:text-gray-900 dark:hover:enabled:text-white;
 }
 
 .btn.btn__logo {
@@ -49,7 +58,7 @@ hr {
 }
 
 .btn.btn__icon {
-    @apply text-white hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+    @apply text-gray-800 hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
 .btn.btn__icon_sm {
@@ -57,16 +66,16 @@ hr {
 }
 
 .btn.btn__icon.btn__white {
-    @apply bg-white disabled:bg-gray-300 hover:bg-gray-200;
+    @apply bg-white disabled:bg-gray-300 disabled:no-highlight hover:bg-gray-200 hover:highlight-400 hover:text-gray-800;
 }
 
 .btn.btn__icon_sm.btn__gray,
 .btn.btn__icon.btn__gray {
-    @apply bg-gray-100 disabled:bg-gray-300 hover:bg-gray-200;
+    @apply bg-gray-100 disabled:bg-gray-300 disabled:no-highlight hover:bg-gray-200 hover:highlight-400;
 }
 
 .btn.btn__icon.btn__transparent {
-    @apply bg-transparent hover:bg-gray-300 text-gray-900 disabled:text-gray-500;
+    @apply bg-transparent hover:bg-gray-300 hover:highlight-400 disabled:bg-transparent disabled:no-highlight text-gray-900 disabled:text-gray-500;
 }
 
 .btn__claim {
@@ -74,7 +83,7 @@ hr {
 }
 
 .chip {
-    @apply text-gray-600 text-sm font-medium px-2.5 py-1 rounded-full;
+    @apply text-gray-800 text-xs px-2.5 py-1 rounded-full;
 }
 .chip.chip__gray {
     @apply text-white bg-gray-500;
@@ -105,7 +114,7 @@ hr {
 }
 
 .btn__add_account {
-    @apply w-64 h-48 p-2.5 flex flex-col justify-evenly border-2 border-dashed border-gray-400 hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
+    @apply w-64 h-48 p-2.5 flex flex-col justify-evenly border-2 border-dashed border-gray-400 hover:border-solid hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 rounded-lg dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
 .tab.tab__filters {
@@ -161,7 +170,7 @@ hr {
 }
 
 .account__chip {
-    @apply inline-flex items-center justify-between me-2 text-sm min-h-9 text-gray-600 dark:text-gray-300;
+    @apply inline-flex items-center justify-between me-2 text-sm min-h-9 text-gray-800 dark:text-gray-300;
 }
 
 .api_init {
@@ -177,8 +186,22 @@ hr {
 }
 
 @layer utilities {
-    .highlight {
+    .no-highlight {
+        box-shadow: none;
+    }
+
+    .highlight-200 {
         box-shadow:
             hsl(210, 16%, 93%) 0px 0px 0px 2px;
+    }
+
+    .highlight-400 {
+        box-shadow:
+            hsl(210, 14%, 83%) 0px 0px 0px 2px;
+    }
+
+    .highlight-800 {
+        box-shadow:
+            hsl(210, 10%, 23%) 0px 0px 0px 2px;
     }
   }

@@ -47,11 +47,11 @@ pub fn account(props: &AccountChipProps) -> Html {
                 {
                     if props.identity.is_some() {
                         html! {
-                            <span class="me-2">{props.identity.clone().unwrap()}</span>
+                            <span class="me-2 text-xs">{props.identity.clone().unwrap()}</span>
                         }
                     } else {
                         html! {
-                            <span class="me-2">{compact(&props.account.clone())}</span>
+                            <span class="me-2 text-xs">{compact(&props.account.clone())}</span>
                         }
                     }
                 }
