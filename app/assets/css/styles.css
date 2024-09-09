@@ -1933,7 +1933,7 @@ video {
 @font-face {
   font-family: "Outfit";
 
-  src: url("../fonts/Outfit/Outfit-VariableFont_wght.ttf");
+  src: url("/fonts/Outfit/Outfit-VariableFont_wght.ttf");
 }
 
 html, body, p, h1, h2, h3, h4, h5, h6, span {
