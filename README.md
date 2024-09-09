@@ -1,6 +1,10 @@
-# claimit
+# claim.it
 
-Claimit ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. Claimit works for anyone looking to easily track and claim child bounties. Claimit is written in Rust and compiled to WASM to run entirely in the browser ([Subxt](https://github.com/paritytech/subxt) + [Yew](https://yew.rs/) + [TailwindCSS](https://tailwindcss.com/)).
+<p align="center">
+  <img src="https://github.com/turboflakes/claimit/blob/main/gh_header.png?raw=true">
+</p>
+
+**claim.it** ― It's a Decentralised Application (DApp) to easy lookup and claim child bounties from Polkadot and Kusama network. **claim.it** works for anyone looking to easily track and claim child bounties. **claim.it** is written in Rust and compiled to WASM to run entirely in the browser ([Subxt](https://github.com/paritytech/subxt) + [Yew](https://yew.rs/) + [TailwindCSS](https://tailwindcss.com/)).
 
 ## ✨ Included Features
 
@@ -101,7 +105,7 @@ Any feedback is welcome.
 
 ## About
 
-Claimit - was made by **Turboflakes**. Visit us at <a href="https://turboflakes.io" target="_blank" rel="noreferrer">turboflakes.io</a> to know more about our work.
+**claim.it** - was made by **Turboflakes**. Visit us at <a href="https://turboflakes.io" target="_blank" rel="noreferrer">turboflakes.io</a> to know more about our work.
 
 If you like this project
   - 🚀 Share our work 
@@ -115,4 +119,4 @@ Tips are welcome
 
 ### License
 
-Claimit - The entire code within this repository is licensed under the [Apache License 2.0](./LICENSE).
+**claim.it** - The entire code within this repository is licensed under the [Apache License 2.0](./LICENSE).
