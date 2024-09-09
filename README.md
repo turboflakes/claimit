@@ -97,6 +97,13 @@ Open a new terminal window and run
 npm run watch
 ```
 
+## Inspiration
+
+Projects that had influence in **claim.it** design.
+
+- <a href="https://github.com/paritytech/subxt/tree/master/examples/wasm-example" target="_blank">wasm-example</a> - This is a small WASM app using the Yew UI framework to showcase how to use Subxt's features in a WASM environment.
+- <a href="https://github.com/yewstack/yew/tree/master/examples/function_todomvc" target="_blank">TodoMVC</a> - This is an implementation of TodoMVC for Yew using function components and hooks.
+
 ## Collaboration
 
 Have an idea for a new feature, a fix or you found a bug, please open an [issue](https://github.com/turboflakes/crunch/issues) or submit a [pull request](https://github.com/turboflakes/crunch/pulls).
