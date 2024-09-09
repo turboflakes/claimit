@@ -7,7 +7,6 @@ use claimit_common::types::{
     extensions::create_payload_as_string,
     worker::Output,
 };
-use claimit_rococo_people::rococo_people::fetch_display_name;
 use log::{error, info};
 use node_runtime::{
     child_bounties::events::Claimed,
@@ -20,6 +19,7 @@ use node_runtime::{
     utility::events::BatchCompleted,
     utility::events::BatchCompletedWithErrors,
 };
+use std::collections::BTreeMap;
 use std::str::FromStr;
 use subxt::{
     config::DefaultExtrinsicParamsBuilder as TxParams,
@@ -42,11 +42,12 @@ type SystemCall = node_runtime::runtime_types::frame_system::pallet::Call;
 
 pub async fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
-    people_api: &OnlineClient<PolkadotConfig>,
     tx: UnboundedSender<Output>,
 ) -> Result<(), ClaimitError> {
     let mut out = ChildBounties::new();
+    let mut temp = BTreeMap::new();
 
+    // Fetch child bounties
     let address = node_runtime::storage()
         .child_bounties()
         .child_bounties_iter();
@@ -55,49 +56,56 @@ pub async fn fetch_child_bounties(
 
     while let Some(Ok(storage)) = iter.next().await {
         match storage.value.status {
-            ChildBountyStatus::PendingPayout {
-                curator: _,
-                beneficiary,
-                unlock_at,
-            } => {
-                let id = get_child_bounty_id_from_storage_key(storage.key_bytes);
-
-                // Fetch child bounty description
-                let address = node_runtime::storage()
-                    .child_bounties()
-                    .child_bounty_descriptions(id);
-                let description = if let Some(BoundedVec(data)) =
-                    api.storage().at_latest().await?.fetch(&address).await?
-                {
-                    str(data)
-                } else {
-                    String::new()
-                };
-
-                // Fetch child bounty beneficiary identity
-                let beneficiary_identity =
-                    fetch_display_name(&people_api.clone(), &beneficiary.clone(), None).await?;
-
-                let cb = ChildBounty {
-                    id,
-                    parent_id: storage.value.parent_bounty,
-                    description,
-                    value: storage.value.value,
-                    status: Status::Pending,
-                    beneficiary: beneficiary,
-                    beneficiary_identity,
-                    unlock_at,
-                };
-                out.insert(id, cb);
-
-                if out.len() % 2 == 0 {
-                    let _ = tx.send_now(Output::ChildBounties(out));
-                    out = ChildBounties::new();
-                }
+            ChildBountyStatus::PendingPayout { .. } => {
+                temp.insert(
+                    get_child_bounty_id_from_storage_key(storage.key_bytes),
+                    storage.value,
+                );
             }
             _ => continue,
         }
     }
+
+    // Fetch all child bounties descriptions
+    let address = node_runtime::storage()
+        .child_bounties()
+        .child_bounty_descriptions_iter();
+
+    let mut iter = api.storage().at_latest().await?.iter(address).await?;
+
+    while let Some(Ok(storage)) = iter.next().await {
+        let id = get_child_bounty_id_from_storage_key(storage.key_bytes);
+
+        if let Some(cb_storage) = temp.get(&id) {
+            match &cb_storage.status {
+                ChildBountyStatus::PendingPayout {
+                    curator: _,
+                    beneficiary,
+                    unlock_at,
+                } => {
+                    let BoundedVec(description) = storage.value;
+
+                    let cb = ChildBounty {
+                        id,
+                        parent_id: cb_storage.parent_bounty,
+                        description: str(description),
+                        value: cb_storage.value,
+                        status: Status::Pending,
+                        beneficiary: beneficiary.clone(),
+                        beneficiary_identity: None,
+                        unlock_at: *unlock_at,
+                    };
+                    out.insert(id, cb);
+                    if out.len() % 2 == 0 {
+                        let _ = tx.send_now(Output::ChildBounties(out));
+                        out = ChildBounties::new();
+                    }
+                }
+                _ => continue,
+            }
+        }
+    }
+
     // Send whatever is left or empty
     let _ = tx.send_now(Output::ChildBounties(out));
     //

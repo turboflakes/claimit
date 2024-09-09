@@ -1,3 +1,3 @@
-pub mod network_api;
+pub mod api;
 
-pub use network_api::Worker;
+pub use api::Worker;

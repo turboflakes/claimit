@@ -17,7 +17,7 @@ use claimit_common::types::{
     network::{NetworkState, NetworkStatus},
     worker::{Input as WorkerInput, Output as WorkerOutput},
 };
-use claimit_workers::network_api::Worker;
+use claimit_workers::api::Worker;
 use gloo::storage::{LocalStorage, Storage};
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
