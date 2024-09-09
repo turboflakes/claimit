@@ -2,11 +2,25 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
-        <title>Claimit by Turboflakes</title>
-        <meta name="description" content="A DApp to easy lookup and claim child bounties for Polkadot and Kusama network.">
+        <title>claim.it by Turboflakes</title>
+        <meta name="description" content="A DApp to easy lookup and claim child bounties for Polkadot and Kusama networks.">
+        <link rel="canonical" href="https://goclaimit.app/">
+        <!--  -->
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="claim.it">
+        <meta property="og:description" content="Easy lookup and claim child bounties on Polkadot and Kusama networks">
+        <meta property="og:url" content="https://goclaimit.app/">
+        <meta property="og:site_name" content="claim.it">
+        <meta property="og:image" content="https://github.com/turboflakes/claimit/blob/main/gh_header.png?raw=true">
+        <meta property="og:image:width" content="1024">
+        <meta property="og:image:height" content="408">
+        <meta property="og:image:type" content="image/png">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="claim.it">
+        <meta name="twitter:description" content="Easy lookup and claim child bounties on Polkadot and Kusama networks">
+        <meta name="twitter:image" content="https://github.com/turboflakes/claimit/blob/main/gh_header.png?raw=true">
         <!-- plausible analytics -->
         <script defer="" data-domain="goclaimit.app" src="https://plausible.io/js/script.js"></script>
-        
         <!--  -->
         
         
@@ -14,13 +28,40 @@
         
         <!--  -->
         <link rel="stylesheet" href="/styles-13e01c990b2aa723.css">
-        <script type="module">import init from '/app-14b71de7e57edbed.js';init('/app-14b71de7e57edbed_bg.wasm');</script>
+        <script type="module">import init from '/app-a39f970695adcad4.js';init('/app-a39f970695adcad4_bg.wasm');</script>
         
         <script defer="" src="/index-1f179ee9f13d67a7.js"></script>
     
-<link rel="preload" href="/app-14b71de7e57edbed_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/app-14b71de7e57edbed.js"></head>
+<link rel="preload" href="/app-a39f970695adcad4_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/app-a39f970695adcad4.js"></head>
     <body>
         
     
-</body></html>
+<script>(function () {
+    var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    var url = protocol + '//' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
