@@ -10,7 +10,7 @@ use yew::{function_component, html, use_context, Callback, Html, Properties};
 #[derive(PartialEq, Properties, Clone)]
 pub struct NavbarProps {
     pub runtime: SupportedRelayRuntime,
-    pub ontoggle_provider: Callback<()>,
+    pub ontoggle_provider: Callback<bool>,
 }
 
 #[function_component(Navbar)]

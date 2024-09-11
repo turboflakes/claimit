@@ -7,7 +7,6 @@ use crate::components::{
 };
 use crate::router::Query;
 use crate::state::{account_key, onboarded_key, signer_key, Action, State, StateContext};
-use claimit_common::runtimes::support::SupportedRelayRuntime;
 use claimit_common::types::{
     accounts::Account,
     child_bounties::Filter,
@@ -36,7 +35,9 @@ pub fn main() -> Html {
     let current_runtime = location
         .query::<Query>()
         .map(|q| q.chain)
-        .unwrap_or(SupportedRelayRuntime::Polkadot);
+        .unwrap_or_default();
+
+    let use_rpc_connection = location.query::<Query>().map(|q| q.rpc).unwrap_or_default();
 
     let state = use_reducer(|| {
         let accounts: Vec<Account> =
@@ -61,7 +62,7 @@ pub fn main() -> Html {
 
         State {
             accounts,
-            network: NetworkState::new(current_runtime.clone(), true),
+            network: NetworkState::new(current_runtime.clone(), !use_rpc_connection),
             child_bounties_raw: None,
             filter,
             extension: ExtensionState::new(signer.clone()),
@@ -197,13 +198,13 @@ pub fn main() -> Html {
 
     let ontoggle_provider = use_callback(
         (state.clone(), worker_api_bridge.clone()),
-        |_, (state, worker_api_bridge)| {
+        |use_light_client, (state, worker_api_bridge)| {
             worker_api_bridge.send(WorkerInput::Finish);
             worker_api_bridge.reset();
             // Note: Reset network toggle current provider
             state.dispatch(Action::ResetNetwork(
                 state.network.runtime.clone(),
-                !state.network.use_light_client_as_network_provider,
+                use_light_client,
             ));
         },
     );

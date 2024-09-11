@@ -39,7 +39,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "wss://sys.ibp.network:443/people-polkadot",
             Self::Kusama => "wss://sys.ibp.network:443/people-kusama",
-            Self::Rococo => "wss://rococo-people-rpc.polkadot.io:443",
+            Self::Rococo => "wss://sys.ibp.network:443/people-kusama",
         }
     }
 
@@ -77,6 +77,12 @@ impl SupportedRelayRuntime {
 
     pub fn class(&self) -> String {
         self.to_string().to_lowercase()
+    }
+}
+
+impl Default for SupportedRelayRuntime {
+    fn default() -> Self {
+        SupportedRelayRuntime::Polkadot
     }
 }
 

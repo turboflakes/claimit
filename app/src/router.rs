@@ -16,7 +16,19 @@ pub enum Routes {
 
 #[derive(Serialize, Deserialize)]
 pub struct Query {
+    /// Specifies to which network [Polkadot, Kusama, Rococo] the api will try to connect to
     pub chain: SupportedRelayRuntime,
+    // Flag to allow RPC connection to be used by default when launching the app
+    pub rpc: bool,
+}
+
+impl Default for Query {
+    fn default() -> Self {
+        Self {
+            chain: SupportedRelayRuntime::Polkadot,
+            rpc: false,
+        }
+    }
 }
 
 #[function_component(Index)]
