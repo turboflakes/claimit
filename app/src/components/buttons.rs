@@ -92,13 +92,13 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
     let selected = props.selected.clone();
     let navigator = use_navigator().unwrap();
     let location = use_location().unwrap();
-    let rpc_param = location.query::<Query>().map(|q| q.rpc).unwrap_or_default();
+    let light_client_param = location.query::<Query>().map(|q| q.lc).unwrap_or_default();
 
     let onclick = props.onchange.reform({
-        let rpc = rpc_param.clone();
+        let lc = light_client_param.clone();
         move |chain| {
             navigator
-                .push_with_query(&Routes::Index, &Query { chain, rpc })
+                .push_with_query(&Routes::Index, &Query { chain, lc })
                 .unwrap();
             chain
         }
@@ -148,16 +148,16 @@ pub fn network_provider_icon_button(props: &NetworkProviderIconButtonProps) -> H
         .query::<Query>()
         .map(|q| q.chain)
         .unwrap_or_default();
-    let rpc_param = location.query::<Query>().map(|q| q.rpc).unwrap_or_default();
+    let light_client_param = location.query::<Query>().map(|q| q.lc).unwrap_or(true);
 
     let onclick = props.onclick.reform({
         let chain = chain_param.clone();
-        let rpc = rpc_param.clone();
+        let lc = !light_client_param;
         move |_| {
             navigator
-                .push_with_query(&Routes::Index, &Query { chain, rpc: !rpc })
+                .push_with_query(&Routes::Index, &Query { chain, lc })
                 .unwrap();
-            rpc
+            lc
         }
     });
 

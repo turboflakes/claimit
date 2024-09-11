@@ -37,7 +37,7 @@ pub fn main() -> Html {
         .map(|q| q.chain)
         .unwrap_or_default();
 
-    let use_rpc_connection = location.query::<Query>().map(|q| q.rpc).unwrap_or_default();
+    let use_light_client = location.query::<Query>().map(|q| q.lc).unwrap_or(true);
 
     let state = use_reducer(|| {
         let accounts: Vec<Account> =
@@ -62,7 +62,7 @@ pub fn main() -> Html {
 
         State {
             accounts,
-            network: NetworkState::new(current_runtime.clone(), !use_rpc_connection),
+            network: NetworkState::new(current_runtime.clone(), use_light_client),
             child_bounties_raw: None,
             filter,
             extension: ExtensionState::new(signer.clone()),

@@ -18,17 +18,8 @@ pub enum Routes {
 pub struct Query {
     /// Specifies to which network [Polkadot, Kusama, Rococo] the api will try to connect to
     pub chain: SupportedRelayRuntime,
-    // Flag to allow RPC connection to be used by default when launching the app
-    pub rpc: bool,
-}
-
-impl Default for Query {
-    fn default() -> Self {
-        Self {
-            chain: SupportedRelayRuntime::Polkadot,
-            rpc: false,
-        }
-    }
+    // Flag to allow light client connection to be used as default or not when launching the app
+    pub lc: bool,
 }
 
 #[function_component(Index)]
