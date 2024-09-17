@@ -55,11 +55,35 @@ impl ExtensionState {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Extension {
+    /// wallet name
+    pub name: String,
+    /// version of the browser extension
+    pub version: String,
+}
+
+impl Extension {
+    pub fn is_pjs(&self) -> bool {
+        self.name == "polkadot-js".to_string()
+    }
+
+    pub fn is_subwallet(&self) -> bool {
+        self.name == "subwallet-js".to_string()
+    }
+}
+
+impl std::fmt::Display for Extension {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ExtensionAccount {
     /// account name
     pub name: String,
     /// name of the browser extension
-    pub source: String,
+    pub source: Extension,
     /// the signature type, e.g. "sr25519" or "ed25519"
     pub r#type: String,
     /// ss58 formatted address as string.
@@ -73,16 +97,14 @@ impl ExtensionAccount {
             _ => String::new(),
         }
     }
-
-    pub fn is_pjs(&self) -> bool {
-        self.source == "polkadot-js".to_string()
-    }
 }
 
 #[wasm_bindgen]
 extern "C" {
+    #[wasm_bindgen(js_name = getExtensions)]
+    pub fn js_get_extensions() -> Promise;
     #[wasm_bindgen(js_name = getAccounts)]
-    pub fn js_get_accounts() -> Promise;
+    pub fn js_get_accounts(source: String) -> Promise;
     #[wasm_bindgen(js_name = signPayload)]
     pub fn js_sign_payload(payload: String, source: String, address: String) -> Promise;
 }
@@ -95,8 +117,20 @@ fn encode_then_hex<E: Encode>(input: &E) -> String {
     format!("0x{}", hex::encode(input.encode()))
 }
 
-pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
-    let result = JsFuture::from(js_get_accounts())
+pub async fn get_extensions() -> Result<Vec<Extension>, anyhow::Error> {
+    let result = JsFuture::from(js_get_extensions())
+        .await
+        .map_err(|js_err| anyhow!("{js_err:?}"))?;
+    let extensions_str = result
+        .as_string()
+        .ok_or(anyhow!("Error converting JsValue into String"))?;
+    let extensions: Vec<Extension> = serde_json::from_str(&extensions_str)?;
+
+    Ok(extensions)
+}
+
+pub async fn get_accounts(source: String) -> Result<Vec<ExtensionAccount>, anyhow::Error> {
+    let result = JsFuture::from(js_get_accounts(source))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
     let accounts_str = result
@@ -104,11 +138,7 @@ pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
         .ok_or(anyhow!("Error converting JsValue into String"))?;
     let accounts: Vec<ExtensionAccount> = serde_json::from_str(&accounts_str)?;
 
-    // TODO: Signing is currently only available for polkadot-js extension, further testing is needed for other wallets
-    Ok(accounts
-        .into_iter()
-        .filter(|account| account.is_pjs())
-        .collect())
+    Ok(accounts)
 }
 
 /// Create payload as string to be signed via a browser extension (NOTE: currently only supports polkadot-js)

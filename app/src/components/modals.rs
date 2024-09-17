@@ -18,6 +18,8 @@ use yew::{
 pub fn claim_modal() -> Html {
     let is_visible = use_state(|| false);
     let err = use_state(|| "".to_string());
+    let extensions_supported = use_state(|| Vec::<Extension>::new());
+    let extensions_available = use_state(|| Vec::<Extension>::new());
     let extension_accounts = use_state(|| Vec::<ExtensionAccount>::new());
     let state = use_context::<StateContext>().unwrap();
     let extension = state.extension.clone();
@@ -44,7 +46,7 @@ pub fn claim_modal() -> Html {
                             spawn_local(async move {
                                 match collect_signature(
                                     payload.clone(),
-                                    signer.source.clone(),
+                                    signer.source.to_string(),
                                     signer.address.clone(),
                                 )
                                 .await
@@ -80,7 +82,7 @@ pub fn claim_modal() -> Html {
         move |extension| match extension.status {
             ExtensionStatus::Connecting => {
                 spawn_local(async move {
-                    match get_accounts().await {
+                    match get_accounts(source: String).await {
                         Ok(accounts) => {
                             if accounts.len() > 0 {
                                 extension_accounts.set(accounts);

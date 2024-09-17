@@ -24,20 +24,39 @@ let getPolkadotJsExtensionMod = (() => {
 })();
 
 /**
+ *  Queries wallets from browser extensions like Talisman and the Polkadot.js extension.
+ *
+ *  @returns a json string that contains all the wallets installed.
+ */
+async function getExtensions() {
+    const extensionMod = await getPolkadotJsExtensionMod();
+    const extensions = await extensionMod.web3Enable(window.location.host);
+    console.log(extensions);
+    const extensionObjects = extensions.map((ext) => ({
+        name: ext.name, // e.g. "talisman", "polkadot-js", "subwallet-js"
+        version: ext.version, // e.g. "talisman", "polkadot-js", "subwallet-js"
+    }));
+    return JSON.stringify(extensionObjects);
+}
+
+/**
  *  Queries wallets from browser extensions like Talisman and the Polkadot.js extension for user accounts.
  *
  *  @returns a json string that contains all the accounts that were found.
  */
-async function getAccounts() {
+async function getAccounts(source) {
+
     const extensionMod = await getPolkadotJsExtensionMod();
-    const extensions = await extensionMod.web3Enable("goclaimit.app");
+    const extensions = await extensionMod.web3Enable(window.location.host);
+    console.log(extensions);
+
     const allAccounts = await extensionMod.web3Accounts();
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
-        source: account.meta.source, // e.g. "talisman", "polkadot-js"
+        source: account.meta.source, // e.g. "talisman", "polkadot-js", "subwallet-js"
         type: account.type, // e.g. "sr25519"
         address: account.address // e.g. "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-    }));
+    })).filter((account) => account.source === source);
     console.log(accountObjects);
     return JSON.stringify(accountObjects);
 }
