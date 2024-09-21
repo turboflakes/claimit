@@ -18,7 +18,7 @@ pub enum ExtensionStatus {
     /// An extension instance has been been created
     Initialized,
     /// The extension is being connected
-    Connecting,
+    Connecting(String),
     /// The extension is available, connected and accounts enabled
     Connected,
     /// The signer account is available in the connected extension
@@ -55,6 +55,53 @@ impl ExtensionState {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Extension {
+    /// wallet name
+    pub name: String,
+    /// wallet description
+    pub description: String,
+    /// version of the browser extension
+    pub installed: bool,
+}
+
+impl Extension {
+    pub fn with_name(name: String, description: String) -> Self {
+        Self {
+            name,
+            description,
+            installed: false,
+        }
+    }
+}
+
+impl std::fmt::Display for Extension {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+pub fn extensions_supported() -> Vec<Extension> {
+    let mut out = Vec::new();
+    out.push(Extension::with_name(
+        "polkadot-js".to_string(),
+        "Polkadot JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "talisman".to_string(),
+        "Talisman JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "subwallet-js".to_string(),
+        "Subwallet JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "polkagate".to_string(),
+        "Polkagate JS".to_string(),
+    ));
+    out
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ExtensionAccount {
     /// account name
     pub name: String,
@@ -73,16 +120,14 @@ impl ExtensionAccount {
             _ => String::new(),
         }
     }
-
-    pub fn is_pjs(&self) -> bool {
-        self.source == "polkadot-js".to_string()
-    }
 }
 
 #[wasm_bindgen]
 extern "C" {
+    #[wasm_bindgen(js_name = getExtensionsInstalled)]
+    pub fn js_get_extensions_installed() -> Promise;
     #[wasm_bindgen(js_name = getAccounts)]
-    pub fn js_get_accounts() -> Promise;
+    pub fn js_get_accounts(source: String) -> Promise;
     #[wasm_bindgen(js_name = signPayload)]
     pub fn js_sign_payload(payload: String, source: String, address: String) -> Promise;
 }
@@ -95,8 +140,27 @@ fn encode_then_hex<E: Encode>(input: &E) -> String {
     format!("0x{}", hex::encode(input.encode()))
 }
 
-pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
-    let result = JsFuture::from(js_get_accounts())
+pub async fn get_extensions() -> Result<Vec<Extension>, anyhow::Error> {
+    let result = JsFuture::from(js_get_extensions_installed())
+        .await
+        .map_err(|js_err| anyhow!("{js_err:?}"))?;
+    let extensions_installed_str = result
+        .as_string()
+        .ok_or(anyhow!("Error converting JsValue into String"))?;
+    let installed: Vec<String> = serde_json::from_str(&extensions_installed_str)?;
+
+    let mut extensions = extensions_supported();
+    extensions.iter_mut().for_each(|ext| {
+        if installed.contains(&ext.name) {
+            ext.installed = true;
+        }
+    });
+
+    Ok(extensions)
+}
+
+pub async fn get_accounts(source: String) -> Result<Vec<ExtensionAccount>, anyhow::Error> {
+    let result = JsFuture::from(js_get_accounts(source))
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
     let accounts_str = result
@@ -104,11 +168,7 @@ pub async fn get_accounts() -> Result<Vec<ExtensionAccount>, anyhow::Error> {
         .ok_or(anyhow!("Error converting JsValue into String"))?;
     let accounts: Vec<ExtensionAccount> = serde_json::from_str(&accounts_str)?;
 
-    // TODO: Signing is currently only available for polkadot-js extension, further testing is needed for other wallets
-    Ok(accounts
-        .into_iter()
-        .filter(|account| account.is_pjs())
-        .collect())
+    Ok(accounts)
 }
 
 /// Create payload as string to be signed via a browser extension (NOTE: currently only supports polkadot-js)

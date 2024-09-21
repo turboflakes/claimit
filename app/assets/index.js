@@ -24,23 +24,53 @@ let getPolkadotJsExtensionMod = (() => {
 })();
 
 /**
+ *  Queries wallets installed from browser.
+ *
+ *  @returns a json string that contains all the wallets installed.
+ */
+let getExtensions = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const { injectedWeb3 } = window;
+            if (injectedWeb3 !== null) {
+                const extensionObjects = Object.keys(injectedWeb3).map((key) => key);
+                resolve(extensionObjects);
+            } else {
+                reject({error: "Something wrong happened, couldn't obtain wallets installed from browser!"});
+            }
+        }, 1000 );
+    });
+};
+
+/**
+ *  Queries wallets installed from browser.
+ *
+ *  @returns a json string that contains all the wallets installed.
+ */
+async function getExtensionsInstalled() {
+    const extensions = await getExtensions();
+    return JSON.stringify(extensions)
+}
+
+/**
  *  Queries wallets from browser extensions like Talisman and the Polkadot.js extension for user accounts.
  *
  *  @returns a json string that contains all the accounts that were found.
  */
-async function getAccounts() {
+async function getAccounts(source) {
     const extensionMod = await getPolkadotJsExtensionMod();
-    const extensions = await extensionMod.web3Enable("goclaimit.app");
+    const _ = await extensionMod.web3Enable(window.location.host);
     const allAccounts = await extensionMod.web3Accounts();
+    console.log(allAccounts);
     const accountObjects = allAccounts.map((account) => ({
         name: account.meta.name, // e.g. "Alice"
-        source: account.meta.source, // e.g. "talisman", "polkadot-js"
+        source: account.meta.source, // e.g. "talisman", "polkadot-js", "subwallet-js"
         type: account.type, // e.g. "sr25519"
         address: account.address // e.g. "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-    }));
-    console.log(accountObjects);
+    })).filter((account) => account.source === source);
     return JSON.stringify(accountObjects);
 }
+
 
 /**
  * Signs a payload via browser extension

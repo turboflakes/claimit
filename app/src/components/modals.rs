@@ -1,26 +1,53 @@
 use crate::components::{
-    buttons::{Button, SignButton},
+    buttons::{ExtensionButton, SignButton},
     inputs::AccountInput,
     items::{ChildBountyItemSmall, ExtensionAccountDropdown},
 };
 use crate::state::{Action, StateContext};
 use claimit_common::types::{
     claims::ClaimStatus,
-    extensions::{collect_signature, get_accounts, ExtensionAccount, ExtensionStatus},
+    extensions::{
+        collect_signature, get_accounts, get_extensions, Extension, ExtensionAccount,
+        ExtensionStatus,
+    },
 };
-use log::error;
+use log::{error, warn};
 use yew::{
     classes, function_component, html, platform::spawn_local, use_context, use_effect_with,
-    use_state, Callback, Html,
+    use_state, AttrValue, Callback, Html,
 };
 
 #[function_component(ClaimModal)]
 pub fn claim_modal() -> Html {
     let is_visible = use_state(|| false);
     let err = use_state(|| "".to_string());
+    let extensions_supported = use_state(|| Vec::<Extension>::new());
     let extension_accounts = use_state(|| Vec::<ExtensionAccount>::new());
     let state = use_context::<StateContext>().unwrap();
     let extension = state.extension.clone();
+
+    // Load browser extensions installed on mount;
+    use_effect_with((), {
+        let extensions_supported = extensions_supported.clone();
+        let err = err.clone();
+        move |_| {
+            spawn_local(async move {
+                match get_extensions().await {
+                    Ok(extensions) => {
+                        if extensions.len() > 0 {
+                            extensions_supported.set(extensions);
+                        } else {
+                            warn!("No wallets could be verified from browser!")
+                        }
+                    }
+                    Err(e) => {
+                        error!("error: {:?}", e);
+                        err.set(e.to_string());
+                    }
+                }
+            });
+        }
+    });
 
     use_effect_with(state.claim.clone(), {
         let is_visible = is_visible.clone();
@@ -33,9 +60,9 @@ pub fn claim_modal() -> Html {
                 match claim.status {
                     ClaimStatus::Initializing => {
                         is_visible.set(true);
-                        if extension.signer.is_some() {
-                            state.dispatch(Action::ConnectExtension);
-                        }
+                        // if extension.signer.is_some() {
+                        //     state.dispatch(Action::ConnectExtension);
+                        // }
                     }
                     ClaimStatus::Signing(payload) => {
                         if extension.is_ready() {
@@ -44,7 +71,7 @@ pub fn claim_modal() -> Html {
                             spawn_local(async move {
                                 match collect_signature(
                                     payload.clone(),
-                                    signer.source.clone(),
+                                    signer.source.to_string(),
                                     signer.address.clone(),
                                 )
                                 .await
@@ -77,10 +104,11 @@ pub fn claim_modal() -> Html {
         let extension_accounts = extension_accounts.clone();
         let state = state.clone();
 
-        move |extension| match extension.status {
-            ExtensionStatus::Connecting => {
+        move |extension| match &extension.status {
+            ExtensionStatus::Connecting(source) => {
+                let source = source.clone();
                 spawn_local(async move {
-                    match get_accounts().await {
+                    match get_accounts(source).await {
                         Ok(accounts) => {
                             if accounts.len() > 0 {
                                 extension_accounts.set(accounts);
@@ -126,10 +154,10 @@ pub fn claim_modal() -> Html {
         })
     };
 
-    let onclick_polkadotjs = {
+    let onconnect = {
         let state = state.clone();
-        Callback::from(move |_| {
-            state.dispatch(Action::ConnectExtension);
+        Callback::from(move |ext: AttrValue| {
+            state.dispatch(Action::ConnectExtension(ext.to_string()));
         })
     };
 
@@ -176,11 +204,22 @@ pub fn claim_modal() -> Html {
                                 html! {
                                     <div>
                                         <h4 class="ms-2 mb-2 text-sm text-gray-600 dark:text-gray-100">{"Supported wallets"}</h4>
-                                        <div class="">
-                                            <Button label={"Polkadot JS"} class={classes!("btn__logo", "px-4")} onclick={&onclick_polkadotjs} >
-                                                <img class="h-6" src="/images/polkadot_js_logo.svg" alt="polkadot js extension" />
-                                            </Button>
-                                        </div>
+                                        { for extensions_supported.iter().cloned().filter(|ext| ext.installed).map(|ext|
+                                            html! {
+                                                <ExtensionButton name={ext.name.clone()} label={ext.description.clone()} class={classes!("btn__ext", "px-4", "me-2")}
+                                                    disabled={!ext.installed} onclick={&onconnect} >
+                                                    <img class="h-6" src={format!("/images/ext/{}.svg", ext.name)} alt={format!("{} extension", ext.description)} />
+                                                </ExtensionButton>
+                                            })
+                                        }
+                                        { for extensions_supported.iter().cloned().filter(|ext| !(ext.installed)).map(|ext|
+                                            html! {
+                                                <ExtensionButton name={ext.name.clone()} label={ext.description.clone()} class={classes!("btn__ext", "px-4", "me-2")}
+                                                    disabled={!ext.installed} onclick={&onconnect} >
+                                                    <img class="h-6" src={format!("/images/ext/{}.svg", ext.name)} alt={format!("{} extension", ext.description)} />
+                                                </ExtensionButton>
+                                            })
+                                        }
                                     </div>
                                 }
 
