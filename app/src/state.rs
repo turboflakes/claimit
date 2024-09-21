@@ -4,8 +4,7 @@ use claimit_common::types::{
     child_bounties::ChildBountyId,
     child_bounties::{ChildBounties, ChildBountiesIds, Filter},
     claims::{ClaimState, ClaimStatus},
-    extensions::ExtensionAccount,
-    extensions::{ExtensionState, ExtensionStatus},
+    extensions::{ExtensionAccount, ExtensionState, ExtensionStatus},
     layout::{BalanceMode, LayoutState},
     network::{NetworkState, NetworkStatus},
 };
@@ -52,7 +51,7 @@ pub enum Action {
     ResetClaim,
     // ErrorClaim(String),
     /// Extension actions
-    ConnectExtension,
+    ConnectExtension(String),
     ChangeExtensionStatus(ExtensionStatus),
     ChangeSigner(ExtensionAccount),
     /// Network actions
@@ -375,9 +374,9 @@ impl Reducible for State {
             //     }
             //     .into()
             // }
-            Action::ConnectExtension => {
+            Action::ConnectExtension(source) => {
                 let mut extension = self.extension.clone();
-                extension.status = ExtensionStatus::Connecting;
+                extension.status = ExtensionStatus::Connecting(source);
 
                 State {
                     accounts: self.accounts.clone(),

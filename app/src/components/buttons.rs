@@ -34,6 +34,31 @@ pub fn button(props: &ButtonProps) -> Html {
 }
 
 #[derive(Properties, PartialEq)]
+pub struct NetworkButtonProps {
+    pub chain: SupportedRelayRuntime,
+    #[prop_or_default]
+    pub class: Option<AttrValue>,
+    #[prop_or_default]
+    pub disabled: bool,
+    pub children: Children,
+    pub onclick: Callback<SupportedRelayRuntime>,
+}
+
+#[function_component(NetworkButton)]
+pub fn network_button(props: &NetworkButtonProps) -> Html {
+    let optional_class = props.class.clone();
+    let chain = props.chain.clone();
+
+    let onclick = props.onclick.reform(move |_| chain);
+
+    html! {
+        <button class={classes!("btn", "btn__link", optional_class)} {onclick} disabled={props.disabled.clone()}>
+            {props.children.clone()}
+        </button>
+    }
+}
+
+#[derive(Properties, PartialEq)]
 pub struct AnotherButtonProps {
     #[prop_or_default]
     pub disabled: bool,
@@ -56,26 +81,39 @@ pub fn another_button(props: &AnotherButtonProps) -> Html {
 }
 
 #[derive(Properties, PartialEq)]
-pub struct NetworkButtonProps {
-    pub chain: SupportedRelayRuntime,
+pub struct ExtensionButtonProps {
+    pub name: AttrValue,
     #[prop_or_default]
     pub class: Option<AttrValue>,
+    pub label: AttrValue,
     #[prop_or_default]
     pub disabled: bool,
     pub children: Children,
-    pub onclick: Callback<SupportedRelayRuntime>,
+    pub onclick: Callback<AttrValue>,
 }
 
-#[function_component(NetworkButton)]
-pub fn network_button(props: &NetworkButtonProps) -> Html {
+#[function_component(ExtensionButton)]
+pub fn extension_button(props: &ExtensionButtonProps) -> Html {
     let optional_class = props.class.clone();
-    let chain = props.chain.clone();
+    let name = props.name.clone();
 
-    let onclick = props.onclick.reform(move |_| chain);
+    let onclick = props.onclick.reform(move |_| name.clone());
 
     html! {
-        <button class={classes!("btn", "btn__link", optional_class)} {onclick} disabled={props.disabled.clone()}>
-            {props.children.clone()}
+        <button class={classes!("btn", optional_class)} {onclick} disabled={props.disabled.clone()}>
+            <span class="inline-flex items-center gap-2">
+                {props.children.clone()}
+                <div class="label">
+                    <span>{format!("{}", props.label.to_string())}</span>
+                    {
+                        if props.disabled {
+                            html! { <span class="text-gray-600 text-xs font-light">{"Not installed"}</span> }
+                        } else {
+                            html! {}
+                        }
+                    }
+                </div>
+            </span>
         </button>
     }
 }

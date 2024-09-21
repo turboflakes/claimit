@@ -18,7 +18,7 @@ pub enum ExtensionStatus {
     /// An extension instance has been been created
     Initialized,
     /// The extension is being connected
-    Connecting,
+    Connecting(String),
     /// The extension is available, connected and accounts enabled
     Connected,
     /// The signer account is available in the connected extension
@@ -58,17 +58,19 @@ impl ExtensionState {
 pub struct Extension {
     /// wallet name
     pub name: String,
+    /// wallet description
+    pub description: String,
     /// version of the browser extension
-    pub version: String,
+    pub installed: bool,
 }
 
 impl Extension {
-    pub fn is_pjs(&self) -> bool {
-        self.name == "polkadot-js".to_string()
-    }
-
-    pub fn is_subwallet(&self) -> bool {
-        self.name == "subwallet-js".to_string()
+    pub fn with_name(name: String, description: String) -> Self {
+        Self {
+            name,
+            description,
+            installed: false,
+        }
     }
 }
 
@@ -78,12 +80,33 @@ impl std::fmt::Display for Extension {
     }
 }
 
+pub fn extensions_supported() -> Vec<Extension> {
+    let mut out = Vec::new();
+    out.push(Extension::with_name(
+        "polkadot-js".to_string(),
+        "Polkadot JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "talisman".to_string(),
+        "Talisman JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "subwallet-js".to_string(),
+        "Subwallet JS".to_string(),
+    ));
+    out.push(Extension::with_name(
+        "polkagate".to_string(),
+        "Polkagate JS".to_string(),
+    ));
+    out
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ExtensionAccount {
     /// account name
     pub name: String,
     /// name of the browser extension
-    pub source: Extension,
+    pub source: String,
     /// the signature type, e.g. "sr25519" or "ed25519"
     pub r#type: String,
     /// ss58 formatted address as string.
@@ -101,8 +124,8 @@ impl ExtensionAccount {
 
 #[wasm_bindgen]
 extern "C" {
-    #[wasm_bindgen(js_name = getExtensions)]
-    pub fn js_get_extensions() -> Promise;
+    #[wasm_bindgen(js_name = getExtensionsInstalled)]
+    pub fn js_get_extensions_installed() -> Promise;
     #[wasm_bindgen(js_name = getAccounts)]
     pub fn js_get_accounts(source: String) -> Promise;
     #[wasm_bindgen(js_name = signPayload)]
@@ -118,13 +141,20 @@ fn encode_then_hex<E: Encode>(input: &E) -> String {
 }
 
 pub async fn get_extensions() -> Result<Vec<Extension>, anyhow::Error> {
-    let result = JsFuture::from(js_get_extensions())
+    let result = JsFuture::from(js_get_extensions_installed())
         .await
         .map_err(|js_err| anyhow!("{js_err:?}"))?;
-    let extensions_str = result
+    let extensions_installed_str = result
         .as_string()
         .ok_or(anyhow!("Error converting JsValue into String"))?;
-    let extensions: Vec<Extension> = serde_json::from_str(&extensions_str)?;
+    let installed: Vec<String> = serde_json::from_str(&extensions_installed_str)?;
+
+    let mut extensions = extensions_supported();
+    extensions.iter_mut().for_each(|ext| {
+        if installed.contains(&ext.name) {
+            ext.installed = true;
+        }
+    });
 
     Ok(extensions)
 }

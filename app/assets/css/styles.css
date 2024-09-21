@@ -2244,12 +2244,66 @@ hr:where(.dark, .dark *) {
   color: hsl(210 11% 15% / var(--tw-text-opacity));
 }
 
+.btn.btn__logo:disabled {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 16% 93% / var(--tw-bg-opacity));
+}
+
 .btn.btn__logo:where(.dark, .dark *) {
   --tw-text-opacity: 1;
   color: hsl(210 14% 83% / var(--tw-text-opacity));
 }
 
 .btn.btn__logo:enabled:hover:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.btn.btn__ext {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn.btn__ext > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.btn.btn__ext {
+  border-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 17% 98% / var(--tw-bg-opacity));
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  --tw-text-opacity: 1;
+  color: hsl(210 11% 71% / var(--tw-text-opacity));
+}
+
+.btn.btn__ext:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  box-shadow:
+            hsl(210, 14%, 83%) 0px 0px 0px 2px;
+}
+
+.btn.btn__ext:enabled:hover {
+  --tw-text-opacity: 1;
+  color: hsl(210 11% 15% / var(--tw-text-opacity));
+}
+
+.btn.btn__ext:disabled {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 16% 93% / var(--tw-bg-opacity));
+  box-shadow: none;
+}
+
+.btn.btn__ext:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: hsl(210 14% 83% / var(--tw-text-opacity));
+}
+
+.btn.btn__ext:enabled:hover:where(.dark, .dark *) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
@@ -2834,6 +2888,13 @@ hr:where(.dark, .dark *) {
   color: hsl(346 84% 61% / var(--tw-text-opacity));
 }
 
+.label {
+  display: flex;
+  flex-direction: column;
+  --tw-text-opacity: 1;
+  color: hsl(208 7% 46% / var(--tw-text-opacity));
+}
+
 .hover\:cursor-copy:hover {
   cursor: copy;
 }
@@ -2947,6 +3008,11 @@ hr:where(.dark, .dark *) {
 
 .hover\:enabled\:underline-offset-2:enabled:hover {
   text-underline-offset: 2px;
+}
+
+.disabled\:bg-gray-200:disabled {
+  --tw-bg-opacity: 1;
+  background-color: hsl(210 16% 93% / var(--tw-bg-opacity));
 }
 
 .disabled\:bg-gray-300:disabled {
