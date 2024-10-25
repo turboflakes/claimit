@@ -65,6 +65,10 @@ hr {
     @apply text-gray-800 hover:bg-gray-200 focus:ring-0 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }
 
+.btn.btn__icon.btn__white.selected {
+    @apply !bg-gray-300;
+}
+
 .btn.btn__icon_sm {
     @apply text-white hover:bg-gray-200 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-full text-sm p-1.5 text-center inline-flex items-center dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-500;
 }

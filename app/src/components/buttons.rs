@@ -519,3 +519,49 @@ pub fn polkassembly_icon_link(props: &PolkassemblyIconLinkProps) -> Html {
         </a>
     }
 }
+
+#[derive(PartialEq, Properties, Clone)]
+pub struct BountyIdToggleProps {
+    #[prop_or_default]
+    pub class: AttrValue,
+    pub id: u32,
+    #[prop_or_default]
+    pub selected: bool,
+    pub onclick: Callback<u32>,
+}
+
+#[function_component(BountyIdToggle)]
+pub fn bounty_id(props: &BountyIdToggleProps) -> Html {
+    let id = props.id.clone();
+    let onclick = props.onclick.reform(move |_| id);
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__white", props.selected.then(|| Some("selected")), props.class.clone())} {onclick}>
+            <div class="inline-flex items-center">
+                <span class="text-xs w-4 h-4">{props.id.clone()}</span>
+            </div>
+        </button>
+    }
+}
+
+#[derive(PartialEq, Properties, Clone)]
+pub struct BountyAllToggleProps {
+    #[prop_or_default]
+    pub class: AttrValue,
+    #[prop_or_default]
+    pub selected: bool,
+    pub onclick: Callback<()>,
+}
+
+#[function_component(BountyAllToggle)]
+pub fn bounty_all(props: &BountyAllToggleProps) -> Html {
+    let onclick = props.onclick.reform(move |_| ());
+
+    html! {
+        <button class={classes!("btn", "btn__icon", "btn__white", props.selected.then(|| Some("selected")), props.class.clone())} {onclick}>
+            <div class="inline-flex items-center">
+                <span class="text-xs w-20 h-4 ">{"All Bounties"}</span>
+            </div>
+        </button>
+    }
+}
