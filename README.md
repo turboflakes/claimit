@@ -12,7 +12,7 @@
 - [&check;] Light client first with optional switch to an RPC connection (default to IBP provider);
 - [&check;] Mobile first support;
 - [&check;] Onboard view in three steps for first time users;
-- [&check;] Synchronize all on chain child bounties and filter by description;
+- [&check;] Synchronize all on chain child bounties and filter by bounty ID or child bounty description;
 - [&check;] Add any beneficiary account;
 - [&check;] Switch view betweeen Total balance, Total awarded, Total Pending, Total claimable;
 - [&check;] External links to Subsquare or Polkassembly child bounty;
