@@ -23,15 +23,15 @@ description = "Claimit ― A dApp to easy lookup and claim child bounties for Po
 edition = "2021"
 
 [workspace.dependencies]
-wasm-bindgen = "0.2.92"
-wasm-bindgen-futures = "0.4.39"
+wasm-bindgen = "0.2.93"
+wasm-bindgen-futures = "0.4.43"
 wasm-logger = "0.2.0"
 yew = { version = "0.21", features = ["csr"] }
 yew-router = "0.18"
 yew-hooks = "0.3.2"
 yew-agent = "0.3.0"
-subxt = { git = "https://github.com/turboflakes/subxt.git", branch = "upgrade-smoldot-dependencies", default-features = false, features = ["unstable-light-client", "jsonrpsee", "web"], target_arch = "wasm32" }
-futures = "0.3.28"
+subxt = { version = "0.38.0", default-features = false, features = ["unstable-light-client", "jsonrpsee", "web"], target_arch = "wasm32" }
+futures = "0.3.31"
 anyhow = "1.0.71"
 strum = "0.17.1"
 strum_macros = "0.17.1"

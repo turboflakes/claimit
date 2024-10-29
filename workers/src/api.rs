@@ -15,7 +15,7 @@ use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::{error, warn};
 use subxt::{
-    backend::unstable::UnstableBackend, lightclient::LightClient, utils::AccountId32, OnlineClient,
+    backend::chain_head::{ChainHeadBackend, ChainHeadBackendBuilder}, lightclient::LightClient, utils::AccountId32, OnlineClient,
     PolkadotConfig,
 };
 use yew::platform::{
@@ -107,22 +107,26 @@ pub async fn create_api_clients(
             .expect("expect valid smoldot connection");
 
         // NOTE: The latest RPC specs are implemented via UnstableBackend in Subxt which is the preferred way to connect to smoldot v0.18
-        let (unstable_backend, mut driver) = UnstableBackend::builder().build(rpc);
+        // let (unstable_backend, mut driver) = ChainHeadBackend::builder().build(rpc);
+        
+        // // Unstable backend needs manually driving at the moment see here:
+        // // https://github.com/paritytech/subxt/issues/1453#issuecomment-2011922808
+        // spawn_local(async move {
+        //     while let Some(val) = driver.next().await {
+        //         if let Err(e) = val {
+        //             // Something went wrong driving unstable backend.
+        //             error!("error driving unstable backend: {:?}", e);
+        //             break;
+        //         }
+        //     }
+        // });
 
-        // Unstable backend needs manually driving at the moment see here:
-        // https://github.com/paritytech/subxt/issues/1453#issuecomment-2011922808
-        spawn_local(async move {
-            while let Some(val) = driver.next().await {
-                if let Err(e) = val {
-                    // Something went wrong driving unstable backend.
-                    error!("error driving unstable backend: {:?}", e);
-                    break;
-                }
-            }
-        });
-
+        // https://github.com/paritytech/subxt/blob/master/subxt/examples/setup_rpc_chainhead_backend.rs
+        let backend: ChainHeadBackend<PolkadotConfig> =
+            ChainHeadBackendBuilder::default().build_with_background_driver(rpc.clone());
+        
         // Create client from unstable backend (ie using new RPCs).
-        let relay_api = Client::from_backend(unstable_backend.into())
+        let relay_api = Client::from_backend(backend.into())
             .await
             .expect("expect valid RPC connection");
 
