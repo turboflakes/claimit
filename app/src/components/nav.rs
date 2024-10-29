@@ -126,7 +126,7 @@ pub fn footer(props: &FooterProps) -> Html {
                         </a>
                     </span>
                 </div>
-                
+
                 <div class="flex items-center justify-center 2xl:justify-end sm:mt-0">
                     <NetworkSubscriber selected={props.runtime.clone()} disabled={state.network.is_initializing()} {onchange} />
                 </div>

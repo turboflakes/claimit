@@ -9,7 +9,9 @@ use claimit_common::runtimes::utils::amount_human;
 use claimit_common::types::child_bounties::Filter;
 use std::collections::BTreeSet;
 use strum::IntoEnumIterator;
-use yew::{function_component, html, use_context, use_state, Callback, Html, UseStateHandle, Properties};
+use yew::{
+    function_component, html, use_context, use_state, Callback, Html, Properties, UseStateHandle,
+};
 
 #[function_component(ChildBountiesCard)]
 pub fn child_bounties_card() -> Html {
@@ -58,7 +60,6 @@ pub fn child_bounties_card() -> Html {
             </div>
         }
     } else if let Some(child_bounties_raw) = &state.child_bounties_raw {
-
         let mut all_bounties = child_bounties_raw
             .into_iter()
             .map(|(_, cb)| cb.parent_id)
@@ -106,7 +107,11 @@ pub fn child_bounties_title(props: &ChildBountiesTitleProps) -> Html {
     if let Some(child_bounties_raw) = &state.child_bounties_raw {
         let child_bounties_total = child_bounties_raw
             .into_iter()
-            .filter(|(_, cb)| state.filter.check(cb) && (props.bounties_filter.len() == 0 || props.bounties_filter.contains(&cb.parent_id)))
+            .filter(|(_, cb)| {
+                state.filter.check(cb)
+                    && (props.bounties_filter.len() == 0
+                        || props.bounties_filter.contains(&cb.parent_id))
+            })
             .count();
 
         if child_bounties_total > 0 {
