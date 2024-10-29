@@ -9,8 +9,8 @@ use claimit_kusama::kusama;
 use claimit_kusama_people::kusama_people;
 use claimit_polkadot::polkadot;
 use claimit_polkadot_people::polkadot_people;
-use claimit_rococo::rococo;
-use claimit_rococo_people::rococo_people;
+use claimit_paseo::paseo;
+use claimit_paseo_people::paseo_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::{error, warn};
@@ -198,7 +198,7 @@ pub fn fetch_child_bounties(
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => polkadot::fetch_child_bounties(&api, tx).await,
             SupportedRelayRuntime::Kusama => kusama::fetch_child_bounties(&api, tx).await,
-            SupportedRelayRuntime::Rococo => rococo::fetch_child_bounties(&api, tx).await,
+            SupportedRelayRuntime::Paseo => paseo::fetch_child_bounties(&api, tx).await,
         };
         match response {
             Err(e) => {
@@ -226,8 +226,8 @@ pub fn fetch_account_balance(
             SupportedRelayRuntime::Kusama => {
                 kusama::fetch_account_balance(&api, account_id.clone()).await
             }
-            SupportedRelayRuntime::Rococo => {
-                rococo::fetch_account_balance(&api, account_id.clone()).await
+            SupportedRelayRuntime::Paseo => {
+                paseo::fetch_account_balance(&api, account_id.clone()).await
             }
         };
         match response {
@@ -258,8 +258,8 @@ pub fn fetch_account_identity(
             SupportedRelayRuntime::Kusama => {
                 kusama_people::fetch_display_name(&api, &account_id, None).await
             }
-            SupportedRelayRuntime::Rococo => {
-                rococo_people::fetch_display_name(&api, &account_id, None).await
+            SupportedRelayRuntime::Paseo => {
+                paseo_people::fetch_display_name(&api, &account_id, None).await
             }
         };
         match response {
@@ -298,8 +298,8 @@ pub fn create_payload_tx(
                 kusama::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
                     .await
             }
-            SupportedRelayRuntime::Rococo => {
-                rococo::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
+            SupportedRelayRuntime::Paseo => {
+                paseo::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
                     .await
             }
         };
@@ -346,8 +346,8 @@ pub fn sign_and_submit_tx(
                 )
                 .await
             }
-            SupportedRelayRuntime::Rococo => {
-                rococo::sign_and_submit_tx(
+            SupportedRelayRuntime::Paseo => {
+                paseo::sign_and_submit_tx(
                     &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),

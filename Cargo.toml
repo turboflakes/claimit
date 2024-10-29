@@ -7,8 +7,8 @@ members = [
     "kusama_people",
     "polkadot",
     "polkadot_people",
-    "rococo",
-    "rococo_people"
+    "paseo",
+    "paseo_people"
 ]
 
 resolver = "2"
