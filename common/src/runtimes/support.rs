@@ -12,6 +12,7 @@ pub const ROCOCO_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo.j
 pub const ROCOCO_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo_people.json");
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum SupportedRelayRuntime {
     Polkadot,
     Kusama,
