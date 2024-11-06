@@ -161,9 +161,9 @@ pub fn account_item(props: &AccountItemProps) -> Html {
                                     <p class="ms-2 text-xl font-semibold">{props.runtime.unit()}</p>
                                 </div>
                             },
-                            SupportedRelayRuntime::Rococo => html! {
+                            SupportedRelayRuntime::Paseo => html! {
                                 <div class="inline-flex items-center">
-                                    <img class="h-12" src="/images/rococo_icon.svg" alt="rococo logo" />
+                                    <img class="h-12" src="/images/paseo_icon.svg" alt="paseo logo" />
                                     <p class="ms-2 text-xl font-semibold">{props.runtime.unit()}</p>
                                 </div>
                             },

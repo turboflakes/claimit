@@ -16,7 +16,7 @@ pub enum Routes {
 
 #[derive(Serialize, Deserialize)]
 pub struct Query {
-    /// Specifies to which network [Polkadot, Kusama, Rococo] the api will try to connect to
+    /// Specifies to which network [polkadot, kusama, paseo] the api will try to connect to
     pub chain: SupportedRelayRuntime,
     // Flag to allow light client connection to be used as default or not when launching the app
     pub lc: bool,
