@@ -106,6 +106,24 @@ pub async fn fetch_child_bounties(
         }
     }
 
+    // ************************************************************************************************
+    // NOTE: Mock data so we can test in case Paseo does not have any child bounties pending payout
+    // ************************************************************************************************
+    let cb = ChildBounty {
+        id: 1,
+        parent_id: 1,
+        description: "Mock description 1".to_string(),
+        value: 100000000000,
+        status: Status::Pending,
+        beneficiary: AccountId32::from_str("5HpwUjPDgg4YUzVcSjUaLXipVc4tSKofMvwiLLVbSFkjTQdu").unwrap(),
+        beneficiary_identity: None,
+        unlock_at: 100,
+    };
+    out.insert(1, cb);
+    // ************************************************************************************************
+    // END OF MOCK DATA
+    // ************************************************************************************************
+
     // Send whatever is left or empty
     let _ = tx.send_now(Output::ChildBounties(out));
     //
@@ -145,6 +163,7 @@ pub async fn create_payload_tx(
             parent_bounty_id,
             child_bounty_id,
         });
+        // NOTE: To test on Paseo we create a remark rather than clearing the child_bounty!
         let call = Call::System(SystemCall::remark_with_event {
             remark: b"test".to_vec(),
         });
@@ -186,7 +205,7 @@ pub async fn sign_and_submit_tx(
             parent_bounty_id,
             child_bounty_id,
         });
-        // NOTE: To test on Rococo we create a remark rather than clearing the child_bounty!
+        // NOTE: To test on Paseo we create a remark rather than clearing the child_bounty!
         let call = Call::System(SystemCall::remark_with_event {
             remark: b"test".to_vec(),
         });
