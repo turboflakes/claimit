@@ -27,7 +27,10 @@ pub struct Query {
     // Filter by Bounty IDs expected in a csv format
     #[serde(default = "BTreeSet::default")]
     #[serde(skip_serializing_if = "BTreeSet::is_empty")]
-    #[serde(serialize_with = "serialize_as_csv", deserialize_with = "deserialize_from_csv")]
+    #[serde(
+        serialize_with = "serialize_as_csv",
+        deserialize_with = "deserialize_from_csv"
+    )]
     pub bounties: BTreeSet<u32>,
 }
 
@@ -49,17 +52,17 @@ fn default_light_client() -> bool {
 }
 
 fn serialize_as_csv<S>(bounties: &BTreeSet<u32>, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let csv_string = bounties
-            .iter()
-            .map(|bounty| bounty.to_string())
-            .collect::<Vec<_>>()
-            .join(",");
-    
-        serializer.serialize_str(&csv_string)
-    }
+where
+    S: Serializer,
+{
+    let csv_string = bounties
+        .iter()
+        .map(|bounty| bounty.to_string())
+        .collect::<Vec<_>>()
+        .join(",");
+
+    serializer.serialize_str(&csv_string)
+}
 
 fn deserialize_from_csv<'de, D>(deserializer: D) -> Result<BTreeSet<u32>, D::Error>
 where
