@@ -15,8 +15,10 @@ use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::{error, warn};
 use subxt::{
-    backend::unstable::UnstableBackend, lightclient::LightClient, utils::AccountId32, OnlineClient,
-    PolkadotConfig,
+    backend::chain_head::{ChainHeadBackend, ChainHeadBackendBuilder},
+    lightclient::LightClient,
+    utils::AccountId32,
+    OnlineClient, PolkadotConfig,
 };
 use yew::platform::{
     pinned::mpsc::{unbounded, UnboundedSender},
@@ -106,29 +108,13 @@ pub async fn create_api_clients(
         let (lc, rpc) = LightClient::relay_chain(runtime.chain_specs())
             .expect("expect valid smoldot connection");
 
-        // NOTE: The latest RPC specs are implemented via UnstableBackend in Subxt which is the preferred way to connect to smoldot v0.18
-        let (unstable_backend, mut driver) = UnstableBackend::builder().build(rpc);
-
-        // Unstable backend needs manually driving at the moment see here:
-        // https://github.com/paritytech/subxt/issues/1453#issuecomment-2011922808
-        spawn_local(async move {
-            while let Some(val) = driver.next().await {
-                if let Err(e) = val {
-                    // Something went wrong driving unstable backend.
-                    error!("error driving unstable backend: {:?}", e);
-                    break;
-                }
-            }
-        });
+        let backend: ChainHeadBackend<PolkadotConfig> =
+            ChainHeadBackendBuilder::default().build_with_background_driver(rpc.clone());
 
         // Create client from unstable backend (ie using new RPCs).
-        let relay_api = Client::from_backend(unstable_backend.into())
+        let relay_api = Client::from_backend(backend.into())
             .await
             .expect("expect valid RPC connection");
-
-        // let relay_api = OnlineClient::<PolkadotConfig>::from_rpc_client(rpc.clone())
-        //     .await
-        //     .expect("expect valid RPC connection");
 
         let people_rpc = lc
             .parachain(runtime.chain_specs_people())
