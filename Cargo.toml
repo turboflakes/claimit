@@ -15,7 +15,7 @@ resolver = "2"
 
 [workspace.package]
 name = "claimit"
-version = "0.12.2"
+version = "0.13.0"
 license = "Apache-2.0"
 repository = "https://github.com/turboflakes/claimit"
 authors = ["Paulo <paulo@turboflakes.io>"]
