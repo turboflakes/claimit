@@ -23,21 +23,24 @@ pub fn child_bounties_card() -> Html {
     let navigator = use_navigator().unwrap();
     let location = use_location().unwrap();
 
-    use_effect_with(location.clone(), {
-        let bounties_filter = bounties_filter.clone();
-        move |location| {
-            let bounties = location
-                .query::<Query>()
-                .map(|q| q.bounties)
-                .unwrap_or_default();
-            bounties_filter.set(bounties);
+    use_effect_with((*bounties_filter).clone(), {
+        let query = location.query::<Query>().unwrap();
+        let navigator = navigator.clone();
+        move |bounties| {
+            navigator
+                .push_with_query(
+                    &Routes::Index,
+                    &Query {
+                        bounties: bounties.clone(),
+                        ..query
+                    },
+                )
+                .unwrap();
         }
     });
 
     let ontoggle = {
         let bounties_filter = bounties_filter.clone();
-        let query = location.query::<Query>().unwrap();
-        let navigator = navigator.clone();
 
         Callback::from(move |value: u32| {
             let mut bounties: BTreeSet<u32> = (*bounties_filter).clone();
@@ -46,30 +49,17 @@ pub fn child_bounties_card() -> Html {
             } else {
                 bounties.insert(value);
             }
-            
-            navigator
-                .push_with_query(&Routes::Index, &Query { bounties, ..query })
-                .unwrap();
+            bounties_filter.set(bounties);
         })
     };
 
     let ontoggle_all = {
         let bounties_filter = bounties_filter.clone();
-        let query = location.query::<Query>().unwrap();
-        let navigator = navigator.clone();
 
         Callback::from(move |_| {
             let tmp: BTreeSet<u32> = (*bounties_filter).clone();
             if tmp.len() > 0 {
-                navigator
-                    .push_with_query(
-                        &Routes::Index,
-                        &Query {
-                            bounties: BTreeSet::new(),
-                            ..query
-                        },
-                    )
-                    .unwrap();
+                bounties_filter.set(BTreeSet::new());
             }
         })
     };

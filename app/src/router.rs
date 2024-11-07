@@ -51,7 +51,8 @@ fn as_csv<S>(bounties: &BTreeSet<u32>, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
-    let csv_string = bounties.iter()
+    let csv_string = bounties
+        .iter()
         .map(|bounty| bounty.to_string())
         .collect::<Vec<_>>()
         .join(",");
