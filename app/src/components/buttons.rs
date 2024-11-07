@@ -4,6 +4,7 @@ use crate::state::Action;
 use crate::state::StateContext;
 use claimit_common::runtimes::support::SupportedRelayRuntime;
 use claimit_common::types::{child_bounties::ChildBountiesIds, layout::BalanceMode};
+use std::collections::BTreeSet;
 use std::str::FromStr;
 use subxt::config::substrate::AccountId32;
 use yew::{
@@ -130,13 +131,19 @@ pub fn network_subscriber(props: &NetworkSubscriberProps) -> Html {
     let selected = props.selected.clone();
     let navigator = use_navigator().unwrap();
     let location = use_location().unwrap();
-    let light_client_param = location.query::<Query>().map(|q| q.lc).unwrap_or_default();
 
     let onclick = props.onchange.reform({
-        let lc = light_client_param.clone();
+        let query = location.query::<Query>().unwrap();
         move |chain| {
             navigator
-                .push_with_query(&Routes::Index, &Query { chain, lc })
+                .push_with_query(
+                    &Routes::Index,
+                    &Query {
+                        chain,
+                        bounties: BTreeSet::new(),
+                        ..query
+                    },
+                )
                 .unwrap();
             chain
         }
@@ -182,18 +189,20 @@ pub fn network_provider_icon_button(props: &NetworkProviderIconButtonProps) -> H
     let state = use_context::<StateContext>().unwrap();
     let navigator = use_navigator().unwrap();
     let location = use_location().unwrap();
-    let chain_param = location
-        .query::<Query>()
-        .map(|q| q.chain)
-        .unwrap_or_default();
-    let light_client_param = location.query::<Query>().map(|q| q.lc).unwrap_or(true);
 
     let onclick = props.onclick.reform({
-        let chain = chain_param.clone();
-        let lc = !light_client_param;
+        let query = location.query::<Query>().unwrap();
+        let lc = !(location.query::<Query>().map(|q| q.lc).unwrap_or_default());
         move |_| {
             navigator
-                .push_with_query(&Routes::Index, &Query { chain, lc })
+                .push_with_query(
+                    &Routes::Index,
+                    &Query {
+                        lc,
+                        bounties: query.bounties.clone(),
+                        ..query
+                    },
+                )
                 .unwrap();
             lc
         }

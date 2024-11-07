@@ -37,7 +37,7 @@ pub fn main() -> Html {
         .map(|q| q.chain)
         .unwrap_or_default();
 
-    let use_light_client = location.query::<Query>().map(|q| q.lc).unwrap_or(true);
+    let use_light_client = location.query::<Query>().map(|q| q.lc).unwrap_or_default();
 
     let state = use_reducer(|| {
         let accounts: Vec<Account> =

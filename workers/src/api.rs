@@ -7,10 +7,10 @@ use claimit_common::types::{
 };
 use claimit_kusama::kusama;
 use claimit_kusama_people::kusama_people;
-use claimit_polkadot::polkadot;
-use claimit_polkadot_people::polkadot_people;
 use claimit_paseo::paseo;
 use claimit_paseo_people::paseo_people;
+use claimit_polkadot::polkadot;
+use claimit_polkadot_people::polkadot_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
 use log::{error, warn};
