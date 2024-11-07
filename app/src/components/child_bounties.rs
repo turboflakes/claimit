@@ -4,41 +4,72 @@ use crate::components::{
     items::{ChildBountyItem, FilterItem},
     spinners::Spinner,
 };
+use crate::router::{Query, Routes};
 use crate::state::{Action, StateContext};
 use claimit_common::runtimes::utils::amount_human;
 use claimit_common::types::child_bounties::Filter;
 use std::collections::BTreeSet;
 use strum::IntoEnumIterator;
 use yew::{
-    function_component, html, use_context, use_state, Callback, Html, Properties, UseStateHandle,
+    function_component, html, use_context, use_effect_with, use_state, Callback, Html, Properties,
+    UseStateHandle,
 };
+use yew_router::prelude::{use_location, use_navigator};
 
 #[function_component(ChildBountiesCard)]
 pub fn child_bounties_card() -> Html {
     let state = use_context::<StateContext>().unwrap();
     let bounties_filter: UseStateHandle<BTreeSet<u32>> = use_state(|| BTreeSet::new());
+    let navigator = use_navigator().unwrap();
+    let location = use_location().unwrap();
+
+    use_effect_with(location.clone(), {
+        let bounties_filter = bounties_filter.clone();
+        move |location| {
+            let bounties = location
+                .query::<Query>()
+                .map(|q| q.bounties)
+                .unwrap_or_default();
+            bounties_filter.set(bounties);
+        }
+    });
 
     let ontoggle = {
         let bounties_filter = bounties_filter.clone();
+        let query = location.query::<Query>().unwrap();
+        let navigator = navigator.clone();
 
         Callback::from(move |value: u32| {
-            let mut tmp: BTreeSet<u32> = (*bounties_filter).clone();
-            if tmp.contains(&value) {
-                tmp.remove(&value);
+            let mut bounties: BTreeSet<u32> = (*bounties_filter).clone();
+            if bounties.contains(&value) {
+                bounties.remove(&value);
             } else {
-                tmp.insert(value);
+                bounties.insert(value);
             }
-            bounties_filter.set(tmp);
+            
+            navigator
+                .push_with_query(&Routes::Index, &Query { bounties, ..query })
+                .unwrap();
         })
     };
 
     let ontoggle_all = {
         let bounties_filter = bounties_filter.clone();
+        let query = location.query::<Query>().unwrap();
+        let navigator = navigator.clone();
 
         Callback::from(move |_| {
             let tmp: BTreeSet<u32> = (*bounties_filter).clone();
             if tmp.len() > 0 {
-                bounties_filter.set(BTreeSet::new());
+                navigator
+                    .push_with_query(
+                        &Routes::Index,
+                        &Query {
+                            bounties: BTreeSet::new(),
+                            ..query
+                        },
+                    )
+                    .unwrap();
             }
         })
     };

@@ -62,10 +62,10 @@ pub fn navbar(props: &NavbarProps) -> Html {
                                         <span>{"Kusama"}</span>
                                     </>
                                 },
-                                SupportedRelayRuntime::Rococo => html! {
+                                SupportedRelayRuntime::Paseo => html! {
                                     <>
-                                        <img class="h-8" src="/images/rococo_icon.svg" alt="rococo logo" />
-                                        <span>{"Rococo"}</span>
+                                        <img class="h-8" src="/images/paseo_icon.svg" alt="paseo logo" />
+                                        <span>{"Paseo"}</span>
                                     </>
                                 },
                             }

@@ -23,5 +23,8 @@ pkg/
 # Bump version script
 bump-version.sh
 
+# Deploy staging version script
+deploy-staging.sh
+
 # Ignore vscode
 .vscode/

@@ -8,14 +8,15 @@ pub const POLKADOT_PEOPLE_SPEC: &str =
     include_str!("../../artifacts/chain_specs/polkadot_people.json");
 pub const KUSAMA_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama.json");
 pub const KUSAMA_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama_people.json");
-pub const ROCOCO_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo.json");
-pub const ROCOCO_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/rococo_people.json");
+pub const PASEO_SPEC: &str = include_str!("../../artifacts/chain_specs/paseo.json");
+pub const PASEO_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/paseo_people.json");
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum SupportedRelayRuntime {
     Polkadot,
     Kusama,
-    Rococo,
+    Paseo,
 }
 
 impl SupportedRelayRuntime {
@@ -23,7 +24,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => 0,
             Self::Kusama => 2,
-            Self::Rococo => 42,
+            Self::Paseo => 0,
         }
     }
 
@@ -31,7 +32,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "wss://rpc.ibp.network:443/polkadot",
             Self::Kusama => "wss://rpc.ibp.network:443/kusama",
-            Self::Rococo => "wss://rococo-rpc.polkadot.io:443",
+            Self::Paseo => "wss://rpc.ibp.network:443/paseo",
         }
     }
 
@@ -39,7 +40,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "wss://sys.ibp.network:443/people-polkadot",
             Self::Kusama => "wss://sys.ibp.network:443/people-kusama",
-            Self::Rococo => "wss://sys.ibp.network:443/people-kusama",
+            Self::Paseo => "wss://sys.ibp.network:443/people-paseo",
         }
     }
 
@@ -47,7 +48,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => POLKADOT_SPEC,
             Self::Kusama => KUSAMA_SPEC,
-            Self::Rococo => ROCOCO_SPEC,
+            Self::Paseo => PASEO_SPEC,
         }
     }
 
@@ -55,7 +56,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => POLKADOT_PEOPLE_SPEC,
             Self::Kusama => KUSAMA_PEOPLE_SPEC,
-            Self::Rococo => ROCOCO_PEOPLE_SPEC,
+            Self::Paseo => PASEO_PEOPLE_SPEC,
         }
     }
 
@@ -63,7 +64,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => "DOT",
             Self::Kusama => "KSM",
-            Self::Rococo => "ROC",
+            Self::Paseo => "PAS",
         }
     }
 
@@ -71,7 +72,7 @@ impl SupportedRelayRuntime {
         match &self {
             Self::Polkadot => 10,
             Self::Kusama => 12,
-            Self::Rococo => 12,
+            Self::Paseo => 10,
         }
     }
 
@@ -95,9 +96,9 @@ impl From<AttrValue> for SupportedRelayRuntime {
             "Kusama" => Self::Kusama,
             "kusama" => Self::Kusama,
             "KSM" => Self::Kusama,
-            "Rococo" => Self::Rococo,
-            "rococo" => Self::Rococo,
-            "ROC" => Self::Rococo,
+            "Paseo" => Self::Paseo,
+            "paseo" => Self::Paseo,
+            "PAS" => Self::Paseo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -112,9 +113,9 @@ impl From<String> for SupportedRelayRuntime {
             "Kusama" => Self::Kusama,
             "kusama" => Self::Kusama,
             "KSM" => Self::Kusama,
-            "Rococo" => Self::Rococo,
-            "rococo" => Self::Rococo,
-            "ROC" => Self::Rococo,
+            "Paseo" => Self::Paseo,
+            "paseo" => Self::Paseo,
+            "PAS" => Self::Paseo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -125,7 +126,6 @@ impl From<ChainPrefix> for SupportedRelayRuntime {
         match v {
             0 => Self::Polkadot,
             2 => Self::Kusama,
-            42 => Self::Rococo,
             _ => unimplemented!("Chain prefix not supported"),
         }
     }
@@ -136,7 +136,7 @@ impl std::fmt::Display for SupportedRelayRuntime {
         match self {
             Self::Polkadot => write!(f, "Polkadot"),
             Self::Kusama => write!(f, "Kusama"),
-            Self::Rococo => write!(f, "Rococo"),
+            Self::Paseo => write!(f, "Paseo"),
         }
     }
 }
