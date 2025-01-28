@@ -31,7 +31,7 @@ use subxt::{
 use yew::platform::pinned::mpsc::UnboundedSender;
 
 #[subxt::subxt(
-    runtime_metadata_path = "artifacts/metadata/paseo_metadata.scale",
+    runtime_metadata_path = "artifacts/metadata/paseo_metadata_small.scale",
     derive_for_all_types = "PartialEq, Clone"
 )]
 
