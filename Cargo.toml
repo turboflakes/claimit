@@ -8,14 +8,14 @@ members = [
     "polkadot",
     "polkadot_people",
     "paseo",
-    "paseo_people"
+    "paseo_people",
 ]
 
 resolver = "2"
 
 [workspace.package]
 name = "claimit"
-version = "0.18.0"
+version = "0.18.1"
 license = "Apache-2.0"
 repository = "https://github.com/turboflakes/claimit"
 authors = ["Paulo <paulo@turboflakes.io>"]
@@ -30,7 +30,11 @@ yew = { version = "0.21", features = ["csr"] }
 yew-router = "0.18"
 yew-hooks = "0.3.2"
 yew-agent = "0.3.0"
-subxt = { version = "0.38.1", default-features = false, features = ["unstable-light-client", "jsonrpsee", "web"], target_arch = "wasm32" }
+subxt = { version = "0.39.0", default-features = false, features = [
+    "unstable-light-client",
+    "jsonrpsee",
+    "web",
+], target_arch = "wasm32" }
 futures = "0.3.28"
 anyhow = "1.0.71"
 strum = "0.17.1"
