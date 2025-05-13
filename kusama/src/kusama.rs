@@ -67,7 +67,7 @@ pub async fn fetch_child_bounties(
     // Fetch all child bounties descriptions
     let address = node_runtime::storage()
         .child_bounties()
-        .child_bounty_descriptions_iter();
+        .child_bounty_descriptions_v1_iter();
 
     let mut iter = api.storage().at_latest().await?.iter(address).await?;
 
