@@ -1,7 +1,0 @@
-[target.wasm32-unknown-unknown]
-rustflags = [
-    "-C", "link-arg=-s",
-]
-
-[build]
-rustflags = ["--cfg=web_sys_unstable_apis"]
