@@ -7,7 +7,6 @@ use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
     runtime_metadata_path = "artifacts/metadata/kusama_people_metadata_small.scale",
     derive_for_all_types = "PartialEq, Clone"
 )]
-
 mod node_runtime {}
 
 /*
@@ -29,7 +28,7 @@ pub async fn fetch_display_name(
         .fetch(&identity_of_addr)
         .await?
     {
-        Some((identity, _)) => {
+        Some(identity) => {
             let parent = parse_identity_data(identity.info.display);
             let name = match sub_account_name {
                 Some(child) => format!("{}/{}", &parent, child),

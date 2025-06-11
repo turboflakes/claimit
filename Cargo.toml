@@ -30,7 +30,7 @@ yew = { version = "0.21", features = ["csr"] }
 yew-router = "0.18"
 yew-hooks = "0.3.2"
 yew-agent = "0.3.0"
-subxt = { version = "0.39.0", default-features = false, features = [
+subxt = { version = "0.42.1", default-features = false, features = [
     "unstable-light-client",
     "jsonrpsee",
     "web",

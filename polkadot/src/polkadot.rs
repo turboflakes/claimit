@@ -23,7 +23,7 @@ use std::str::FromStr;
 use subxt::{
     config::DefaultExtrinsicParamsBuilder as TxParams,
     ext::codec::Decode,
-    tx::{SubmittableExtrinsic, TxStatus},
+    tx::{SubmittableTransaction, TxStatus},
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
@@ -66,7 +66,7 @@ pub async fn fetch_child_bounties(
     // Fetch all child bounties descriptions
     let address = node_runtime::storage()
         .child_bounties()
-        .child_bounty_descriptions_iter();
+        .child_bounty_descriptions_v1_iter();
 
     let mut iter = api.storage().at_latest().await?.iter(address).await?;
 
@@ -196,7 +196,7 @@ pub async fn sign_and_submit_tx(
 
     let params = TxParams::new().nonce(account_nonce).build();
 
-    let Ok(partial_signed) = api.tx().create_partial_signed_offline(&batch_call, params) else {
+    let Ok(mut partial_signed) = api.tx().create_partial_offline(&batch_call, params) else {
         return Err(ClaimitError::Other(
             "PartialExtrinsic creation failed".to_string(),
         ));
@@ -204,7 +204,7 @@ pub async fn sign_and_submit_tx(
 
     // Apply the signature
     let signed_extrinsic =
-        partial_signed.sign_with_address_and_signature(&account_id.into(), &multi_signature);
+        partial_signed.sign_with_account_and_signature(&account_id.into(), &multi_signature);
 
     // check the TX validity (to debug in the js console if the extrinsic would work)
     let dry_res = signed_extrinsic.validate().await;
@@ -220,7 +220,7 @@ pub async fn submit_and_watch_tx(
 ) -> Result<Vec<ChildBountyId>, ClaimitError> {
     let mut out = Vec::new();
 
-    let extrinsic = SubmittableExtrinsic::from_bytes(api.clone(), tx_bytes);
+    let extrinsic = SubmittableTransaction::from_bytes(api.clone(), tx_bytes);
 
     let mut tx_progress = extrinsic.submit_and_watch().await?;
 

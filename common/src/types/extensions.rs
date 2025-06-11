@@ -190,13 +190,17 @@ pub async fn create_payload_as_string(
     let mortality_checkpoint = encode_then_hex(&api.genesis_hash());
     let era = encode_then_hex(&Era::Immortal);
     let method = to_hex(call_data);
-    let signed_extensions: Vec<String> = api
-        .metadata()
+
+    let metadata = api.metadata();
+    let version = metadata
         .extrinsic()
-        .signed_extensions()
-        .iter()
-        .map(|e| e.identifier().to_string())
-        .collect();
+        .transaction_extension_version_to_use_for_decoding();
+    let signed_extensions: Vec<String> = metadata
+        .extrinsic()
+        .transaction_extensions_by_version(version)
+        .map(|extensions| extensions.map(|ext| ext.identifier().to_string()).collect())
+        .unwrap_or_default();
+
     let tip = encode_then_hex(&Compact(0u128));
 
     let payload = json!({

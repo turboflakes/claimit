@@ -24,7 +24,7 @@ use std::str::FromStr;
 use subxt::{
     config::DefaultExtrinsicParamsBuilder as TxParams,
     ext::codec::Decode,
-    tx::{SubmittableExtrinsic, TxStatus},
+    tx::{SubmittableTransaction, TxStatus},
     utils::{AccountId32, MultiSignature},
     OnlineClient, PolkadotConfig,
 };
@@ -231,7 +231,7 @@ pub async fn submit_and_watch_tx(
 ) -> Result<Vec<ChildBountyId>, ClaimitError> {
     let mut out = Vec::new();
 
-    let extrinsic = SubmittableExtrinsic::from_bytes(api.clone(), tx_bytes);
+    let extrinsic = SubmittableTransaction::from_bytes(api.clone(), tx_bytes);
 
     let mut tx_progress = extrinsic.submit_and_watch().await?;
 
