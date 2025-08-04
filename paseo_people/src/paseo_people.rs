@@ -29,7 +29,7 @@ pub async fn fetch_display_name(
         .fetch(&identity_of_addr)
         .await?
     {
-        Some((identity, _)) => {
+        Some(identity) => {
             let parent = parse_identity_data(identity.info.display);
             let name = match sub_account_name {
                 Some(child) => format!("{}/{}", &parent, child),

@@ -15,7 +15,6 @@ use node_runtime::{
     },
     system::events::ExtrinsicFailed,
     system::events::ExtrinsicSuccess,
-    system::events::Remarked,
     utility::events::BatchCompleted,
     utility::events::BatchCompletedWithErrors,
 };
@@ -34,11 +33,9 @@ use yew::platform::pinned::mpsc::UnboundedSender;
     runtime_metadata_path = "artifacts/metadata/paseo_metadata_small.scale",
     derive_for_all_types = "PartialEq, Clone"
 )]
-
 mod node_runtime {}
 type Call = node_runtime::runtime_types::paseo_runtime::RuntimeCall;
 type ChildBountyCall = node_runtime::runtime_types::pallet_child_bounties::pallet::Call;
-type SystemCall = node_runtime::runtime_types::frame_system::pallet::Call;
 
 pub async fn fetch_child_bounties(
     api: &OnlineClient<PolkadotConfig>,
@@ -69,7 +66,7 @@ pub async fn fetch_child_bounties(
     // Fetch all child bounties descriptions
     let address = node_runtime::storage()
         .child_bounties()
-        .child_bounty_descriptions_iter();
+        .child_bounty_descriptions_v1_iter();
 
     let mut iter = api.storage().at_latest().await?.iter(address).await?;
 
@@ -106,25 +103,6 @@ pub async fn fetch_child_bounties(
         }
     }
 
-    // ************************************************************************************************
-    // NOTE: Mock data so we can test in case Paseo does not have any child bounties pending payout
-    // ************************************************************************************************
-    let cb = ChildBounty {
-        id: 1,
-        parent_id: 1,
-        description: "Mock description 1".to_string(),
-        value: 100000000000,
-        status: Status::Pending,
-        beneficiary: AccountId32::from_str("5HpwUjPDgg4YUzVcSjUaLXipVc4tSKofMvwiLLVbSFkjTQdu")
-            .unwrap(),
-        beneficiary_identity: None,
-        unlock_at: 100,
-    };
-    out.insert(1, cb);
-    // ************************************************************************************************
-    // END OF MOCK DATA
-    // ************************************************************************************************
-
     // Send whatever is left or empty
     let _ = tx.send_now(Output::ChildBounties(out));
     //
@@ -160,13 +138,9 @@ pub async fn create_payload_tx(
     // Create a batch call with the child bounty claims extrinsics
     let mut calls_for_batch: Vec<Call> = vec![];
     for (parent_bounty_id, child_bounty_id) in child_bounties_ids.into_iter() {
-        let _call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
+        let call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
             parent_bounty_id,
             child_bounty_id,
-        });
-        // NOTE: To test on Paseo we create a remark rather than clearing the child_bounty!
-        let call = Call::System(SystemCall::remark_with_event {
-            remark: b"test".to_vec(),
         });
         calls_for_batch.push(call);
     }
@@ -202,15 +176,10 @@ pub async fn sign_and_submit_tx(
     // Create a batch call with the child bounty claims extrinsics
     let mut calls_for_batch: Vec<Call> = vec![];
     for (parent_bounty_id, child_bounty_id) in child_bounties_ids.into_iter() {
-        let _call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
+        let call = Call::ChildBounties(ChildBountyCall::claim_child_bounty {
             parent_bounty_id,
             child_bounty_id,
         });
-        // NOTE: To test on Paseo we create a remark rather than clearing the child_bounty!
-        let call = Call::System(SystemCall::remark_with_event {
-            remark: b"test".to_vec(),
-        });
-
         calls_for_batch.push(call);
     }
 
@@ -275,9 +244,6 @@ pub async fn submit_and_watch_tx(
                     let event = event?;
                     if let Some(ev) = event.as_event::<Claimed>()? {
                         out.push(ev.child_index);
-                    } else if let Some(ev) = event.as_event::<Remarked>()? {
-                        info!("Remarked: {}", ev.sender);
-                        out.push(4);
                     } else if let Some(_ev) = event.as_event::<BatchCompleted>()? {
                         info!(
                             "Batch fully completed at block {} extrinsic {:?}",
