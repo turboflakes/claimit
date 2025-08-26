@@ -1,0 +1,156 @@
+name: Version Bump and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type (auto/manual)'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - manual
+      version_number:
+        description: 'Version number (only if manual)'
+        required: false
+        type: string
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install Trunk
+        run: |
+          cargo install --locked trunk
+
+      - name: Create branch for version bump
+        run: |
+          # Get current version
+          CURRENT_VERSION=$(cargo pkgid --manifest-path=app/Cargo.toml | cut -d# -f2 | cut -d@ -f2)
+          BASE_LIST=($(echo $CURRENT_VERSION | tr '.' ' '))
+          V_MAJOR=${BASE_LIST[0]}
+          V_MINOR=${BASE_LIST[1]}
+          V_PATCH=${BASE_LIST[2]}
+
+          # Calculate next version
+          V_MINOR=$((V_MINOR + 1))
+          V_PATCH=0
+          NEXT_VERSION="$V_MAJOR.$V_MINOR.$V_PATCH"
+
+          # Use input version if provided and not auto
+          if [[ "${{ github.event.inputs.version_type }}" == "manual" && -n "${{ github.event.inputs.version_number }}" ]]; then
+            VERSION="${{ github.event.inputs.version_number }}"
+          else
+            VERSION="$NEXT_VERSION"
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Will bump version to: $VERSION"
+
+          # Create branch for version bump
+          git checkout -b "release-v$VERSION" main
+
+      - name: Run bump-version script
+        run: |
+          chmod +x ./bump-version.sh
+          ./bump-version.sh ${{ github.event.inputs.version_type }}
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Version bump to v${{ env.VERSION }}"
+          title: "Version bump to v${{ env.VERSION }}"
+          body: |
+            Automated version bump to v${{ env.VERSION }}
+
+            This PR was created automatically by the GitHub Actions workflow.
+          branch: "release-v${{ env.VERSION }}"
+          base: main
+          draft: false
+
+      - name: Merge Pull Request
+        if: steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          merge-method: merge
+
+      - name: Wait for PR merge
+        if: steps.create_pr.outputs.pull-request-number
+        run: |
+          PR_NUMBER=${{ steps.create_pr.outputs.pull-request-number }}
+          echo "Waiting for PR #$PR_NUMBER to be merged..."
+
+          # Wait for the PR to be merged
+          for i in {1..30}; do
+            PR_STATE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" | \
+              jq -r .state)
+
+            if [ "$PR_STATE" == "closed" ]; then
+              echo "PR has been merged!"
+              break
+            fi
+
+            if [ $i -eq 30 ]; then
+              echo "Timeout waiting for PR to be merged."
+              exit 1
+            fi
+
+            echo "PR not merged yet. Waiting..."
+            sleep 10
+          done
+
+  deploy:
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install Trunk
+        run: |
+          cargo install --locked trunk
+
+      - name: Run deploy script
+        run: |
+          chmod +x ./deploy-staging.sh
+          ./deploy-staging.sh auto

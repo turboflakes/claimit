@@ -1,0 +1,70 @@
+name: Update Metadata
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Monday at 2:00 AM UTC
+    - cron: '0 2 * * 1'
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Install subxt-cli
+        run: |
+          cargo install subxt-cli --force
+
+      - name: Run update-metadata script
+        run: |
+          chmod +x ./update-metadata.sh
+          ./update-metadata.sh
+
+      - name: Create branch for metadata update
+        run: |
+          git checkout -b metadata-update-$(date +"%Y-%m-%d")
+
+      - name: Commit metadata changes
+        run: |
+          git add -A
+          git commit -m "Update metadata $(date +"%Y-%m-%d")" || echo "No changes to commit"
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update metadata $(date +"%Y-%m-%d")"
+          title: "Update metadata $(date +"%Y-%m-%d")"
+          body: |
+            Automated metadata update
+
+            This PR was created automatically by the GitHub Actions workflow.
+          branch: metadata-update-$(date +"%Y-%m-%d")
+          base: main
+          draft: false
+
+      - name: Merge Pull Request
+        if: steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          merge-method: merge
