@@ -20,7 +20,9 @@ pub async fn fetch_display_name(
     address: &AccountId32,
     sub_account_name: Option<String>,
 ) -> Result<Option<String>, ClaimitError> {
-    let identity_of_addr = node_runtime::storage().identity().identity_of(address);
+    let identity_of_addr = node_runtime::storage()
+        .identity()
+        .identity_of(address.clone());
     match api
         .storage()
         .at_latest()
@@ -37,7 +39,7 @@ pub async fn fetch_display_name(
             Ok(Some(name))
         }
         None => {
-            let super_of_addr = node_runtime::storage().identity().super_of(address);
+            let super_of_addr = node_runtime::storage().identity().super_of(address.clone());
             if let Some((parent_account, data)) = api
                 .storage()
                 .at_latest()

@@ -30,12 +30,11 @@ use subxt::{
 use yew::platform::pinned::mpsc::UnboundedSender;
 
 #[subxt::subxt(
-    runtime_metadata_path = "artifacts/metadata/kusama_metadata_small.scale",
+    runtime_metadata_path = "artifacts/metadata/paseo_asset_hub_metadata_small.scale",
     derive_for_all_types = "PartialEq, Clone"
 )]
-
 mod node_runtime {}
-type Call = node_runtime::runtime_types::staging_kusama_runtime::RuntimeCall;
+type Call = node_runtime::runtime_types::asset_hub_paseo_runtime::RuntimeCall;
 type ChildBountyCall = node_runtime::runtime_types::pallet_child_bounties::pallet::Call;
 
 pub async fn fetch_child_bounties(
@@ -114,7 +113,7 @@ pub async fn fetch_account_balance(
     api: &OnlineClient<PolkadotConfig>,
     account: AccountId32,
 ) -> Result<Balance, ClaimitError> {
-    let address = node_runtime::storage().system().account(account);
+    let address = node_runtime::storage().system().account(account.clone());
 
     if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
         return Ok(Balance {

@@ -14,4 +14,3 @@ yew = { workspace = true }
 tracing-wasm = { workspace = true }
 tracing = { workspace = true }
 claimit-common = { path = "../common" }
-claimit-polkadot-people = { path = "../polkadot_people" }

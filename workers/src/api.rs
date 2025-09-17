@@ -7,7 +7,7 @@ use claimit_common::types::{
 };
 use claimit_kusama::kusama;
 use claimit_kusama_people::kusama_people;
-use claimit_paseo::paseo;
+use claimit_paseo_asset_hub::paseo_asset_hub;
 use claimit_paseo_people::paseo_people;
 use claimit_polkadot::polkadot;
 use claimit_polkadot_people::polkadot_people;
@@ -29,15 +29,17 @@ use yew_agent::{prelude::reactor, reactor::ReactorScope};
 type Client = OnlineClient<PolkadotConfig>;
 use Client as RelayClient;
 use Client as PeopleClient;
+use Client as AssetHubClient;
 
 #[reactor(Worker)]
 pub async fn worker(mut scope: ReactorScope<Input, Output>) {
     'outer: while let Some(input) = scope.next().await {
         if let Input::Start(sub_id, runtime, use_light_client) = input {
             // Create API clients
-            let (relay_api, people_api) = create_api_clients(runtime, use_light_client)
-                .await
-                .expect("expect valid API clients");
+            let (relay_api, people_api, asset_hub_api) =
+                create_api_clients(runtime, use_light_client)
+                    .await
+                    .expect("expect valid API clients");
 
             // Create unbounded channel to facilitate communication between the reactor and all background tasks
             let (tx_inner_output, mut rx_inner_output) = unbounded::<Output>();
@@ -61,19 +63,31 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
                                 break 'outer;
                             },
                             Some(Input::FetchChildBounties) => {
-                                fetch_child_bounties(&relay_api.clone(), runtime.clone(), tx_inner_output.clone());
+                                match runtime {
+                                    SupportedRelayRuntime::Paseo => fetch_child_bounties(&asset_hub_api.clone(), runtime.clone(), tx_inner_output.clone()),
+                                    _ => fetch_child_bounties(&relay_api.clone(), runtime.clone(), tx_inner_output.clone())
+                                };
                             }
                             Some(Input::FetchAccountBalance(account_id)) => {
-                                fetch_account_balance(&relay_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone());
+                                match runtime {
+                                    SupportedRelayRuntime::Paseo => fetch_account_balance(&asset_hub_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone()),
+                                    _ => fetch_account_balance(&relay_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone())
+                                };
                             }
                             Some(Input::FetchAccountIdentity(account_id)) => {
                                 fetch_account_identity(&people_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::CreatePayloadTx(child_bounty_ids, signer_address)) => {
-                                create_payload_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone());
+                                match runtime {
+                                    SupportedRelayRuntime::Paseo => create_payload_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone()),
+                                    _ => create_payload_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone())
+                                };
                             }
                             Some(Input::SignAndSubmitTx(child_bounty_ids, signer_address, signature)) => {
-                                sign_and_submit_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone());
+                                match runtime {
+                                    SupportedRelayRuntime::Paseo => sign_and_submit_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone()),
+                                    _ => sign_and_submit_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone())
+                                };
                             }
                             _ => ()
                         }
@@ -102,7 +116,7 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
 pub async fn create_api_clients(
     runtime: SupportedRelayRuntime,
     use_light_client: bool,
-) -> Result<(RelayClient, PeopleClient), ClaimitError> {
+) -> Result<(RelayClient, PeopleClient, AssetHubClient), ClaimitError> {
     if use_light_client {
         // Initiate light client (smoldot)
         let (lc, rpc) = LightClient::relay_chain(runtime.chain_specs())
@@ -124,7 +138,15 @@ pub async fn create_api_clients(
             .await
             .expect("expect valid RPC connection");
 
-        Ok((relay_api, people_api))
+        let asset_hub_rpc = lc
+            .parachain(runtime.chain_specs_asset_hub())
+            .expect("expect valid smoldot connection");
+
+        let asset_hub_api = Client::from_rpc_client(asset_hub_rpc)
+            .await
+            .expect("expect valid RPC connection");
+
+        Ok((relay_api, people_api, asset_hub_api))
     } else {
         // Initiate RPC client from default RPCs provider
         let relay_api = Client::from_url(runtime.default_rpc_url())
@@ -135,7 +157,11 @@ pub async fn create_api_clients(
             .await
             .expect("expect valid RPC connection");
 
-        Ok((relay_api, people_api))
+        let asset_hub_api = Client::from_url(runtime.default_asset_hub_rpc_url())
+            .await
+            .expect("expect valid RPC connection");
+
+        Ok((relay_api, people_api, asset_hub_api))
     }
 }
 
@@ -180,7 +206,7 @@ pub fn fetch_child_bounties(
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => polkadot::fetch_child_bounties(&api, tx).await,
             SupportedRelayRuntime::Kusama => kusama::fetch_child_bounties(&api, tx).await,
-            SupportedRelayRuntime::Paseo => paseo::fetch_child_bounties(&api, tx).await,
+            SupportedRelayRuntime::Paseo => paseo_asset_hub::fetch_child_bounties(&api, tx).await,
         };
         match response {
             Err(e) => {
@@ -209,7 +235,7 @@ pub fn fetch_account_balance(
                 kusama::fetch_account_balance(&api, account_id.clone()).await
             }
             SupportedRelayRuntime::Paseo => {
-                paseo::fetch_account_balance(&api, account_id.clone()).await
+                paseo_asset_hub::fetch_account_balance(&api, account_id.clone()).await
             }
         };
         match response {
@@ -281,8 +307,12 @@ pub fn create_payload_tx(
                     .await
             }
             SupportedRelayRuntime::Paseo => {
-                paseo::create_payload_tx(&api, child_bounties_ids.clone(), signer_address.clone())
-                    .await
+                paseo_asset_hub::create_payload_tx(
+                    &api,
+                    child_bounties_ids.clone(),
+                    signer_address.clone(),
+                )
+                .await
             }
         };
         match response {
@@ -329,7 +359,7 @@ pub fn sign_and_submit_tx(
                 .await
             }
             SupportedRelayRuntime::Paseo => {
-                paseo::sign_and_submit_tx(
+                paseo_asset_hub::sign_and_submit_tx(
                     &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),

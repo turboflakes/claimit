@@ -6,10 +6,16 @@ pub type ChainPrefix = u16;
 pub const POLKADOT_SPEC: &str = include_str!("../../artifacts/chain_specs/polkadot.json");
 pub const POLKADOT_PEOPLE_SPEC: &str =
     include_str!("../../artifacts/chain_specs/polkadot_people.json");
+pub const POLKADOT_ASSET_HUB_SPEC: &str =
+    include_str!("../../artifacts/chain_specs/polkadot_asset_hub.json");
 pub const KUSAMA_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama.json");
 pub const KUSAMA_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/kusama_people.json");
+pub const KUSAMA_ASSET_HUB_SPEC: &str =
+    include_str!("../../artifacts/chain_specs/kusama_asset_hub.json");
 pub const PASEO_SPEC: &str = include_str!("../../artifacts/chain_specs/paseo.json");
 pub const PASEO_PEOPLE_SPEC: &str = include_str!("../../artifacts/chain_specs/paseo_people.json");
+pub const PASEO_ASSET_HUB_SPEC: &str =
+    include_str!("../../artifacts/chain_specs/paseo_asset_hub.json");
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -44,6 +50,14 @@ impl SupportedRelayRuntime {
         }
     }
 
+    pub fn default_asset_hub_rpc_url(&self) -> &'static str {
+        match &self {
+            Self::Polkadot => "wss://sys.ibp.network:443/asset-hub-polkadot",
+            Self::Kusama => "wss://sys.ibp.network:443/asset-hub-kusama",
+            Self::Paseo => "wss://sys.ibp.network:443/asset-hub-paseo",
+        }
+    }
+
     pub fn chain_specs(&self) -> &str {
         match &self {
             Self::Polkadot => POLKADOT_SPEC,
@@ -57,6 +71,14 @@ impl SupportedRelayRuntime {
             Self::Polkadot => POLKADOT_PEOPLE_SPEC,
             Self::Kusama => KUSAMA_PEOPLE_SPEC,
             Self::Paseo => PASEO_PEOPLE_SPEC,
+        }
+    }
+
+    pub fn chain_specs_asset_hub(&self) -> &str {
+        match &self {
+            Self::Polkadot => POLKADOT_ASSET_HUB_SPEC,
+            Self::Kusama => KUSAMA_ASSET_HUB_SPEC,
+            Self::Paseo => PASEO_ASSET_HUB_SPEC,
         }
     }
 

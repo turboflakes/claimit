@@ -17,7 +17,7 @@ watch = [
     "kusama_people",
     "polkadot",
     "polkadot_people",
-    "paseo",
+    "paseo_asset_hub",
     "paseo_people",
 ]
 

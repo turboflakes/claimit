@@ -1,5 +1,5 @@
 [package]
-name = "claimit-kusama"
+name = "claimit-paseo-asset-hub"
 version.workspace = true
 license.workspace = true
 repository.workspace = true

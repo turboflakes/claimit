@@ -32,5 +32,5 @@ claimit-kusama = { path = "../kusama" }
 claimit-kusama-people = { path = "../kusama_people" }
 claimit-polkadot = { path = "../polkadot" }
 claimit-polkadot-people = { path = "../polkadot_people" }
-claimit-paseo = { path = "../paseo" }
+claimit-paseo-asset-hub = { path = "../paseo_asset_hub" }
 claimit-paseo-people = { path = "../paseo_people" }

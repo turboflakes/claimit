@@ -113,7 +113,7 @@ pub async fn fetch_account_balance(
     api: &OnlineClient<PolkadotConfig>,
     account: AccountId32,
 ) -> Result<Balance, ClaimitError> {
-    let address = node_runtime::storage().system().account(&account);
+    let address = node_runtime::storage().system().account(account);
 
     if let Some(result) = api.storage().at_latest().await?.fetch(&address).await? {
         return Ok(Balance {
