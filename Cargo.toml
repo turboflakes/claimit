@@ -3,7 +3,7 @@ members = [
     "app",
     "common",
     "workers",
-    "kusama",
+    "kusama_asset_hub",
     "kusama_people",
     "polkadot",
     "polkadot_people",
