@@ -40,13 +40,13 @@ pub fn navbar(props: &NavbarProps) -> Html {
                     <Spinner is_visible={state.network.is_fetching()} />
 
                     <div class="ms-4 inline-flex items-center space-x-2 text-gray-900">
-                        {
-                            if state.network.finalized_block_number.is_some() {
-                                html! {
-                                    <span class="text-sm">{format!("#{}", state.network.finalized_block_number.unwrap().to_formatted_string(&Locale::en))}</span>
-                                }
-                            } else { html! {} }
-                        }
+                        // {
+                        //     if state.network.finalized_block_number.is_some() {
+                        //         html! {
+                        //             <span class="text-sm">{format!("#{}", state.network.finalized_block_number.unwrap().to_formatted_string(&Locale::en))}</span>
+                        //         }
+                        //     } else { html! {} }
+                        // }
 
                         {
                             match props.runtime.clone() {
