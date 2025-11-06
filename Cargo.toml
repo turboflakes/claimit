@@ -5,10 +5,10 @@ members = [
     "workers",
     "kusama_asset_hub",
     "kusama_people",
-    "polkadot",
-    "polkadot_people",
-    "paseo_people",
     "paseo_asset_hub",
+    "paseo_people",
+    "polkadot_asset_hub",
+    "polkadot_people",
 ]
 
 resolver = "2"

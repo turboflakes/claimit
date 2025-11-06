@@ -4,7 +4,7 @@ use crate::components::{
 };
 use crate::state::StateContext;
 use claimit_common::runtimes::support::SupportedRelayRuntime;
-use num_format::{Locale, ToFormattedString};
+// use num_format::{Locale, ToFormattedString};
 use yew::{function_component, html, use_context, Callback, Html, Properties};
 
 #[derive(PartialEq, Properties, Clone)]

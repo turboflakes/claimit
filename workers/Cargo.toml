@@ -30,7 +30,7 @@ rand = { workspace = true }
 claimit-common = { path = "../common" }
 claimit-kusama-asset-hub = { path = "../kusama_asset_hub" }
 claimit-kusama-people = { path = "../kusama_people" }
-claimit-polkadot = { path = "../polkadot" }
+claimit-polkadot-asset-hub = { path = "../polkadot_asset_hub" }
 claimit-polkadot-people = { path = "../polkadot_people" }
 claimit-paseo-asset-hub = { path = "../paseo_asset_hub" }
 claimit-paseo-people = { path = "../paseo_people" }

@@ -9,7 +9,7 @@ use claimit_kusama_asset_hub::kusama_asset_hub;
 use claimit_kusama_people::kusama_people;
 use claimit_paseo_asset_hub::paseo_asset_hub;
 use claimit_paseo_people::paseo_people;
-use claimit_polkadot::polkadot;
+use claimit_polkadot_asset_hub::polkadot_asset_hub;
 use claimit_polkadot_people::polkadot_people;
 use futures::sink::SinkExt;
 use futures::stream::StreamExt;
@@ -63,35 +63,19 @@ pub async fn worker(mut scope: ReactorScope<Input, Output>) {
                                 break 'outer;
                             },
                             Some(Input::FetchChildBounties) => {
-                                match runtime {
-                                    SupportedRelayRuntime::Paseo => fetch_child_bounties(&asset_hub_api.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    SupportedRelayRuntime::Kusama => fetch_child_bounties(&asset_hub_api.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    _ => fetch_child_bounties(&relay_api.clone(), runtime.clone(), tx_inner_output.clone())
-                                };
+                                fetch_child_bounties(&asset_hub_api.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::FetchAccountBalance(account_id)) => {
-                                match runtime {
-                                    SupportedRelayRuntime::Paseo => fetch_account_balance(&asset_hub_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    SupportedRelayRuntime::Kusama => fetch_account_balance(&asset_hub_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    _ => fetch_account_balance(&relay_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone())
-                                };
+                                fetch_account_balance(&asset_hub_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::FetchAccountIdentity(account_id)) => {
                                 fetch_account_identity(&people_api.clone(), account_id.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::CreatePayloadTx(child_bounty_ids, signer_address)) => {
-                                match runtime {
-                                    SupportedRelayRuntime::Paseo => create_payload_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    SupportedRelayRuntime::Kusama => create_payload_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    _ => create_payload_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone())
-                                };
+                                create_payload_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             Some(Input::SignAndSubmitTx(child_bounty_ids, signer_address, signature)) => {
-                                match runtime {
-                                    SupportedRelayRuntime::Paseo => sign_and_submit_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    SupportedRelayRuntime::Kusama => sign_and_submit_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone()),
-                                    _ => sign_and_submit_tx(&relay_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone())
-                                };
+                                sign_and_submit_tx(&asset_hub_api.clone(), child_bounty_ids.clone(), signer_address.clone(), signature.clone(), runtime.clone(), tx_inner_output.clone());
                             }
                             _ => ()
                         }
@@ -208,7 +192,9 @@ pub fn fetch_child_bounties(
     let tx = tx.clone();
     spawn_local(async move {
         let response = match runtime {
-            SupportedRelayRuntime::Polkadot => polkadot::fetch_child_bounties(&api, tx).await,
+            SupportedRelayRuntime::Polkadot => {
+                polkadot_asset_hub::fetch_child_bounties(&api, tx).await
+            }
             SupportedRelayRuntime::Kusama => kusama_asset_hub::fetch_child_bounties(&api, tx).await,
             SupportedRelayRuntime::Paseo => paseo_asset_hub::fetch_child_bounties(&api, tx).await,
         };
@@ -233,7 +219,7 @@ pub fn fetch_account_balance(
     spawn_local(async move {
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
-                polkadot::fetch_account_balance(&api, account_id.clone()).await
+                polkadot_asset_hub::fetch_account_balance(&api, account_id.clone()).await
             }
             SupportedRelayRuntime::Kusama => {
                 kusama_asset_hub::fetch_account_balance(&api, account_id.clone()).await
@@ -299,7 +285,7 @@ pub fn create_payload_tx(
     spawn_local(async move {
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
-                polkadot::create_payload_tx(
+                polkadot_asset_hub::create_payload_tx(
                     &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
@@ -349,7 +335,7 @@ pub fn sign_and_submit_tx(
     spawn_local(async move {
         let response = match runtime {
             SupportedRelayRuntime::Polkadot => {
-                polkadot::sign_and_submit_tx(
+                polkadot_asset_hub::sign_and_submit_tx(
                     &api,
                     child_bounties_ids.clone(),
                     signer_address.clone(),
