@@ -36,25 +36,25 @@ impl SupportedRelayRuntime {
 
     pub fn default_rpc_url(&self) -> &'static str {
         match &self {
-            Self::Polkadot => "wss://rpc.ibp.network:443/polkadot",
-            Self::Kusama => "wss://rpc.ibp.network:443/kusama",
-            Self::Paseo => "wss://rpc.ibp.network:443/paseo",
+            Self::Polkadot => "wss://polkadot.rpc.turboflakes.io:443",
+            Self::Kusama => "wss://kusama.rpc.turboflakes.io:443",
+            Self::Paseo => "wss://paseo.rpc.turboflakes.io:443",
         }
     }
 
     pub fn default_people_rpc_url(&self) -> &'static str {
         match &self {
-            Self::Polkadot => "wss://sys.ibp.network:443/people-polkadot",
-            Self::Kusama => "wss://sys.ibp.network:443/people-kusama",
-            Self::Paseo => "wss://sys.ibp.network:443/people-paseo",
+            Self::Polkadot => "wss://people-polkadot.rpc.turboflakes.io:443",
+            Self::Kusama => "wss://people-kusama.rpc.turboflakes.io:443",
+            Self::Paseo => "wss://people-paseo.rpc.turboflakes.io:443",
         }
     }
 
     pub fn default_asset_hub_rpc_url(&self) -> &'static str {
         match &self {
-            Self::Polkadot => "wss://sys.ibp.network:443/asset-hub-polkadot",
-            Self::Kusama => "wss://sys.ibp.network:443/asset-hub-kusama",
-            Self::Paseo => "wss://sys.ibp.network:443/asset-hub-paseo",
+            Self::Polkadot => "wss://asset-hub-polkadot.rpc.turboflakes.io:443",
+            Self::Kusama => "wss://asset-hub-kusama.rpc.turboflakes.io:443",
+            Self::Paseo => "wss://asset-hub-paseo.rpc.turboflakes.io:443",
         }
     }
 
